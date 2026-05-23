@@ -10,6 +10,8 @@ const navItems = [
   { label: 'Delete Account', path: '/delete-account' },
 ]
 
+const basePath = normalizeBasePath(import.meta.env.BASE_URL)
+
 const deletionMailto = `mailto:${supportEmail}?subject=${encodeURIComponent(
   'Delete my Ecopals account',
 )}&body=${encodeURIComponent(
@@ -20,11 +22,34 @@ function normalizePath(pathname) {
   return pathname.replace(/\/+$/, '') || '/'
 }
 
+function normalizeBasePath(baseUrl) {
+  const normalized = normalizePath(baseUrl)
+  return normalized === '/' ? '' : normalized
+}
+
+function getAppPath(pathname) {
+  const normalizedPath = normalizePath(pathname)
+
+  if (basePath && normalizedPath.startsWith(basePath)) {
+    return normalizePath(normalizedPath.slice(basePath.length))
+  }
+
+  return normalizedPath
+}
+
+function getPublicPath(appPath) {
+  if (!basePath) {
+    return appPath
+  }
+
+  return appPath === '/' ? `${basePath}/` : `${basePath}${appPath}`
+}
+
 function App() {
-  const [path, setPath] = useState(() => normalizePath(window.location.pathname))
+  const [path, setPath] = useState(() => getAppPath(window.location.pathname))
 
   useEffect(() => {
-    const handlePopState = () => setPath(normalizePath(window.location.pathname))
+    const handlePopState = () => setPath(getAppPath(window.location.pathname))
 
     window.addEventListener('popstate', handlePopState)
     return () => window.removeEventListener('popstate', handlePopState)
@@ -40,8 +65,10 @@ function App() {
 
     event.preventDefault()
 
-    if (window.location.pathname !== nextPath) {
-      window.history.pushState({}, '', nextPath)
+    const publicPath = getPublicPath(nextPath)
+
+    if (window.location.pathname !== publicPath) {
+      window.history.pushState({}, '', publicPath)
     }
 
     setPath(nextPath)
@@ -65,7 +92,7 @@ function Layout({ activePath, children, onNavigate }) {
   return (
     <>
       <header className="site-header">
-        <a className="brand" href="/" onClick={(event) => onNavigate(event, '/')}>
+        <a className="brand" href={getPublicPath('/')} onClick={(event) => onNavigate(event, '/')}>
           <span className="brand-mark" aria-hidden="true">
             E
           </span>
@@ -76,7 +103,7 @@ function Layout({ activePath, children, onNavigate }) {
           {navItems.map((item) => (
             <a
               aria-current={activePath === item.path ? 'page' : undefined}
-              href={item.path}
+              href={getPublicPath(item.path)}
               key={item.path}
               onClick={(event) => onNavigate(event, item.path)}
             >
@@ -91,10 +118,13 @@ function Layout({ activePath, children, onNavigate }) {
       <footer className="site-footer">
         <p>{appName}</p>
         <div>
-          <a href="/policies" onClick={(event) => onNavigate(event, '/policies')}>
+          <a href={getPublicPath('/policies')} onClick={(event) => onNavigate(event, '/policies')}>
             Policies
           </a>
-          <a href="/delete-account" onClick={(event) => onNavigate(event, '/delete-account')}>
+          <a
+            href={getPublicPath('/delete-account')}
+            onClick={(event) => onNavigate(event, '/delete-account')}
+          >
             Delete Account
           </a>
           <a href={`mailto:${supportEmail}`}>Contact</a>
@@ -382,7 +412,7 @@ function NotFoundPage() {
       <p className="eyebrow">404</p>
       <h1>Page not found</h1>
       <p>The page you opened is not part of the Ecopals web structure yet.</p>
-      <a className="button button-primary" href="/">
+      <a className="button button-primary" href={getPublicPath('/')}>
         Go Home
       </a>
     </section>
