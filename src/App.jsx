@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 
 const appName = 'Ecopals'
-const supportEmail = 'support@ecopals.app'
+const supportEmail = 'shefaalhendi@gmail.com'
 
 const navItems = [
   { label: 'Home', path: '/' },
