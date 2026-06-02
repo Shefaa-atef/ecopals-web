@@ -1,4 +1,8 @@
+import { useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLang } from '../context/LanguageContext'
 import { playMenuSound } from '../utils/menuAudio'
 import PhoneScrollStage from './PhoneScrollStage'
@@ -14,6 +18,8 @@ import EarthieShowcase from '../components/EarthieShowcase'
 import HeroParticles from '../components/HeroParticles'
 import './HomePage.css'
 
+gsap.registerPlugin(ScrollTrigger)
+
 const heroCharacters = [
   { key: 'sh2', src: sh2Url, alt: 'EcoPals character holding a plant', className: 'hero-character-sh2' },
   { key: 'ra', src: raUrl, alt: 'EcoPals character in a beige dress', className: 'hero-character-ra' },
@@ -26,7 +32,25 @@ const heroCharacters = [
 
 export default function HomePage() {
   const { lang, isAr } = useLang()
-  const heroTitle = isAr ? '\u0625\u064a\u0643\u0648\u0628\u0627\u0644\u0632' : 'EcoPals'
+  const heroTitle = isAr ? 'إيكوبالز' : 'EcoPals'
+  const aboutStickyRef = useRef(null)
+  const [earthieEnergy, setEarthieEnergy] = useState(0)
+
+  useGSAP(() => {
+    const sticky = aboutStickyRef.current
+    if (!sticky) return
+
+    ScrollTrigger.create({
+      trigger: sticky,
+      start: 'top top',
+      end: '+=260%',
+      pin: true,
+      pinSpacing: true,
+      onUpdate: ({ progress }) => {
+        setEarthieEnergy(Math.min(progress * 100, 100))
+      },
+    })
+  }, [])
 
   return (
     <>
@@ -74,7 +98,7 @@ export default function HomePage() {
             transition={{ type: 'spring', stiffness: 300, damping: 18, delay: 2.4 }}
           >
             <motion.a
-              aria-label={isAr ? '\u0627\u0641\u062a\u062d \u0625\u064a\u0643\u0648\u0628\u0627\u0644\u0632 \u0639\u0644\u0649 \u062c\u0648\u062c\u0644 \u0628\u0644\u0627\u064a' : 'Open EcoPals on Google Play'}
+              aria-label={isAr ? 'افتح إيكوبالز على جوجل بلاي' : 'Open EcoPals on Google Play'}
               className={`hero-google-play ${isAr ? 'hero-google-play--ar' : ''}`}
               href="https://play.google.com/store/apps/details?id=com.ecopals"
               rel="noopener noreferrer"
@@ -89,10 +113,10 @@ export default function HomePage() {
               }}
               whileTap={{ scale: 0.95, y: 1 }}
             >
-              <img className="hero-google-play-icon" src={googlePlayUrl} alt={isAr ? '\u062c\u0648\u062c\u0644 \u0628\u0644\u0627\u064a' : 'Google Play'} />
+              <img className="hero-google-play-icon" src={googlePlayUrl} alt={isAr ? 'جوجل بلاي' : 'Google Play'} />
               <span className={`hero-google-play-text ${isAr ? 'hero-google-play-text--ar' : ''}`} dir={isAr ? 'rtl' : 'ltr'}>
-                <small>{isAr ? '\u0645\u062a\u0648\u0641\u0631 \u0639\u0644\u0649' : 'GET IT ON'}</small>
-                <strong>{isAr ? '\u062c\u0648\u062c\u0644 \u0628\u0644\u0627\u064a' : 'Google Play'}</strong>
+                <small>{isAr ? 'متوفر على' : 'GET IT ON'}</small>
+                <strong>{isAr ? 'جوجل بلاي' : 'Google Play'}</strong>
               </span>
             </motion.a>
           </motion.div>
@@ -127,7 +151,7 @@ export default function HomePage() {
       </section>
 
       <section className="home-band home-band-about" id="game" aria-label="EcoPals app description">
-        <div className="about-sticky">
+        <div className="about-sticky" ref={aboutStickyRef}>
           <div className="about-background-word" aria-hidden="true">EcoPals</div>
           <div className="about-deco-ring" aria-hidden="true" />
           <div className="about-stage">
@@ -139,13 +163,7 @@ export default function HomePage() {
               data-phone-orientation="landscape"
               data-phone-scale="2.12"
             />
-            <EarthieShowcase isAr={isAr} sectionId="game" />
-          </div>
-          <div className="about-scroll-hint" aria-hidden="true">
-            <span>{isAr ? 'اسحب لأسفل' : 'Scroll to grow Earthie'}</span>
-            <svg width="14" height="18" viewBox="0 0 14 18" fill="none" aria-hidden="true">
-              <path d="M7 1v12M1 7l6 6 6-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <EarthieShowcase isAr={isAr} energy={earthieEnergy} />
           </div>
         </div>
       </section>

@@ -41,39 +41,50 @@
   display: block;
 }
 
+/* ── Status panel ────────────────────────────────────── */
+
 .earthie-status {
-  width: min(330px, 100%);
-  padding-inline: clamp(8px, 1.2vw, 16px);
+  width: min(400px, 100%);
+  padding-inline: clamp(6px, 1vw, 14px);
 }
 
-.earthie-status-row {
+.earthie-status-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 9px;
+  gap: 12px;
+  margin-bottom: clamp(9px, 1.3vw, 16px);
 }
 
-.earthie-status-row strong {
-  font-size: clamp(1.45rem, 2.4vw, 2.55rem);
+.earthie-energy-label {
+  font-size: clamp(0.52rem, 0.72vw, 0.76rem);
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(var(--forest-green-rgb) / 0.58);
+}
+
+.earthie-energy-value {
+  font-size: clamp(2.4rem, 4vw, 4.6rem);
   font-weight: 950;
   line-height: 1;
+  color: var(--forest-green);
+  font-variant-numeric: tabular-nums;
 }
 
-.earthie-status-row span {
-  color: var(--forest-green);
-  font-size: clamp(1rem, 1.45vw, 1.35rem);
-  font-weight: 950;
-}
+/* ── Energy bar ──────────────────────────────────────── */
 
 .earthie-energy-track {
   position: relative;
   width: 100%;
-  height: 13px;
+  height: 20px;
   overflow: hidden;
-  border: 2px solid rgb(var(--forest-green-rgb) / 0.78);
+  border: 2px solid rgb(var(--forest-green-rgb) / 0.52);
   border-radius: 999px;
-  background: rgb(255 255 255 / 0.62);
+  background: rgb(var(--forest-green-rgb) / 0.07);
+  box-shadow:
+    inset 0 1px 4px rgb(0 0 0 / 0.1),
+    0 0 0 calc(var(--earthie-energy, 0) * 7px) rgb(var(--fresh-leaf-rgb) / calc(var(--earthie-energy, 0) * 0.18));
 }
 
 .earthie-energy-track span {
@@ -81,22 +92,42 @@
   inset-block: 0;
   inset-inline-start: 0;
   border-radius: inherit;
-  background: linear-gradient(90deg, #e0dca6, var(--golden-yellow), var(--fresh-leaf));
-  transition: inline-size 60ms linear;
+  background: linear-gradient(90deg, #c8d880 0%, var(--golden-yellow) 46%, var(--fresh-leaf) 100%);
+  overflow: hidden;
+  box-shadow: 2px 0 16px rgb(var(--fresh-leaf-rgb) / calc(var(--earthie-energy, 0) * 0.6));
+  transition: inline-size 50ms linear;
 }
 
-.earthie-status p {
-  margin-top: 9px;
-  color: rgb(var(--forest-green-rgb) / 0.78);
-  font-size: clamp(0.95rem, 1.2vw, 1.15rem);
-  font-weight: 900;
-  text-align: center;
+.earthie-energy-track span::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgb(255 255 255 / 0.44) 50%, transparent 100%);
+  animation: energy-shimmer 2.6s ease-in-out infinite;
+}
+
+@keyframes energy-shimmer {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(220%); }
 }
 
 .earthie-showcase--ar .earthie-energy-track span {
   inset-inline-start: auto;
   inset-inline-end: 0;
 }
+
+/* ── State label ─────────────────────────────────────── */
+
+.earthie-state-label {
+  margin-top: clamp(8px, 1vw, 12px);
+  color: rgb(var(--forest-green-rgb) / 0.7);
+  font-size: clamp(0.9rem, 1.15vw, 1.1rem);
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
 
 @media (max-width: 860px) {
   .earthie-rive-stage {
@@ -105,7 +136,11 @@
   }
 
   .earthie-status {
-    width: min(310px, 82vw);
+    width: min(320px, 82vw);
+  }
+
+  .earthie-energy-value {
+    font-size: clamp(1.8rem, 5.5vw, 2.6rem);
   }
 }
 
@@ -119,15 +154,15 @@
     min-width: 175px;
   }
 
-  .earthie-status-row strong {
-    font-size: 1.25rem;
+  .earthie-energy-track {
+    height: 15px;
   }
 
-  .earthie-status-row span {
-    font-size: 0.98rem;
+  .earthie-energy-value {
+    font-size: 1.55rem;
   }
 
-  .earthie-status p {
-    font-size: 0.85rem;
+  .earthie-state-label {
+    font-size: 0.82rem;
   }
 }

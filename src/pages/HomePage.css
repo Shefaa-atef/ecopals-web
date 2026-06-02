@@ -244,16 +244,12 @@
 
 .home-band-about {
   position: relative;
-  height: 290svh;
   padding: 0;
   border-top: none;
   min-height: 0;
-  overflow: visible;
 }
 
 .about-sticky {
-  position: sticky;
-  top: 0;
   height: 100svh;
   overflow: hidden;
   display: flex;
@@ -320,29 +316,6 @@
   pointer-events: none;
 }
 
-.about-scroll-hint {
-  position: absolute;
-  bottom: 26px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  color: rgb(var(--forest-green-rgb) / 0.44);
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  pointer-events: none;
-  white-space: nowrap;
-  animation: about-hint-float 2.6s ease-in-out infinite;
-}
-
-@keyframes about-hint-float {
-  0%, 100% { opacity: 0.65; transform: translateX(-50%) translateY(0); }
-  50% { opacity: 1; transform: translateX(-50%) translateY(5px); }
-}
 
 .home-band-challenges {
   background: linear-gradient(100deg, var(--challenge-energy-soft), var(--challenge-animals-soft));
@@ -486,10 +459,6 @@
     display: none;
   }
 
-  .home-band-about {
-    height: 260svh;
-  }
-
   .about-sticky {
     border-radius: 32px 32px 0 0;
   }
@@ -584,10 +553,6 @@
 
   .hero-google-play-text strong {
     font-size: 1rem;
-  }
-
-  .home-band-about {
-    height: 240svh;
   }
 
   .about-sticky {
