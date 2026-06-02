@@ -1,12 +1,14 @@
 import { Gamepad2, Home, ShieldCheck, Sparkles, Trash2, Trophy } from 'lucide-react'
 
 export const appName = 'Ecopals'
+export const appNameAr = 'إيكوبالز'
 export const supportEmail = 'shefaalhendi@gmail.com'
 
 export const mainNavItems = [
   {
     key: 'home',
     label: 'Home',
+    labelAr: 'الرئيسية',
     path: '/',
     icon: Home,
     color: 'var(--challenge-plants)',
@@ -15,6 +17,7 @@ export const mainNavItems = [
   {
     key: 'game',
     label: 'Game',
+    labelAr: 'اللعبة',
     path: '/',
     hash: 'game',
     icon: Gamepad2,
@@ -24,6 +27,7 @@ export const mainNavItems = [
   {
     key: 'challenges',
     label: 'Challenges',
+    labelAr: 'التحديات',
     path: '/',
     hash: 'challenges',
     icon: Trophy,
@@ -33,6 +37,7 @@ export const mainNavItems = [
   {
     key: 'earthie',
     label: 'Earthie',
+    labelAr: 'إيرثي',
     path: '/',
     hash: 'earthie',
     icon: Sparkles,
@@ -45,6 +50,7 @@ export const legalNavItems = [
   {
     key: 'privacy',
     label: 'Privacy',
+    labelAr: 'الخصوصية',
     path: '/policies',
     icon: ShieldCheck,
     color: 'var(--challenge-air)',
@@ -53,6 +59,7 @@ export const legalNavItems = [
   {
     key: 'delete-account',
     label: 'Delete Account',
+    labelAr: 'حذف الحساب',
     path: '/delete-account',
     icon: Trash2,
     color: 'var(--challenge-animals)',

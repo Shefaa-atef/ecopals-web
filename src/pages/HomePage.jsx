@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { heroState } from './heroState'
+import { useLang } from '../context/LanguageContext'
+import { playMenuSound } from '../utils/menuAudio'
 import HeroPhoneScene from './HeroPhoneScene'
 import raUrl from '../assets/ra.png'
 import sh1Url from '../assets/sh1.png'
@@ -10,6 +12,7 @@ import waUrl from '../assets/wa.png'
 import catUrl from '../assets/cat.png'
 import duckUrl from '../assets/duck.png'
 import googlePlayUrl from '../assets/google-play-svgrepo-com.svg'
+import HeroParticles from '../components/HeroParticles'
 import './HomePage.css'
 
 const heroCharacters = [
@@ -24,7 +27,16 @@ const heroCharacters = [
 
 export default function HomePage() {
   const [soundFlash, setSoundFlash] = useState(null)
+  const [isSoundMuted, setIsSoundMuted] = useState(heroState.soundMuted)
   const flashTimer = useRef(null)
+  const { lang, isAr } = useLang()
+  const soundCue = soundFlash ?? (isSoundMuted ? 'muted' : null)
+
+  function showSoundFlash(nextFlash) {
+    clearTimeout(flashTimer.current)
+    setSoundFlash(nextFlash)
+    flashTimer.current = setTimeout(() => setSoundFlash(null), 600)
+  }
 
   useEffect(() => {
     const section = document.getElementById('home')
@@ -35,7 +47,13 @@ export default function HomePage() {
         if (!heroState.videoRef) return
         if (entry.isIntersecting) {
           heroState.videoRef.muted = heroState.soundMuted
-          heroState.videoRef.play().catch(() => {})
+          heroState.videoRef.play().catch(() => {
+            heroState.videoRef.muted = true
+            heroState.videoRef.defaultMuted = true
+            heroState.videoRef.setAttribute('muted', '')
+            heroState.soundMuted = true
+            setIsSoundMuted(true)
+          })
         } else {
           heroState.videoRef.muted = true
         }
@@ -49,52 +67,94 @@ export default function HomePage() {
 
   function handlePhoneClick() {
     if (!heroState.videoRef) return
-    const nowMuted = !heroState.videoRef.muted
-    heroState.videoRef.muted = nowMuted
-    heroState.soundMuted = nowMuted
-    if (!nowMuted) {
-      heroState.videoRef.play().catch(() => {
-        heroState.videoRef.muted = true
-        heroState.soundMuted = true
-      })
+    const video = heroState.videoRef
+    const nowMuted = !video.muted
+
+    video.muted = nowMuted
+    video.defaultMuted = nowMuted
+    if (nowMuted) {
+      video.setAttribute('muted', '')
+    } else {
+      video.removeAttribute('muted')
     }
-    clearTimeout(flashTimer.current)
-    setSoundFlash(nowMuted ? 'muted' : 'on')
-    flashTimer.current = setTimeout(() => setSoundFlash(null), 600)
+    heroState.soundMuted = nowMuted
+    setIsSoundMuted(nowMuted)
+
+    if (!nowMuted) {
+      video.play().then(() => {
+        showSoundFlash('on')
+      }).catch(() => {
+        video.muted = true
+        video.defaultMuted = true
+        video.setAttribute('muted', '')
+        heroState.soundMuted = true
+        setIsSoundMuted(true)
+        showSoundFlash('muted')
+      })
+      return
+    }
+
+    showSoundFlash('muted')
+  }
+
+  function handlePhoneKeyDown(event) {
+    if (event.key !== 'Enter' && event.key !== ' ') return
+    event.preventDefault()
+    handlePhoneClick()
   }
 
   return (
     <>
       <section className="home-stage ecopals-hero" id="home" aria-label="EcoPals game hero">
+        <HeroParticles />
 
         <motion.div
-          animate={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
           aria-hidden="true"
           className="ecopals-hero-word"
-          initial={{ opacity: 0, y: 22 }}
-          transformTemplate={({ y }) => `translateX(-50%) translateY(${y})`}
-          transition={{ delay: 0.05, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, scale: 1.22, filter: 'blur(18px)' }}
+          transformTemplate={() => `translateX(-50%)`}
+          transition={{ delay: 0, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
         >
-          EcoPals
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={lang}
+              className={isAr ? 'hero-word--ar' : undefined}
+              initial={{ opacity: 0, scale: 0.9, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: isAr ? -22 : 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: -12 }}
+              transition={{ type: 'spring', stiffness: 320, damping: 22 }}
+              style={{ display: 'block' }}
+            >
+              {isAr ? 'إيكوبالز' : 'EcoPals'}
+            </motion.span>
+          </AnimatePresence>
         </motion.div>
 
         <div className="hero-poster">
           <div
-            aria-hidden="true"
+            aria-label={isSoundMuted ? 'Turn video sound on' : 'Mute video sound'}
+            aria-pressed={!isSoundMuted}
             className="hero-phone"
             onClick={handlePhoneClick}
+            onKeyDown={handlePhoneKeyDown}
+            role="button"
+            tabIndex={0}
             style={{ cursor: 'pointer' }}
           >
-            {soundFlash && (
-              <div className={`phone-sound-flash phone-sound-flash--${soundFlash}`} key={soundFlash + Date.now()}>
-                {soundFlash === 'on' ? (
+            {soundCue && (
+              <div
+                aria-hidden="true"
+                className={`phone-sound-flash phone-sound-flash--${soundCue} ${soundFlash ? '' : 'phone-sound-prompt'}`}
+                key={soundFlash ? soundFlash + Date.now() : 'sound-prompt'}
+              >
+                {soundCue === 'on' ? (
                   <svg viewBox="0 0 24 24" fill="#1e3a1e" width="36" height="36"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
                 ) : (
                   <svg viewBox="0 0 24 24" fill="#1e3a1e" width="36" height="36"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
                 )}
               </div>
             )}
-            {/* opacity-only entrance so the Canvas always has correct dimensions */}
             <motion.div
               animate={{
                 opacity: 1,
@@ -104,9 +164,9 @@ export default function HomePage() {
               className="hero-phone-motion"
               initial={{ opacity: 0 }}
               transition={{
-                opacity: { delay: 0.35, duration: 0.6, ease: 'easeOut' },
-                y: { delay: 0.35, duration: 7.2, ease: 'easeInOut', repeat: Infinity },
-                rotate: { delay: 0.35, duration: 7.2, ease: 'easeInOut', repeat: Infinity },
+                opacity: { delay: 0.55, duration: 0.6, ease: 'easeOut' },
+                y: { delay: 1.2, duration: 7.2, ease: 'easeInOut', repeat: Infinity },
+                rotate: { delay: 1.2, duration: 7.2, ease: 'easeInOut', repeat: Infinity },
               }}
             >
               <HeroPhoneScene />
@@ -115,17 +175,20 @@ export default function HomePage() {
 
           {/* wrapper owns position so motion.a can animate freely */}
           <motion.div
-            animate={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, scale: 1, y: 0, rotate: 0 }}
             className="hero-google-play-wrap"
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, scale: 0.5, y: 24, rotate: -4 }}
             transformTemplate={({ y }) => `translateX(-50%) translateY(${y ?? '0px'})`}
-            transition={{ delay: 0.5, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ type: 'spring', stiffness: 300, damping: 18, delay: 2.4 }}
           >
             <motion.a
-              className="hero-google-play"
+              aria-label={isAr ? 'افتح إيكوبالز على جوجل بلاي' : 'Open EcoPals on Google Play'}
+              className={`hero-google-play ${isAr ? 'hero-google-play--ar' : ''}`}
               href="https://play.google.com/store/apps/details?id=com.ecopals"
               rel="noopener noreferrer"
               target="_blank"
+              onMouseEnter={() => playMenuSound('hover')}
+              onFocus={() => playMenuSound('hover')}
               whileHover={{
                 y: -4,
                 scale: 1.04,
@@ -134,10 +197,10 @@ export default function HomePage() {
               }}
               whileTap={{ scale: 0.95, y: 1 }}
             >
-              <img className="hero-google-play-icon" src={googlePlayUrl} alt="Google Play" />
-              <span className="hero-google-play-text">
-                <small>GET IT ON</small>
-                <strong>Google Play</strong>
+              <img className="hero-google-play-icon" src={googlePlayUrl} alt={isAr ? 'جوجل بلاي' : 'Google Play'} />
+              <span className={`hero-google-play-text ${isAr ? 'hero-google-play-text--ar' : ''}`} dir={isAr ? 'rtl' : 'ltr'}>
+                <small>{isAr ? 'متوفر على' : 'GET IT ON'}</small>
+                <strong>{isAr ? 'جوجل بلاي' : 'Google Play'}</strong>
               </span>
             </motion.a>
           </motion.div>
@@ -145,17 +208,19 @@ export default function HomePage() {
           {heroCharacters.map((character, i) => (
             <motion.img
               alt={character.alt}
-              animate={{ opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
               className={`hero-character ${character.className}`}
               draggable="false"
-              initial={{ opacity: 0, y: 18 }}
+              initial={{ opacity: 0, y: 90, scale: 0.6, rotate: i % 2 === 0 ? -14 : 14 }}
               key={character.key}
               src={character.src}
               style={{ originX: 0.5, originY: 1 }}
               transition={{
-                delay: 0.62 + i * 0.1,
-                duration: 0.55,
-                ease: [0.22, 1, 0.36, 1],
+                type: 'spring',
+                stiffness: 260,
+                damping: 18,
+                mass: 0.7,
+                delay: 1.1 + Math.floor(i / 2) * 0.38,
               }}
               whileHover={{
                 y: -14,

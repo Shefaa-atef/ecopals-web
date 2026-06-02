@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import { appName } from './constants/nav'
 import { getPublicPath, getRouteState, isModifiedClick } from './utils/routing'
+import { LanguageProvider } from './context/LanguageContext'
 import Layout from './components/Layout'
+import LoadingScreen from './components/LoadingScreen'
 import HomePage from './pages/HomePage'
 import PrivacyPage from './pages/PrivacyPage'
 import DeleteAccountPage from './pages/DeleteAccountPage'
@@ -9,6 +12,7 @@ import NotFoundPage from './pages/NotFoundPage'
 import logoUrl from './assets/logo@4x.png'
 
 function App() {
+  const [loading, setLoading] = useState(true)
   const [route, setRoute] = useState(() => getRouteState())
 
   useEffect(() => {
@@ -69,9 +73,16 @@ function App() {
   }
 
   return (
-    <Layout route={route} onNavigate={handleNavigate}>
-      {pages[route.path] ?? <NotFoundPage onNavigate={handleNavigate} />}
-    </Layout>
+    <LanguageProvider>
+      <AnimatePresence>
+        {loading && <LoadingScreen key="loading" onDone={() => setLoading(false)} />}
+      </AnimatePresence>
+      {!loading && (
+        <Layout route={route} onNavigate={handleNavigate}>
+          {pages[route.path] ?? <NotFoundPage onNavigate={handleNavigate} />}
+        </Layout>
+      )}
+    </LanguageProvider>
   )
 }
 

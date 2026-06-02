@@ -29,9 +29,11 @@ function useEarthieVideoTexture() {
     const video = document.createElement('video')
     video.src = earthieVideoUrl
     video.loop = true
-    video.muted = false
+    video.muted = heroState.soundMuted
+    video.defaultMuted = heroState.soundMuted
     video.playsInline = true
     video.preload = 'auto'
+    video.setAttribute('muted', '')
     video.setAttribute('playsinline', '')
 
     heroState.videoRef = video
@@ -52,6 +54,8 @@ function useEarthieVideoTexture() {
     const startVideo = () => {
       video.play().catch(() => {
         video.muted = true
+        video.defaultMuted = true
+        video.setAttribute('muted', '')
         heroState.soundMuted = true
         video.play().catch(() => {})
       })

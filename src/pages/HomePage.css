@@ -18,7 +18,7 @@
   top: clamp(68px, 9svh, 105px);
   left: 50%;
   z-index: 0;
-  color: rgb(255 255 255 / 0.93);
+  color: #ffffff;
   font-family: var(--font-heading-en);
   font-size: clamp(9rem, 27vw, 30rem);
   line-height: 0.78;
@@ -30,6 +30,13 @@
     0 18px 36px rgb(0 0 0 / 0.14);
   transform: translateX(-50%);
   white-space: nowrap;
+}
+
+.hero-word--ar {
+  font-family: var(--font-heading-ar);
+  font-size: clamp(4.5rem, 13vw, 15rem);
+  font-weight: 800;
+
 }
 
 .hero-poster {
@@ -68,6 +75,12 @@
   box-shadow: 0 4px 24px rgb(0 0 0 / 0.18);
 }
 
+.phone-sound-prompt {
+  opacity: 0.94;
+  transform: translate(-50%, -50%) scale(1);
+  animation: phone-sound-prompt-pulse 1.8s ease-in-out infinite;
+}
+
 @keyframes phone-sound-flash-pop {
   0% {
     opacity: 0;
@@ -87,6 +100,19 @@
   100% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+@keyframes phone-sound-prompt-pulse {
+  0%,
+  100% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(0.96);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.04);
   }
 }
 
@@ -126,6 +152,10 @@
   will-change: transform;
 }
 
+.hero-google-play--ar {
+  flex-direction: row-reverse;
+}
+
 .hero-google-play:hover {
   box-shadow:
     0 9px 0 color-mix(in srgb, #111827, #3b2f27 40%),
@@ -147,6 +177,11 @@
   display: flex;
   flex-direction: column;
   line-height: 1.15;
+}
+
+.hero-google-play-text--ar {
+  font-family: var(--font-body);
+  text-align: right;
 }
 
 .hero-google-play-text small {
