@@ -281,20 +281,19 @@ export default function HomePage() {
         {/* Centered text + phone */}
         <div className="community-center">
           <h2 className="community-heading" dir={isAr ? 'rtl' : 'ltr'}>
-            {isAr ? 'صوتك يغيّر الكوكب' : 'Your voice changes the planet.'}
+            {isAr ? (
+              <><span>اكتب</span><br /><span>أبلغ</span><br /><span>ألهم</span></>
+            ) : (
+              <><span>Post</span><br /><span>Report</span><br /><span>Inspire</span></>
+            )}
           </h2>
-          <p className="community-sub" dir={isAr ? 'rtl' : 'ltr'}>
-            {isAr
-              ? 'من تبني الحيوانات إلى الإبلاغ عن التلوث وهاكاثونات البيئة — هنا يبدأ التغيير.'
-              : 'From adopting animals to reporting pollution and eco‑hackathons — this is where change starts.'}
-          </p>
           <div
             aria-hidden="true"
             className="community-phone-anchor phone-scene-anchor"
             data-phone-content={isAr ? 'community-ar' : 'community-en'}
             data-phone-float-amount="0.5"
             data-phone-orientation="portrait"
-            data-phone-scale="1.7"
+            data-phone-scale="1.1"
           />
         </div>
       </section>
