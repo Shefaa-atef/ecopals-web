@@ -1,0 +1,44 @@
+.delete-page {
+  padding: 132px 48px 80px;
+}
+
+.delete-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.delete-panel {
+  padding: 26px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.accent-panel {
+  border-color: rgb(var(--warm-terracotta-rgb) / 0.34);
+  background: var(--challenge-animals-soft);
+}
+
+.delete-panel ol,
+.delete-panel ul {
+  margin: 18px 0 0;
+  padding-left: 22px;
+}
+
+.delete-panel li {
+  margin-top: 8px;
+}
+
+/* .legal-hero reused here — defined in PrivacyPage.css */
+
+@media (max-width: 860px) {
+  .delete-page {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .delete-layout {
+    grid-template-columns: 1fr;
+  }
+}

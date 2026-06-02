@@ -1,0 +1,80 @@
+.legal-page {
+  padding: 132px 48px 80px;
+}
+
+.legal-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+}
+
+.legal-toc {
+  position: sticky;
+  top: 124px;
+  display: grid;
+  gap: 10px;
+}
+
+.legal-toc a {
+  padding: 10px 12px;
+  border-left: 3px solid var(--border);
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.legal-toc a:hover {
+  border-left-color: var(--green);
+  color: var(--text-strong);
+}
+
+.legal-content {
+  display: grid;
+  gap: 34px;
+}
+
+.legal-block {
+  padding-top: 30px;
+  border-top: 1px solid var(--border);
+}
+
+.legal-block:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.legal-block a {
+  color: var(--green);
+  font-weight: 800;
+}
+
+.legal-block ul {
+  margin: 18px 0 0;
+  padding-left: 22px;
+}
+
+.legal-block li {
+  margin-top: 8px;
+}
+
+@media (max-width: 860px) {
+  .legal-page {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .legal-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .legal-toc {
+    position: static;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .legal-toc {
+    grid-template-columns: 1fr;
+  }
+}

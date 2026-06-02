@@ -1,0 +1,362 @@
+.site-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 30;
+  padding: 22px 34px 0;
+  pointer-events: none;
+}
+
+.nav-stage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 74px;
+  margin: 0 auto;
+  padding: 0;
+  pointer-events: none;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  color: var(--text-strong);
+  text-decoration: none;
+  pointer-events: auto;
+  transition: transform 180ms ease;
+}
+
+.brand:hover {
+  transform: translateY(-2px) scale(1.04);
+}
+
+.brand-orbit {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+}
+
+.brand-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.menu-button {
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0;
+  width: 70px;
+  height: 70px;
+  border: 0;
+  border-radius: 50%;
+  color: var(--text-strong);
+  background: #ffffff;
+  box-shadow: none;
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.menu-button::before,
+.menu-button::after {
+  display: none;
+}
+
+.menu-button:hover {
+  box-shadow: none;
+  transform: translateY(-3px) scale(1.04);
+}
+
+.menu-button svg {
+  position: relative;
+  z-index: 1;
+}
+
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  border: 0;
+  background: rgb(34 48 29 / 0.12);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.game-menu {
+  position: fixed;
+  top: 106px;
+  right: 34px;
+  z-index: 40;
+  display: grid;
+  gap: 20px;
+  width: min(390px, calc(100vw - 28px));
+  height: min(540px, calc(100svh - 124px));
+  max-height: calc(100svh - 124px);
+  padding: 24px;
+  border: 0;
+  border-radius: 32px;
+  background: #ffffff;
+  box-shadow: 0 26px 76px rgb(var(--forest-green-rgb) / 0.18);
+  overflow: hidden;
+  pointer-events: auto;
+  transform-origin: calc(100% - 42px) -52px;
+  will-change: clip-path, filter, opacity, transform;
+}
+
+.menu-prelayers {
+  position: fixed;
+  top: 106px;
+  right: 34px;
+  z-index: 39;
+  width: min(390px, calc(100vw - 28px));
+  height: min(540px, calc(100svh - 124px));
+  max-height: calc(100svh - 124px);
+  pointer-events: none;
+}
+
+.menu-prelayer {
+  position: absolute;
+  inset: 0;
+  min-height: 100%;
+  border-radius: 32px;
+  background: var(--prelayer-color);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--prelayer-color), transparent 86%);
+  transform-origin: calc(100% - 42px) -52px;
+  will-change: clip-path, opacity, transform;
+}
+
+.game-menu::before {
+  display: none;
+}
+
+.game-menu > * {
+  position: relative;
+}
+
+.menu-top {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.menu-top img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.menu-top p {
+  color: var(--muted);
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.menu-top h2 {
+  font-size: 2rem;
+}
+
+.menu-links {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.menu-link {
+  isolation: isolate;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 68px;
+  padding: 10px 42px 10px 14px;
+  border: 3px solid #3b2f27;
+  border-radius: 999px;
+  color: var(--text-strong);
+  background: var(--item-soft);
+  box-shadow:
+    0 8px 0 color-mix(in srgb, var(--item-color), #3b2f27 10%),
+    0 12px 20px color-mix(in srgb, var(--item-color), transparent 86%);
+  font-size: 1.08rem;
+  font-weight: 900;
+  text-decoration: none;
+  transition:
+    background 180ms ease,
+    box-shadow 180ms ease;
+  will-change: transform;
+}
+
+.menu-link::before {
+  position: absolute;
+  inset: 4px;
+  z-index: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(110deg, transparent 0 24%, rgb(255 255 255 / 0.68) 44%, transparent 64%),
+    color-mix(in srgb, var(--item-color), transparent 86%);
+  opacity: 0;
+  transform: translateX(-82%);
+  transition:
+    opacity 220ms ease,
+    transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  content: '';
+}
+
+.menu-link::after {
+  position: absolute;
+  right: 22px;
+  z-index: 1;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--item-color);
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity 180ms ease,
+    transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  content: '';
+}
+
+.menu-link > span {
+  position: relative;
+  z-index: 1;
+}
+
+.menu-link:hover {
+  background: color-mix(in srgb, var(--item-soft), #ffffff 24%);
+  box-shadow:
+    0 11px 0 color-mix(in srgb, var(--item-color), #3b2f27 10%),
+    0 18px 28px color-mix(in srgb, var(--item-color), transparent 76%);
+}
+
+.menu-link:hover::before {
+  opacity: 1;
+  transform: translateX(58%);
+}
+
+.menu-link:hover::after,
+.menu-link[aria-current='page']::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.menu-link[aria-current='page'] {
+  background: color-mix(in srgb, var(--item-soft), var(--surface) 32%);
+  outline: 4px solid rgb(255 255 255 / 0.76);
+  animation: menuActiveGlow 2.8s ease-in-out infinite;
+}
+
+.menu-link-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 2px solid #3b2f27;
+  border-radius: 50%;
+  color: #ffffff;
+  background: var(--item-color);
+  transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.menu-link:hover .menu-link-icon {
+  transform: rotate(-9deg) scale(1.1);
+}
+
+.menu-link svg {
+  transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.menu-link:hover svg {
+  transform: rotate(8deg) scale(1.06);
+}
+
+@keyframes menuActiveGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 8px 0 color-mix(in srgb, var(--item-color), #3b2f27 10%),
+      0 0 0 color-mix(in srgb, var(--item-color), transparent 100%);
+  }
+
+  50% {
+    box-shadow:
+      0 8px 0 color-mix(in srgb, var(--item-color), #3b2f27 10%),
+      0 18px 30px color-mix(in srgb, var(--item-color), transparent 78%);
+  }
+}
+
+@media (max-width: 980px) {
+  .site-header {
+    padding: 14px 18px 0;
+  }
+}
+
+@media (max-width: 860px) {
+  .nav-stage {
+    min-height: 72px;
+  }
+
+  .brand-orbit {
+    width: 64px;
+    height: 64px;
+  }
+
+  .brand-logo {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+@media (max-width: 560px) {
+  .site-header {
+    padding-inline: 14px;
+  }
+
+  .menu-button {
+    width: 70px;
+    height: 70px;
+  }
+
+  .game-menu {
+    top: 92px;
+    right: 14px;
+    bottom: auto;
+    left: 14px;
+    width: auto;
+    height: min(540px, calc(100svh - 108px));
+    max-height: calc(100svh - 108px);
+    padding: 22px 18px;
+    border-radius: 28px;
+    overflow-y: auto;
+  }
+
+  .menu-prelayers {
+    top: 92px;
+    right: 14px;
+    left: 14px;
+    width: auto;
+    height: min(540px, calc(100svh - 108px));
+    max-height: calc(100svh - 108px);
+  }
+
+  .menu-top h2 {
+    font-size: 1.8rem;
+  }
+
+  .menu-link {
+    min-height: 62px;
+    font-size: 0.98rem;
+  }
+}
