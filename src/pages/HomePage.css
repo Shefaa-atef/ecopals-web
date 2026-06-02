@@ -317,8 +317,206 @@
 }
 
 
-.home-band-challenges {
-  background: linear-gradient(100deg, var(--challenge-energy-soft), var(--challenge-animals-soft));
+/* ── Community section ───────────────────────────────── */
+
+.home-band-community {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(48px, 6vw, 80px);
+  padding: clamp(80px, 10svh, 120px) clamp(20px, 4vw, 64px) clamp(80px, 10svh, 120px);
+  background:
+    radial-gradient(ellipse 55% 48% at 8% 32%, rgb(var(--sky-cyan-rgb) / 0.16), transparent 55%),
+    radial-gradient(circle at 92% 72%, rgb(var(--warm-terracotta-rgb) / 0.1), transparent 38%),
+    radial-gradient(circle at 48% 10%, rgb(var(--golden-yellow-rgb) / 0.1), transparent 32%),
+    linear-gradient(148deg, #fffef5 0%, #f8f9ff 55%, #fff5f0 100%);
+}
+
+.community-header {
+  text-align: center;
+  max-width: 680px;
+}
+
+.community-desc {
+  margin-top: clamp(12px, 1.6vw, 18px);
+  font-size: clamp(0.95rem, 1.22vw, 1.14rem);
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 580px;
+  margin-inline: auto;
+}
+
+.community-stage {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: clamp(20px, 3.2vw, 56px);
+  align-items: center;
+  width: min(1240px, 94vw);
+}
+
+.community-posts-col {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2vw, 24px);
+}
+
+.community-posts-col:first-child {
+  align-items: flex-end;
+}
+
+.community-posts-col:last-child {
+  align-items: flex-start;
+}
+
+.community-phone-anchor {
+  position: relative;
+  z-index: 2;
+  width: min(220px, 14.5vw);
+  height: min(460px, 30.5vw);
+  min-height: 340px;
+  min-width: 120px;
+  pointer-events: none;
+}
+
+/* ── Post cards ──────────────────────────────────────── */
+
+.community-post-card {
+  width: clamp(200px, 22vw, 290px);
+  padding: clamp(10px, 1.1vw, 16px);
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid rgb(var(--forest-green-rgb) / 0.08);
+  box-shadow:
+    0 2px 8px rgb(34 48 29 / 0.07),
+    0 8px 32px rgb(34 48 29 / 0.07);
+}
+
+.community-post-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: clamp(6px, 0.8vw, 10px);
+}
+
+.community-post-avatar {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.community-post-username {
+  flex: 1;
+  font-size: clamp(0.72rem, 0.85vw, 0.85rem);
+  font-weight: 800;
+  color: var(--text-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.community-post-menu {
+  color: var(--muted);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.community-post-text {
+  font-size: clamp(0.7rem, 0.85vw, 0.84rem);
+  line-height: 1.6;
+  color: var(--text-strong);
+  margin-bottom: clamp(6px, 0.8vw, 10px);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.community-post-footer {
+  display: flex;
+  gap: 14px;
+  font-size: clamp(0.66rem, 0.78vw, 0.78rem);
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.community-post-footer span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+
+@media (max-width: 980px) {
+  .community-stage {
+    grid-template-columns: 1fr auto 1fr;
+    gap: clamp(12px, 2vw, 28px);
+  }
+
+  .community-post-card {
+    width: clamp(170px, 26vw, 240px);
+  }
+}
+
+@media (max-width: 720px) {
+  .community-stage {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 16px;
+    justify-items: center;
+  }
+
+  .community-phone-anchor {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: min(180px, 46vw);
+    height: min(378px, 96vw);
+    min-height: 280px;
+  }
+
+  .community-posts-col {
+    gap: 12px;
+  }
+
+  .community-posts-col:first-child,
+  .community-posts-col:last-child {
+    align-items: center;
+  }
+
+  .community-post-card {
+    width: min(220px, 44vw);
+  }
+}
+
+@media (max-width: 480px) {
+  .community-stage {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .community-phone-anchor {
+    grid-column: 1;
+    width: min(170px, 48vw);
+    height: min(358px, 101vw);
+    min-height: 260px;
+  }
+
+  .community-posts-col {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .community-post-card {
+    width: min(240px, 90vw);
+  }
 }
 
 .home-band-earthie {
