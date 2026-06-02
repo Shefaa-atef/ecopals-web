@@ -28,17 +28,11 @@ function getSectionProgress(sectionId) {
   const section = document.getElementById(sectionId)
   if (!section) return 0
 
-  const rect = section.getBoundingClientRect()
-  const sectionTop = rect.top + window.scrollY
-  const viewportCenter = window.scrollY + window.innerHeight * 0.5
-  const start = sectionTop + rect.height * 0.08
-  const end = sectionTop + rect.height * 0.9
+  const sectionTop = section.getBoundingClientRect().top + window.scrollY
+  const scrollable = section.offsetHeight - window.innerHeight
+  if (scrollable <= 0) return 0
 
-  return clamp((viewportCenter - start) / Math.max(end - start, 1), 0, 1)
-}
-
-function snapToEnergy(progress) {
-  return Math.round(clamp(progress, 0, 1) * 4) * 25
+  return clamp((window.scrollY - sectionTop) / scrollable, 0, 1)
 }
 
 function useScrollEnergy(sectionId) {
@@ -48,7 +42,7 @@ function useScrollEnergy(sectionId) {
   useEffect(() => {
     function updateEnergy() {
       rafRef.current = null
-      setEnergy(snapToEnergy(getSectionProgress(sectionId)))
+      setEnergy(clamp(getSectionProgress(sectionId) * 100, 0, 100))
     }
 
     function scheduleUpdate() {
@@ -121,10 +115,15 @@ function RiveLayer({ className, progress, src }) {
 export default function EarthieShowcase({ isAr, sectionId = 'game' }) {
   const energy = useScrollEnergy(sectionId)
   const copy = isAr ? earthieCopy.ar : earthieCopy.en
-  const stateIndex = Math.round(energy / 25)
+  const displayEnergy = Math.round(energy / 25) * 25
+  const stateIndex = Math.round(displayEnergy / 25)
 
   return (
-    <aside className={`earthie-showcase ${isAr ? 'earthie-showcase--ar' : ''}`} dir={isAr ? 'rtl' : 'ltr'}>
+    <aside
+      className={`earthie-showcase ${isAr ? 'earthie-showcase--ar' : ''}`}
+      dir={isAr ? 'rtl' : 'ltr'}
+      style={{ '--earthie-energy': energy / 100 }}
+    >
       <div className="earthie-rive-stage">
         <RiveLayer className="earthie-rive-layer--body" progress={energy} src={bodyRiveUrl} />
         <RiveLayer className="earthie-rive-layer--arms" progress={energy} src={armsRiveUrl} />
@@ -133,9 +132,9 @@ export default function EarthieShowcase({ isAr, sectionId = 'game' }) {
       <div className="earthie-status" aria-live="polite">
         <div className="earthie-status-row">
           <strong>{copy.name}</strong>
-          <span>{energy}%</span>
+          <span>{Math.round(energy)}%</span>
         </div>
-        <div className="earthie-energy-track" aria-label={`${copy.energy} ${energy}%`}>
+        <div className="earthie-energy-track" aria-label={`${copy.energy} ${Math.round(energy)}%`}>
           <span style={{ inlineSize: `${energy}%` }} />
         </div>
         <p>{copy.states[stateIndex]}</p>

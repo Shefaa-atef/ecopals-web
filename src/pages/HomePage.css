@@ -244,24 +244,52 @@
 
 .home-band-about {
   position: relative;
-  display: grid;
-  place-items: center;
-  min-height: 135svh;
+  height: 290svh;
+  padding: 0;
+  border-top: none;
+  min-height: 0;
+  overflow: visible;
+}
+
+.about-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 48px 48px 0 0;
   background:
-    radial-gradient(circle at 18% 30%, rgb(var(--sky-cyan-rgb) / 0.26), transparent 28%),
-    radial-gradient(circle at 80% 62%, rgb(var(--golden-yellow-rgb) / 0.22), transparent 30%),
-    linear-gradient(135deg, #f7fff1 0%, var(--challenge-plants-soft) 52%, #f1fbff 100%);
+    radial-gradient(ellipse 66% 78% at 84% 56%, rgb(var(--fresh-leaf-rgb) / 0.13) 0%, transparent 64%),
+    radial-gradient(circle at 11% 76%, rgb(var(--sky-cyan-rgb) / 0.16) 0%, transparent 30%),
+    radial-gradient(circle at 90% 11%, rgb(var(--golden-yellow-rgb) / 0.14) 0%, transparent 26%),
+    linear-gradient(155deg, #f9fff4 0%, #f0fdf9 55%, #f7fef0 100%);
+}
+
+.about-deco-ring {
+  position: absolute;
+  right: -7%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(58vw, 860px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1.5px solid rgb(var(--forest-green-rgb) / 0.07);
+  background: radial-gradient(circle, rgb(var(--forest-green-rgb) / 0.04), transparent 68%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .about-background-word {
   position: absolute;
-  top: 11%;
+  top: 8%;
   left: 50%;
   z-index: 0;
-  color: rgb(34 48 29 / 0.06);
+  color: rgb(34 48 29 / 0.055);
   font-family: var(--font-heading-en);
-  font-size: clamp(7rem, 19vw, 22rem);
+  font-size: clamp(7rem, 18vw, 21rem);
   line-height: 0.8;
   transform: translateX(-50%);
   white-space: nowrap;
@@ -272,22 +300,48 @@
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(520px, 1fr) minmax(280px, 0.72fr);
-  gap: clamp(22px, 4vw, 74px);
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(16px, 3vw, 56px);
   align-items: center;
-  width: min(1240px, 92vw);
-  min-height: 104svh;
+  width: min(1300px, 94vw);
+  height: calc(100svh - 64px);
+  max-height: 920px;
 }
 
 .about-phone-anchor {
   position: relative;
   z-index: 2;
   justify-self: start;
-  width: min(875px, 59vw);
-  height: min(496px, 35vw);
-  min-height: 360px;
-  transform: translateX(clamp(-54px, -4vw, -24px));
+  align-self: center;
+  width: min(840px, 57vw);
+  height: min(477px, 33vw);
+  min-height: 290px;
+  transform: translateX(clamp(-48px, -3.5vw, -18px));
   pointer-events: none;
+}
+
+.about-scroll-hint {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  color: rgb(var(--forest-green-rgb) / 0.44);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  pointer-events: none;
+  white-space: nowrap;
+  animation: about-hint-float 2.6s ease-in-out infinite;
+}
+
+@keyframes about-hint-float {
+  0%, 100% { opacity: 0.65; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 1; transform: translateX(-50%) translateY(5px); }
 }
 
 .home-band-challenges {
@@ -433,21 +487,32 @@
   }
 
   .home-band-about {
-    min-height: 126svh;
+    height: 260svh;
+  }
+
+  .about-sticky {
+    border-radius: 32px 32px 0 0;
+  }
+
+  .about-deco-ring {
+    width: min(80vw, 480px);
+    right: 50%;
+    transform: translate(50%, -50%);
   }
 
   .about-stage {
     grid-template-columns: 1fr;
-    gap: 22px;
+    gap: 10px;
     justify-items: center;
-    min-height: 106svh;
+    height: calc(100svh - 48px);
   }
 
   .about-phone-anchor {
     justify-self: center;
-    width: min(780px, 92vw);
-    height: min(442px, 52vw);
-    min-height: 286px;
+    align-self: end;
+    width: min(700px, 90vw);
+    height: min(397px, 51vw);
+    min-height: 230px;
     transform: translateX(0);
   }
 }
@@ -522,18 +587,21 @@
   }
 
   .home-band-about {
-    min-height: 118svh;
-    padding-inline: 0;
+    height: 240svh;
+  }
+
+  .about-sticky {
+    border-radius: 20px 20px 0 0;
   }
 
   .about-background-word {
-    top: 17%;
+    top: 13%;
     font-size: clamp(4.4rem, 25vw, 8rem);
   }
 
   .about-phone-anchor {
-    width: 94vw;
-    height: 53vw;
-    min-height: 205px;
+    width: 92vw;
+    height: 52vw;
+    min-height: 185px;
   }
 }

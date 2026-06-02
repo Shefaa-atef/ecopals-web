@@ -127,17 +127,26 @@ export default function HomePage() {
       </section>
 
       <section className="home-band home-band-about" id="game" aria-label="EcoPals app description">
-        <div className="about-background-word" aria-hidden="true">EcoPals</div>
-        <div className="about-stage">
-          <div
-            aria-hidden="true"
-            className="about-phone-anchor phone-scene-anchor"
-            data-phone-content="app-description"
-            data-phone-float-amount="0"
-            data-phone-orientation="landscape"
-            data-phone-scale="2.12"
-          />
-          <EarthieShowcase isAr={isAr} sectionId="game" />
+        <div className="about-sticky">
+          <div className="about-background-word" aria-hidden="true">EcoPals</div>
+          <div className="about-deco-ring" aria-hidden="true" />
+          <div className="about-stage">
+            <div
+              aria-hidden="true"
+              className="about-phone-anchor phone-scene-anchor"
+              data-phone-content="app-description"
+              data-phone-float-amount="0"
+              data-phone-orientation="landscape"
+              data-phone-scale="2.12"
+            />
+            <EarthieShowcase isAr={isAr} sectionId="game" />
+          </div>
+          <div className="about-scroll-hint" aria-hidden="true">
+            <span>{isAr ? 'اسحب لأسفل' : 'Scroll to grow Earthie'}</span>
+            <svg width="14" height="18" viewBox="0 0 14 18" fill="none" aria-hidden="true">
+              <path d="M7 1v12M1 7l6 6 6-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
         </div>
       </section>
 
