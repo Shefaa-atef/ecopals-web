@@ -1,4 +1,4 @@
-import { Gamepad2, Home, ShieldCheck, Sparkles, Trash2, Trophy } from 'lucide-react'
+import { Home, Info, ShieldCheck, Sparkles, Trash2, Trophy } from 'lucide-react'
 
 export const appName = 'Ecopals'
 export const appNameAr = 'إيكوبالز'
@@ -16,11 +16,11 @@ export const mainNavItems = [
   },
   {
     key: 'game',
-    label: 'Game',
+    label: 'Idea',
     labelAr: 'اللعبة',
     path: '/',
     hash: 'game',
-    icon: Gamepad2,
+    icon: Info,
     color: 'var(--challenge-community)',
     soft: 'var(--challenge-community-soft)',
   },

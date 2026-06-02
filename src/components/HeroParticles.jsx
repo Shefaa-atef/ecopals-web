@@ -1,24 +1,28 @@
 import './HeroParticles.css'
 
+// Each left particle has a mirrored right counterpart — same shape, size, and opacity.
+// Delays are staggered so the two sides don't pulse in perfect sync.
 const PARTICLES = [
-  { id: 1,  shape: 'leaf',    left: '3%',  top: '78%', size: 22, color: '#7fb366', opacity: 0.55, dur: 9,  delay: 0,   dx:  18, rs:  20, re: 160 },
-  { id: 2,  shape: 'sparkle', left: '11%', top: '55%', size: 13, color: '#f4c542', opacity: 0.60, dur: 7,  delay: 1.5, dx: -14, rs:   0, re:  72 },
-  { id: 3,  shape: 'leaf',    left: '19%', top: '83%', size: 17, color: '#5a913e', opacity: 0.48, dur: 11, delay: 3,   dx:  24, rs:  55, re: 200 },
-  { id: 4,  shape: 'glow',    left: '26%', top: '71%', size:  9, color: '#dff6ff', opacity: 0.65, dur: 8,  delay: 0.8, dx: -10, rs:   0, re:   0 },
-  { id: 5,  shape: 'sparkle', left: '34%', top: '48%', size: 14, color: '#f4c542', opacity: 0.50, dur: 10, delay: 4,   dx:  16, rs:  20, re: 110 },
-  { id: 6,  shape: 'leaf',    left: '43%', top: '87%', size: 24, color: '#7fb366', opacity: 0.42, dur: 12, delay: 1,   dx: -22, rs: 100, re: 260 },
-  { id: 7,  shape: 'glow',    left: '51%', top: '63%', size:  7, color: '#5bbbe8', opacity: 0.55, dur: 7,  delay: 2,   dx:   8, rs:   0, re:   0 },
-  { id: 8,  shape: 'leaf',    left: '59%', top: '77%', size: 19, color: '#5a913e', opacity: 0.50, dur: 9,  delay: 3.5, dx:  20, rs:  35, re: 175 },
-  { id: 9,  shape: 'sparkle', left: '66%', top: '51%', size: 12, color: '#f4c542', opacity: 0.55, dur: 8,  delay: 0.5, dx: -18, rs:   0, re:  80 },
-  { id: 10, shape: 'leaf',    left: '73%', top: '84%', size: 21, color: '#7fb366', opacity: 0.46, dur: 10, delay: 2.2, dx:  26, rs:  70, re: 220 },
-  { id: 11, shape: 'glow',    left: '80%', top: '67%', size: 10, color: '#ddead7', opacity: 0.60, dur: 7,  delay: 4.5, dx: -12, rs:   0, re:   0 },
-  { id: 12, shape: 'leaf',    left: '87%', top: '80%', size: 16, color: '#5a913e', opacity: 0.48, dur: 11, delay: 1.8, dx: -20, rs:  15, re: 155 },
-  { id: 13, shape: 'sparkle', left: '93%', top: '45%', size: 11, color: '#f4c542', opacity: 0.52, dur: 8,  delay: 3.2, dx:  14, rs:  45, re: 135 },
-  { id: 14, shape: 'leaf',    left: '8%',  top: '40%', size: 14, color: '#7fb366', opacity: 0.42, dur: 9,  delay: 5,   dx:  16, rs:   0, re: 180 },
-  { id: 15, shape: 'glow',    left: '47%', top: '43%', size:  8, color: '#dff6ff', opacity: 0.50, dur: 8,  delay: 6,   dx:  -8, rs:   0, re:   0 },
-  { id: 16, shape: 'leaf',    left: '76%', top: '33%', size: 20, color: '#5a913e', opacity: 0.40, dur: 12, delay: 2.7, dx: -24, rs: 130, re: 310 },
-  { id: 17, shape: 'sparkle', left: '55%', top: '89%', size: 13, color: '#f4c542', opacity: 0.56, dur: 7,  delay: 1.2, dx:  12, rs:   0, re:  90 },
-  { id: 18, shape: 'leaf',    left: '32%', top: '29%', size: 18, color: '#7fb366', opacity: 0.44, dur: 10, delay: 4.8, dx:  22, rs:  80, re: 240 },
+  // ── Left side (4 leaves · 2 sparkles · 3 glows) ─────────────────────────────
+  { id: 1,  shape: 'leaf',    left: '5%',  top: '76%', size: 20, color: '#7fb366', opacity: 0.55, dur: 9,  delay: 0,   dx:  18, rs:  20, re: 165 },
+  { id: 2,  shape: 'sparkle', left: '13%', top: '53%', size: 13, color: '#f4c542', opacity: 0.60, dur: 7,  delay: 1.6, dx: -14, rs:   0, re:  75 },
+  { id: 3,  shape: 'leaf',    left: '22%', top: '85%', size: 17, color: '#5a913e', opacity: 0.48, dur: 11, delay: 3.1, dx:  22, rs:  55, re: 200 },
+  { id: 4,  shape: 'glow',    left: '8%',  top: '34%', size:  9, color: '#dff6ff', opacity: 0.62, dur: 8,  delay: 0.9, dx: -10, rs:   0, re:   0 },
+  { id: 5,  shape: 'sparkle', left: '31%', top: '46%', size: 14, color: '#f4c542', opacity: 0.50, dur: 10, delay: 4.2, dx:  16, rs:  20, re: 110 },
+  { id: 6,  shape: 'leaf',    left: '42%', top: '88%', size: 22, color: '#7fb366', opacity: 0.44, dur: 12, delay: 1.1, dx: -20, rs: 100, re: 255 },
+  { id: 7,  shape: 'glow',    left: '17%', top: '63%', size:  8, color: '#5bbbe8', opacity: 0.55, dur: 7,  delay: 2.3, dx:   8, rs:   0, re:   0 },
+  { id: 8,  shape: 'leaf',    left: '35%', top: '27%', size: 16, color: '#5a913e', opacity: 0.42, dur: 10, delay: 5.1, dx:  20, rs:  40, re: 185 },
+  { id: 9,  shape: 'glow',    left: '47%', top: '69%', size:  7, color: '#ddead7', opacity: 0.50, dur: 8,  delay: 3.6, dx:  -8, rs:   0, re:   0 },
+  // ── Right side — mirrors left (4 leaves · 2 sparkles · 3 glows) ─────────────
+  { id: 10, shape: 'leaf',    left: '95%', top: '76%', size: 20, color: '#7fb366', opacity: 0.55, dur: 9,  delay: 0.6, dx: -18, rs: 165, re:  20 },
+  { id: 11, shape: 'sparkle', left: '87%', top: '53%', size: 13, color: '#f4c542', opacity: 0.60, dur: 7,  delay: 2.2, dx:  14, rs:  75, re:   0 },
+  { id: 12, shape: 'leaf',    left: '78%', top: '85%', size: 17, color: '#5a913e', opacity: 0.48, dur: 11, delay: 3.7, dx: -22, rs: 200, re:  55 },
+  { id: 13, shape: 'glow',    left: '92%', top: '34%', size:  9, color: '#dff6ff', opacity: 0.62, dur: 8,  delay: 1.5, dx:  10, rs:   0, re:   0 },
+  { id: 14, shape: 'sparkle', left: '69%', top: '46%', size: 14, color: '#f4c542', opacity: 0.50, dur: 10, delay: 4.8, dx: -16, rs: 110, re:  20 },
+  { id: 15, shape: 'leaf',    left: '58%', top: '88%', size: 22, color: '#7fb366', opacity: 0.44, dur: 12, delay: 1.7, dx:  20, rs: 255, re: 100 },
+  { id: 16, shape: 'glow',    left: '83%', top: '63%', size:  8, color: '#5bbbe8', opacity: 0.55, dur: 7,  delay: 2.9, dx:  -8, rs:   0, re:   0 },
+  { id: 17, shape: 'leaf',    left: '65%', top: '27%', size: 16, color: '#5a913e', opacity: 0.42, dur: 10, delay: 5.7, dx: -20, rs: 185, re:  40 },
+  { id: 18, shape: 'glow',    left: '53%', top: '69%', size:  7, color: '#ddead7', opacity: 0.50, dur: 8,  delay: 4.2, dx:   8, rs:   0, re:   0 },
 ]
 
 function Leaf({ color }) {

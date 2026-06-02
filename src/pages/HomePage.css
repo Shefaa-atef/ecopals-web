@@ -4,7 +4,6 @@
 
 .ecopals-hero {
   position: relative;
-  isolation: isolate;
   display: grid;
   place-items: center;
   min-height: 100svh;
@@ -36,7 +35,6 @@
   font-family: var(--font-heading-ar);
   font-size: clamp(4.5rem, 13vw, 15rem);
   font-weight: 800;
-
 }
 
 .hero-poster {
@@ -46,7 +44,7 @@
   min-height: min(720px, calc(100svh - 128px));
 }
 
-.hero-phone {
+.hero-phone-slot {
   position: absolute;
   top: 42%;
   left: 50%;
@@ -55,76 +53,7 @@
   height: min(520px, 47vw);
   min-height: 380px;
   transform: translate(-50%, -50%);
-}
-
-.phone-sound-flash {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: rgb(255 255 255 / 0.88);
-  transform: translate(-50%, -50%) scale(0.6);
   pointer-events: none;
-  animation: phone-sound-flash-pop 0.55s ease-out forwards;
-  box-shadow: 0 4px 24px rgb(0 0 0 / 0.18);
-}
-
-.phone-sound-prompt {
-  opacity: 0.94;
-  transform: translate(-50%, -50%) scale(1);
-  animation: phone-sound-prompt-pulse 1.8s ease-in-out infinite;
-}
-
-@keyframes phone-sound-flash-pop {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.5);
-  }
-
-  20% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.08);
-  }
-
-  50% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-
-  100% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(1.1);
-  }
-}
-
-@keyframes phone-sound-prompt-pulse {
-  0%,
-  100% {
-    opacity: 0.9;
-    transform: translate(-50%, -50%) scale(0.96);
-  }
-
-  50% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.04);
-  }
-}
-
-.hero-phone-motion {
-  width: 100%;
-  height: 100%;
-}
-
-.hero-phone-canvas {
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 34px 36px rgb(34 48 29 / 0.28));
 }
 
 .hero-google-play-wrap {
@@ -303,7 +232,6 @@
   box-shadow: 0 15px 24px rgb(34 48 29 / 0.16);
 }
 
-
 .home-band {
   min-height: 44svh;
   padding: 84px 48px;
@@ -314,8 +242,52 @@
   max-width: 860px;
 }
 
-.home-band-game {
-  background: var(--challenge-plants-soft);
+.home-band-about {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 135svh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 30%, rgb(var(--sky-cyan-rgb) / 0.26), transparent 28%),
+    radial-gradient(circle at 80% 62%, rgb(var(--golden-yellow-rgb) / 0.22), transparent 30%),
+    linear-gradient(135deg, #f7fff1 0%, var(--challenge-plants-soft) 52%, #f1fbff 100%);
+}
+
+.about-background-word {
+  position: absolute;
+  top: 11%;
+  left: 50%;
+  z-index: 0;
+  color: rgb(34 48 29 / 0.06);
+  font-family: var(--font-heading-en);
+  font-size: clamp(7rem, 19vw, 22rem);
+  line-height: 0.8;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.about-stage {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(520px, 1fr) minmax(280px, 0.72fr);
+  gap: clamp(22px, 4vw, 74px);
+  align-items: center;
+  width: min(1240px, 92vw);
+  min-height: 104svh;
+}
+
+.about-phone-anchor {
+  position: relative;
+  z-index: 2;
+  justify-self: start;
+  width: min(875px, 59vw);
+  height: min(496px, 35vw);
+  min-height: 360px;
+  transform: translateX(clamp(-54px, -4vw, -24px));
+  pointer-events: none;
 }
 
 .home-band-challenges {
@@ -331,7 +303,7 @@
     min-height: min(680px, calc(100svh - 126px));
   }
 
-  .hero-phone {
+  .hero-phone-slot {
     top: 30%;
     width: min(820px, 88vw);
     height: min(465px, 50vw);
@@ -398,7 +370,7 @@
     font-size: clamp(5.5rem, 22vw, 13rem);
   }
 
-  .hero-phone {
+  .hero-phone-slot {
     top: 36%;
     width: min(720px, 90vw);
     height: min(408px, 51vw);
@@ -459,6 +431,25 @@
   .hero-button {
     display: none;
   }
+
+  .home-band-about {
+    min-height: 126svh;
+  }
+
+  .about-stage {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    justify-items: center;
+    min-height: 106svh;
+  }
+
+  .about-phone-anchor {
+    justify-self: center;
+    width: min(780px, 92vw);
+    height: min(442px, 52vw);
+    min-height: 286px;
+    transform: translateX(0);
+  }
 }
 
 @media (max-width: 560px) {
@@ -477,8 +468,7 @@
     min-height: calc(100svh - 106px);
   }
 
-  /* phone big and centered */
-  .hero-phone {
+  .hero-phone-slot {
     top: 50%;
     left: 50%;
     width: 92vw;
@@ -487,7 +477,6 @@
     transform: translate(-50%, -50%);
   }
 
-  /* hide all human characters — too crowded on phone */
   .hero-character-sh1,
   .hero-character-sh2,
   .hero-character-ra,
@@ -496,7 +485,6 @@
     display: none;
   }
 
-  /* cat and duck sit below the phone, flanking the button */
   .hero-character-cat {
     left: 8%;
     bottom: 18px;
@@ -531,5 +519,21 @@
 
   .hero-google-play-text strong {
     font-size: 1rem;
+  }
+
+  .home-band-about {
+    min-height: 118svh;
+    padding-inline: 0;
+  }
+
+  .about-background-word {
+    top: 17%;
+    font-size: clamp(4.4rem, 25vw, 8rem);
+  }
+
+  .about-phone-anchor {
+    width: 94vw;
+    height: 53vw;
+    min-height: 205px;
   }
 }

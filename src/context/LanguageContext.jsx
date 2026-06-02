@@ -8,7 +8,7 @@ export function LanguageProvider({ children }) {
   useEffect(() => {
     const isAr = lang === 'ar'
     document.documentElement.lang = isAr ? 'ar' : 'en'
-    document.title = isAr ? 'إيكوبالز' : 'Ecopals'
+    document.title = isAr ? '\u0625\u064a\u0643\u0648\u0628\u0627\u0644\u0632' : 'Ecopals'
     localStorage.setItem('eco-lang', lang)
   }, [lang])
 

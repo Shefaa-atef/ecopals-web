@@ -1,0 +1,120 @@
+.earthie-showcase {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: clamp(12px, 2vw, 22px);
+  min-width: 0;
+  color: var(--text-strong);
+}
+
+.earthie-rive-stage {
+  position: relative;
+  width: min(390px, 29vw);
+  min-width: 280px;
+  aspect-ratio: 1 / 1.12;
+  filter: drop-shadow(0 28px 26px rgb(34 48 29 / 0.18));
+}
+
+.earthie-rive-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.earthie-rive-layer canvas {
+  display: block;
+}
+
+.earthie-status {
+  width: min(330px, 100%);
+  padding-inline: clamp(8px, 1.2vw, 16px);
+}
+
+.earthie-status-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 9px;
+}
+
+.earthie-status-row strong {
+  font-size: clamp(1.45rem, 2.4vw, 2.55rem);
+  font-weight: 950;
+  line-height: 1;
+}
+
+.earthie-status-row span {
+  color: var(--forest-green);
+  font-size: clamp(1rem, 1.45vw, 1.35rem);
+  font-weight: 950;
+}
+
+.earthie-energy-track {
+  position: relative;
+  width: 100%;
+  height: 13px;
+  overflow: hidden;
+  border: 2px solid rgb(var(--forest-green-rgb) / 0.78);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.62);
+}
+
+.earthie-energy-track span {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #e0dca6, var(--golden-yellow), var(--fresh-leaf));
+  transition: inline-size 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.earthie-status p {
+  margin-top: 9px;
+  color: rgb(var(--forest-green-rgb) / 0.78);
+  font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+  font-weight: 900;
+  text-align: center;
+}
+
+.earthie-showcase--ar .earthie-energy-track span {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+
+@media (max-width: 860px) {
+  .earthie-rive-stage {
+    width: min(330px, 72vw);
+    min-width: 220px;
+  }
+
+  .earthie-status {
+    width: min(310px, 82vw);
+  }
+}
+
+@media (max-width: 560px) {
+  .earthie-showcase {
+    gap: 8px;
+  }
+
+  .earthie-rive-stage {
+    width: min(245px, 70vw);
+    min-width: 190px;
+  }
+
+  .earthie-status-row strong {
+    font-size: 1.25rem;
+  }
+
+  .earthie-status-row span {
+    font-size: 0.98rem;
+  }
+
+  .earthie-status p {
+    font-size: 0.85rem;
+  }
+}

@@ -2,11 +2,22 @@ import { Suspense, useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
-import { heroState } from './heroState'
+import { getHeroSoundMuted, setHeroSoundMuted, setHeroVideoRef } from './heroState'
 import earthieVideoUrl from '../assets/earthie video.mp4?url'
 import phoneModelUrl from '../assets/low_poly_android_phone.glb?url'
 
-export default function HeroPhoneScene() {
+const DEFAULT_PHONE_MODEL_POSE = {
+  rotationX: Math.PI / 2,
+  rotationY: Math.PI / 2,
+  rotationZ: 0,
+  positionX: 0,
+  positionY: 0,
+  positionZ: 0,
+  scale: 2.08,
+  floatAmount: 1,
+}
+
+export default function HeroPhoneScene({ modelPose = DEFAULT_PHONE_MODEL_POSE, screenContent = 'earthie-video' }) {
   return (
     <Canvas
       camera={{ position: [0, 0, 4.6], fov: 33 }}
@@ -18,25 +29,25 @@ export default function HeroPhoneScene() {
       <directionalLight color="#fff4d6" intensity={2.3} position={[1.8, 3.4, 4]} />
       <directionalLight color="#dff6ff" intensity={1.5} position={[-3, 1.5, 2.5]} />
       <Suspense fallback={null}>
-        <HeroPhoneModel />
+        <HeroPhoneModel modelPose={modelPose} screenContent={screenContent} />
       </Suspense>
     </Canvas>
   )
 }
 
-function useEarthieVideoTexture() {
+function useEarthieVideoTexture(enabled) {
   const videoTexture = useMemo(() => {
+    if (!enabled) return null
+
     const video = document.createElement('video')
     video.src = earthieVideoUrl
     video.loop = true
-    video.muted = heroState.soundMuted
-    video.defaultMuted = heroState.soundMuted
+    video.muted = getHeroSoundMuted()
+    video.defaultMuted = getHeroSoundMuted()
     video.playsInline = true
     video.preload = 'auto'
     video.setAttribute('muted', '')
     video.setAttribute('playsinline', '')
-
-    heroState.videoRef = video
 
     const texture = new THREE.VideoTexture(video)
     texture.colorSpace = THREE.SRGBColorSpace
@@ -46,17 +57,23 @@ function useEarthieVideoTexture() {
     texture.repeat.set(-1, 1)
 
     return texture
-  }, [])
+  }, [enabled])
 
   useEffect(() => {
+    if (!videoTexture) {
+      setHeroVideoRef(null)
+      return undefined
+    }
+
     const video = videoTexture.image
+    setHeroVideoRef(video)
 
     const startVideo = () => {
       video.play().catch(() => {
         video.muted = true
         video.defaultMuted = true
         video.setAttribute('muted', '')
-        heroState.soundMuted = true
+        setHeroSoundMuted(true)
         video.play().catch(() => {})
       })
     }
@@ -66,6 +83,7 @@ function useEarthieVideoTexture() {
     startVideo()
 
     return () => {
+      setHeroVideoRef(null)
       video.removeEventListener('loadeddata', startVideo)
       video.pause()
       video.removeAttribute('src')
@@ -77,11 +95,16 @@ function useEarthieVideoTexture() {
   return videoTexture
 }
 
-function HeroPhoneModel() {
+function HeroPhoneModel({ modelPose, screenContent }) {
   const groupRef = useRef(null)
+  const poseRef = useRef(modelPose)
   const { scene } = useGLTF(phoneModelUrl)
-  const videoTexture = useEarthieVideoTexture()
+  const videoTexture = useEarthieVideoTexture(screenContent === 'earthie-video')
   const phoneScene = useMemo(() => scene.clone(true), [scene])
+
+  useEffect(() => {
+    poseRef.current = modelPose
+  }, [modelPose])
 
   useEffect(() => {
     phoneScene.traverse((node) => {
@@ -92,7 +115,7 @@ function HeroPhoneModel() {
 
       if (node.material?.name === 'phone_screen' || node.name.toLowerCase().includes('screen')) {
         node.material = new THREE.MeshBasicMaterial({
-          color: videoTexture ? '#ffffff' : '#fff4d6',
+          color: '#ffffff',
           map: videoTexture,
           side: THREE.DoubleSide,
           toneMapped: false,
@@ -110,14 +133,20 @@ function HeroPhoneModel() {
     if (!groupRef.current) return
 
     const time = clock.elapsedTime
-    groupRef.current.rotation.x = Math.PI / 2 + Math.sin(time * 0.5) * 0.018
-    groupRef.current.rotation.y = Math.PI / 2 + Math.sin(time * 0.44) * 0.055
-    groupRef.current.rotation.z = Math.sin(time * 0.38) * 0.018
-    groupRef.current.position.y = Math.sin(time * 0.68) * 0.035
+    const pose = poseRef.current ?? DEFAULT_PHONE_MODEL_POSE
+    const floatAmount = pose.floatAmount ?? 1
+
+    groupRef.current.rotation.x = (pose.rotationX ?? DEFAULT_PHONE_MODEL_POSE.rotationX) + Math.sin(time * 0.5) * 0.018 * floatAmount
+    groupRef.current.rotation.y = (pose.rotationY ?? DEFAULT_PHONE_MODEL_POSE.rotationY) + Math.sin(time * 0.44) * 0.055 * floatAmount
+    groupRef.current.rotation.z = (pose.rotationZ ?? DEFAULT_PHONE_MODEL_POSE.rotationZ) + Math.sin(time * 0.38) * 0.018 * floatAmount
+    groupRef.current.position.x = pose.positionX ?? 0
+    groupRef.current.position.y = (pose.positionY ?? 0) + Math.sin(time * 0.68) * 0.035 * floatAmount
+    groupRef.current.position.z = pose.positionZ ?? 0
+    groupRef.current.scale.setScalar(pose.scale ?? DEFAULT_PHONE_MODEL_POSE.scale)
   })
 
   return (
-    <group ref={groupRef} scale={2.08}>
+    <group ref={groupRef} scale={modelPose.scale ?? DEFAULT_PHONE_MODEL_POSE.scale}>
       <primitive object={phoneScene} />
     </group>
   )
