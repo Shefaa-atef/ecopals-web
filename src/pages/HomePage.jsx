@@ -15,6 +15,8 @@ import catUrl from '../assets/cat.png'
 import duckUrl from '../assets/duck.png'
 import googlePlayUrl from '../assets/google-play-svgrepo-com.svg'
 import earthieAvatarUrl from '../assets/logo@4x.png'
+import communityArUrl from '../assets/community_ar.jpg'
+import communityEnUrl from '../assets/community_en.jpg'
 import EarthieShowcase from '../components/EarthieShowcase'
 import HeroParticles from '../components/HeroParticles'
 import './HomePage.css'
@@ -287,14 +289,22 @@ export default function HomePage() {
               <><span>Post</span><br /><span>Report</span><br /><span>Inspire</span></>
             )}
           </h2>
+          {/* Fade out the 3D phone — portrait Euler angles produce edge-on view */}
           <div
             aria-hidden="true"
-            className="community-phone-anchor phone-scene-anchor"
-            data-phone-content={isAr ? 'community-ar' : 'community-en'}
-            data-phone-float-amount="0.5"
-            data-phone-orientation="portrait"
-            data-phone-scale="1.1"
+            className="phone-scene-anchor"
+            data-phone-opacity="0"
+            data-phone-orientation="landscape"
+            style={{ position: 'absolute', width: '1px', height: '1px', pointerEvents: 'none' }}
           />
+          {/* CSS phone mockup — screenshot in a real phone frame */}
+          <div className="community-phone-mock">
+            <img
+              alt=""
+              aria-hidden="true"
+              src={isAr ? communityArUrl : communityEnUrl}
+            />
+          </div>
         </div>
       </section>
 
