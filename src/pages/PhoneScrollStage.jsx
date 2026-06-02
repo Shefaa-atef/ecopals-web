@@ -3,8 +3,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useLang } from '../context/LanguageContext'
 import { getHeroSoundMuted, getHeroVideoRef, setHeroSoundMuted } from './heroState'
 import HeroPhoneScene from './HeroPhoneScene'
-import communityArUrl from '../assets/community_ar.jpg'
-import communityEnUrl from '../assets/community_en.jpg'
 import './PhoneScrollStage.css'
 
 const MODEL_POSES = {
@@ -231,7 +229,7 @@ export default function PhoneScrollStage() {
   const flashTimer = useRef(null)
   const isVideoContent = pose.content === 'earthie-video'
   const isDescriptionContent = pose.content === 'app-description'
-  const isCommunityContent = pose.content === 'community'
+  const isCommunityContent = pose.content === 'community-ar' || pose.content === 'community-en'
   const shouldFloat = !isDescriptionContent && !isCommunityContent
   const soundCue = isVideoContent ? soundFlash ?? (isSoundMuted ? 'muted' : null) : null
 
@@ -348,30 +346,8 @@ export default function PhoneScrollStage() {
         {isDescriptionContent && (
           <PhoneDescriptionScreen key={isAr ? 'ar' : 'en'} isAr={isAr} />
         )}
-        {isCommunityContent && (
-          <PhoneCommunityScreen key={`community-${isAr ? 'ar' : 'en'}`} isAr={isAr} />
-        )}
       </AnimatePresence>
     </div>
-  )
-}
-
-function PhoneCommunityScreen({ isAr }) {
-  return (
-    <motion.div
-      animate={{ opacity: 1, scale: 1 }}
-      className="phone-community-screen"
-      exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.22, ease: 'easeIn' } }}
-      initial={{ opacity: 0, scale: 0.97 }}
-      transition={{ duration: 0.44, ease: [0.16, 1, 0.3, 1] }}
-    >
-      <img
-        alt=""
-        aria-hidden="true"
-        className="phone-community-img"
-        src={isAr ? communityArUrl : communityEnUrl}
-      />
-    </motion.div>
   )
 }
 

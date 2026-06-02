@@ -1,10 +1,12 @@
-import { Suspense, useEffect, useMemo, useRef } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { getHeroSoundMuted, setHeroSoundMuted, setHeroVideoRef } from './heroState'
 import earthieVideoUrl from '../assets/earthie video.mp4?url'
 import phoneModelUrl from '../assets/low_poly_android_phone.glb?url'
+import communityArUrl from '../assets/community_ar.jpg'
+import communityEnUrl from '../assets/community_en.jpg'
 
 const DEFAULT_PHONE_MODEL_POSE = {
   rotationX: Math.PI / 2,
@@ -95,11 +97,46 @@ function useEarthieVideoTexture(enabled) {
   return videoTexture
 }
 
+function useCommunityTexture(screenContent) {
+  const [texture, setTexture] = useState(null)
+
+  useEffect(() => {
+    const isAr = screenContent === 'community-ar'
+    const isEn = screenContent === 'community-en'
+    if (!isAr && !isEn) {
+      setTexture((prev) => { prev?.dispose(); return null })
+      return
+    }
+
+    let active = true
+    const loader = new THREE.TextureLoader()
+    loader.load(isAr ? communityArUrl : communityEnUrl, (tex) => {
+      if (!active) { tex.dispose(); return }
+      tex.colorSpace = THREE.SRGBColorSpace
+      tex.flipY = false
+      tex.center.set(0.5, 0.5)
+      tex.rotation = Math.PI / 2
+      tex.wrapS = THREE.ClampToEdgeWrapping
+      tex.wrapT = THREE.ClampToEdgeWrapping
+      setTexture(tex)
+    })
+
+    return () => {
+      active = false
+      setTexture((prev) => { prev?.dispose(); return null })
+    }
+  }, [screenContent])
+
+  return texture
+}
+
 function HeroPhoneModel({ modelPose, screenContent }) {
   const groupRef = useRef(null)
   const poseRef = useRef(modelPose)
   const { scene } = useGLTF(phoneModelUrl)
   const videoTexture = useEarthieVideoTexture(screenContent === 'earthie-video')
+  const communityTexture = useCommunityTexture(screenContent)
+  const screenTexture = videoTexture ?? communityTexture
   const phoneScene = useMemo(() => scene.clone(true), [scene])
 
   useEffect(() => {
@@ -116,7 +153,7 @@ function HeroPhoneModel({ modelPose, screenContent }) {
       if (node.material?.name === 'phone_screen' || node.name.toLowerCase().includes('screen')) {
         node.material = new THREE.MeshBasicMaterial({
           color: '#ffffff',
-          map: videoTexture,
+          map: screenTexture,
           side: THREE.DoubleSide,
           toneMapped: false,
         })
@@ -127,7 +164,7 @@ function HeroPhoneModel({ modelPose, screenContent }) {
       node.material.roughness = 0.62
       node.material.metalness = 0.08
     })
-  }, [phoneScene, videoTexture])
+  }, [phoneScene, screenTexture])
 
   useFrame(({ clock }) => {
     if (!groupRef.current) return
