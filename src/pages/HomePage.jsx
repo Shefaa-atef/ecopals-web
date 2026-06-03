@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
@@ -14,110 +14,12 @@ import waUrl from '../assets/wa.png'
 import catUrl from '../assets/cat.png'
 import duckUrl from '../assets/duck.png'
 import googlePlayUrl from '../assets/google-play-svgrepo-com.svg'
-import earthieAvatarUrl from '../assets/logo@4x.png'
-import communityArUrl from '../assets/community_ar.jpg'
-import communityEnUrl from '../assets/community_en.jpg'
 import EarthieShowcase from '../components/EarthieShowcase'
 import HeroParticles from '../components/HeroParticles'
+import CommunityFloatingPosts from '../components/CommunityFloatingPosts'
 import './HomePage.css'
 
 gsap.registerPlugin(ScrollTrigger)
-
-// ── Community ─────────────────────────────────────────
-
-// 8 slots × 2 posts each
-const EN_SLOTS = [
-  [{ user: 'Sarah M.', text: '🐱 Found a stray kitten near the park! She needs a loving home. Can anyone help? #AdoptDontShop', likes: 24, comments: 8 }, { user: 'EcoWarrior', text: '🌱 Eco‑hackathon this Friday! Ideas for greener streets welcome. #GreenInnovation', likes: 41, comments: 15 }],
-  [{ user: 'Ahmad K.', text: '😡 Spotted illegal waste dumping near the creek. Reported it to the municipality! #EcoAlert', likes: 67, comments: 22 }, { user: 'Lina S.', text: '🌳 Planted 3 trees with my neighbors today. Small action, big change! #PlantMore', likes: 89, comments: 31 }],
-  [{ user: 'Omar T.', text: '🚭 Heavy smoking right next to the children\'s playground. Serious air quality issue — let\'s speak up!', likes: 103, comments: 47 }, { user: 'Haya R.', text: '♻️ New recycling bin on Main St! Let\'s actually use it this time. #Recycle', likes: 56, comments: 18 }],
-  [{ user: 'Noor A.', text: '💗 Lost cat, pink collar, near Jumeirah. Please share — she deserves a safe home! #CommunityHelp', likes: 38, comments: 12 }, { user: 'Ali H.', text: '🌿 Eco walk this Sunday morning. Families welcome! #GreenCommunity', likes: 72, comments: 29 }],
-  [{ user: 'Maya S.', text: '🦎 Found an injured bird in the garden. Local vet is helping 🙏 #WildlifeRescue', likes: 45, comments: 19 }, { user: 'Rayan M.', text: '☀️ Our school installed solar panels today! So proud. #RenewableEnergy', likes: 91, comments: 34 }],
-  [{ user: 'Fatima L.', text: '🌊 Beach cleanup last weekend — 40 kg of trash collected! Thank you all 💪', likes: 127, comments: 55 }, { user: 'Khalid B.', text: '🌱 Community garden now open! Free plots for residents. #GrowTogether', likes: 63, comments: 27 }],
-  [{ user: 'Dina H.', text: '🐕 Lost dog near the lake, brown collar. Please DM if you see him! 🙏', likes: 52, comments: 23 }, { user: 'Ziad E.', text: '💡 LED streetlights petition hit 500 signatures! Council meeting next week.', likes: 84, comments: 41 }],
-  [{ user: 'Sara J.', text: '🌳 20 volunteers, 50 trees planted in one morning. This is community 💚', likes: 156, comments: 68 }, { user: 'Adam C.', text: '♻️ Launched a swap store — bring old stuff, take new stuff. Zero waste! #SwapStore', likes: 99, comments: 44 }],
-]
-
-const AR_SLOTS = [
-  [{ user: 'سارة م.', text: '🐱 وجدت قطة صغيرة قرب الحديقة! تحتاج منزلاً. #تبني_ولا_تشتري', likes: 24, comments: 8 }, { user: 'محارب البيئة', text: '🌱 هاكاثون بيئي الجمعة! أفكار لشوارع أخضر مرحب بها. #ابتكار_أخضر', likes: 41, comments: 15 }],
-  [{ user: 'أحمد ك.', text: '😡 رمي نفايات غير قانوني قرب النهر. أبلغت البلدية! #تنبيه_بيئي', likes: 67, comments: 22 }, { user: 'لينا س.', text: '🌳 زرعت ٣ أشجار مع الجيران اليوم. #ازرع_أكثر', likes: 89, comments: 31 }],
-  [{ user: 'عمر ت.', text: '🚭 تدخين شديد قرب ملعب الأطفال. يؤثر على صحتهم — يجب أن نتكلم!', likes: 103, comments: 47 }, { user: 'هيا ر.', text: '♻️ حاوية تدوير جديدة في الحي! فلنستخدمها. #أعد_التدوير', likes: 56, comments: 18 }],
-  [{ user: 'نور أ.', text: '💗 قطة ضائعة بطوق وردي. شاركوا! #مجتمع_متعاون', likes: 38, comments: 12 }, { user: 'علي ح.', text: '🌿 مسيرة بيئية الأحد الصباح. #مجتمع_أخضر', likes: 72, comments: 29 }],
-  [{ user: 'مايا س.', text: '🦎 طائر مصاب في الحديقة — الطبيب البيطري يساعده 🙏', likes: 45, comments: 19 }, { user: 'ريان م.', text: '☀️ مدرستنا ركّبت ألواح شمسية اليوم! فخورون.', likes: 91, comments: 34 }],
-  [{ user: 'فاطمة ل.', text: '🌊 تنظيف شاطئ الأسبوع الماضي — ٤٠ كيلو نفايات! شكراً لكم 💪', likes: 127, comments: 55 }, { user: 'خالد ب.', text: '🌱 حديقة مجتمعية مفتوحة! قطع مجانية للسكان.', likes: 63, comments: 27 }],
-  [{ user: 'دينا ح.', text: '🐕 كلب ضائع قرب البحيرة، طوق بني. تواصلوا! 🙏', likes: 52, comments: 23 }, { user: 'زياد ع.', text: '💡 عريضة إضاءة LED وصلت ٥٠٠ توقيع!', likes: 84, comments: 41 }],
-  [{ user: 'سارة ج.', text: '🌳 ٢٠ متطوعاً زرعوا ٥٠ شجرة في صباح واحد 💚', likes: 156, comments: 68 }, { user: 'آدم ك.', text: '♻️ متجر مبادلة — أحضر قديماً وخذ جديداً! #صفر_نفايات', likes: 99, comments: 44 }],
-]
-
-// Scattered positions across the section (8 slots)
-const SCATTER = [
-  { style: { top: '3%', left: '0%' }, rotate: '-5deg', z: 7 },
-  { style: { top: '5%', left: '28%' }, rotate: '4deg', z: 2 },
-  { style: { top: '4%', right: '0%' }, rotate: '6deg', z: 7 },
-  { style: { top: '36%', left: '0%' }, rotate: '-4deg', z: 7 },
-  { style: { top: '36%', right: '0%' }, rotate: '5deg', z: 7 },
-  { style: { bottom: '3%', left: '0%' }, rotate: '3deg', z: 7 },
-  { style: { bottom: '5%', left: '28%' }, rotate: '-4deg', z: 2 },
-  { style: { bottom: '3%', right: '0%' }, rotate: '-6deg', z: 7 },
-]
-
-function CommunityPost({ posts, isAr, rotate, style, z, delay = 0 }) {
-  const [index, setIndex] = useState(0)
-  const intervalRef = useRef(null)
-  const timeoutRef = useRef(null)
-
-  useEffect(() => {
-    if (posts.length < 2) return
-    timeoutRef.current = setTimeout(() => {
-      intervalRef.current = setInterval(() => setIndex((i) => (i + 1) % posts.length), 4800)
-    }, delay)
-    return () => { clearTimeout(timeoutRef.current); clearInterval(intervalRef.current) }
-  }, [posts.length, delay])
-
-  const post = posts[index]
-
-  function handleHover() {
-    setIndex((i) => (i + 1) % posts.length)
-  }
-
-  return (
-    <div
-      className="cpost-float"
-      onMouseEnter={handleHover}
-      style={{ ...style, zIndex: z, transform: `rotate(${rotate})` }}
-    >
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={index}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -6, transition: { duration: 0.22, ease: 'easeIn' } }}
-          initial={{ opacity: 0, y: 8 }}
-          transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div className="cpost" dir={isAr ? 'rtl' : 'ltr'}>
-            <div className="cpost-header">
-              <img alt="" aria-hidden="true" className="cpost-avatar" src={earthieAvatarUrl} />
-              <span className="cpost-user">{post.user}</span>
-              <span aria-hidden="true" className="cpost-dots">···</span>
-            </div>
-            <p className="cpost-text">{post.text}</p>
-            <div className="cpost-footer">
-              <span className="cpost-action">
-                <svg aria-hidden="true" fill="none" height="13" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="13"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>
-                {post.likes}
-              </span>
-              <span className="cpost-action">
-                <svg aria-hidden="true" fill="none" height="13" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="13"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
-                {post.comments} {isAr ? 'تعليق' : (post.comments === 1 ? 'Comment' : 'Comments')}
-              </span>
-            </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  )
-}
-
-// ─────────────────────────────────────────────────────
 const heroCharacters = [
   { key: 'sh2', src: sh2Url, alt: 'EcoPals character holding a plant', className: 'hero-character-sh2' },
   { key: 'ra', src: raUrl, alt: 'EcoPals character in a beige dress', className: 'hero-character-ra' },
@@ -132,10 +34,15 @@ export default function HomePage() {
   const { lang, isAr } = useLang()
   const heroTitle = isAr ? 'إيكوبالز' : 'EcoPals'
   const aboutStickyRef = useRef(null)
+  const aboutBandRef = useRef(null)
+  const communitySectionRef = useRef(null)
+  const earthieSectionRef = useRef(null)
   const [earthieEnergy, setEarthieEnergy] = useState(0)
 
   useGSAP(() => {
     const sticky = aboutStickyRef.current
+    const community = communitySectionRef.current
+    const earthie = earthieSectionRef.current
     if (!sticky) return
 
     ScrollTrigger.create({
@@ -147,6 +54,56 @@ export default function HomePage() {
       onUpdate: ({ progress }) => {
         setEarthieEnergy(Math.min(progress * 100, 100))
       },
+    })
+
+    if (community) {
+      gsap.fromTo(
+        community,
+        { '--community-merge-scale': 1 },
+        {
+          '--community-merge-scale': 0,
+          ease: 'none',
+          immediateRender: true,
+          scrollTrigger: {
+            trigger: community,
+            start: 'top bottom',
+            end: 'top top',
+            invalidateOnRefresh: true,
+            scrub: true,
+          },
+        },
+      )
+    }
+
+    const rootStyle = getComputedStyle(document.documentElement)
+    const readPastel = (name) => rootStyle.getPropertyValue(name).trim()
+    const pastelMerges = [
+      {
+        element: earthie,
+        from: readPastel('--pastel-community-bg'),
+        to: readPastel('--pastel-earthie-bg'),
+      },
+    ]
+
+    pastelMerges.forEach(({ element, from, to }) => {
+      if (!element || !from || !to) return
+
+      gsap.fromTo(
+        element,
+        { backgroundColor: from },
+        {
+          backgroundColor: to,
+          ease: 'none',
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: element,
+            start: 'top bottom',
+            end: 'top top',
+            invalidateOnRefresh: true,
+            scrub: 0.45,
+          },
+        },
+      )
     })
   }, [])
 
@@ -248,7 +205,24 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="home-band home-band-about" id="game" aria-label="EcoPals app description">
+      {/* ── Wave divider: hero → about ── */}
+      <div className="hero-about-divider" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 88" preserveAspectRatio="none">
+          <path
+            d="M0,0 L0,38 C240,78 480,84 720,50 C960,16 1200,74 1440,42 L1440,0 Z"
+            fill="#5a913e"
+          />
+          <path
+            d="M0,38 C240,78 480,84 720,50 C960,16 1200,74 1440,42"
+            fill="none"
+            stroke="#3b2f27"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
+
+      <section className="home-band home-band-about" id="game" aria-label="EcoPals app description" ref={aboutBandRef}>
         <div className="about-sticky" ref={aboutStickyRef}>
           <div className="about-background-word" aria-hidden="true">EcoPals</div>
           <div className="about-deco-ring" aria-hidden="true" />
@@ -266,49 +240,40 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="home-band-community" id="community">
-        {/* Scattered floating posts */}
-        {SCATTER.map((pos, i) => (
-          <CommunityPost
-            key={i}
-            delay={i * 600}
-            isAr={isAr}
-            posts={(isAr ? AR_SLOTS : EN_SLOTS)[i]}
-            rotate={pos.rotate}
-            style={pos.style}
-            z={pos.z}
-          />
-        ))}
+      <section className={`home-band-community ${isAr ? 'home-band-community--ar' : ''}`} id="community" aria-labelledby="community-title" ref={communitySectionRef}>
+        <CommunityFloatingPosts isAr={isAr} />
 
-        {/* Centered text + phone */}
-        <div className="community-center">
-          <h2 className="community-heading" dir={isAr ? 'rtl' : 'ltr'}>
-            {isAr ? (
-              <><span>اكتب</span><br /><span>أبلغ</span><br /><span>ألهم</span></>
-            ) : (
-              <><span>Post</span><br /><span>Report</span><br /><span>Inspire</span></>
-            )}
-          </h2>
-          {/* Fade out the 3D phone — portrait Euler angles produce edge-on view */}
-          <div
-            aria-hidden="true"
-            className="phone-scene-anchor"
-            data-phone-opacity="0"
-            data-phone-orientation="landscape"
-            style={{ position: 'absolute', width: '1px', height: '1px', pointerEvents: 'none' }}
-          />
-          {/* CSS phone mockup — screenshot in a real phone frame */}
-          <div className="community-phone-mock">
-            <img
-              alt=""
-              aria-hidden="true"
-              src={isAr ? communityArUrl : communityEnUrl}
+        <div className="community-layout">
+          <div className={`community-copy ${isAr ? 'community-copy--ar' : ''}`} dir={isAr ? 'rtl' : 'ltr'}>
+            <p className="community-kicker">{isAr ? 'مجتمع إيكوبالز' : 'EcoPals community'}</p>
+            <h2 className="community-heading" id="community-title">
+              {isAr ? (
+                <><span>شارك</span><span>أنجز</span><span>ألهم</span></>
+              ) : (
+                <><span>Post.</span><span>Report.</span><span>Inspire.</span></>
+              )}
+            </h2>
+            <p className="community-body">
+              {isAr
+                ? 'شوف أفعال الأصدقاء وتحدياتهم وتعليقاتهم وهي تتحول إلى أثر واضح داخل إيكوبالز.'
+                : 'A live feed of eco actions, local challenges, comments, and progress from people making the planet a little brighter.'}
+            </p>
+          </div>
+
+          <div className="community-phone-zone" aria-hidden="true">
+            <div
+              className="community-phone-anchor phone-scene-anchor"
+              data-phone-content={isAr ? 'community-ar' : 'community-en'}
+              data-phone-float-amount="0"
+              data-phone-orientation="portrait"
+              data-phone-rotate="-2"
+              data-phone-scale="1.18"
             />
           </div>
         </div>
       </section>
 
-      <section className="home-band home-band-earthie" id="earthie">
+      <section className="home-band home-band-earthie" id="earthie" ref={earthieSectionRef}>
         <p className="eyebrow">Earthie</p>
         <h2>Your cheerful eco companion.</h2>
       </section>

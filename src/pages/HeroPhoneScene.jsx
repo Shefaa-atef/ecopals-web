@@ -24,8 +24,8 @@ export default function HeroPhoneScene({ modelPose = DEFAULT_PHONE_MODEL_POSE, s
     <Canvas
       camera={{ position: [0, 0, 4.6], fov: 33 }}
       className="hero-phone-canvas"
-      dpr={[1, 1.75]}
-      gl={{ alpha: true, antialias: true }}
+      dpr={[1.5, 3]}
+      gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
     >
       <ambientLight intensity={1.25} />
       <directionalLight color="#fff4d6" intensity={2.3} position={[1.8, 3.4, 4]} />
@@ -104,26 +104,45 @@ function useCommunityTexture(screenContent) {
     const isAr = screenContent === 'community-ar'
     const isEn = screenContent === 'community-en'
     if (!isAr && !isEn) {
-      setTexture((prev) => { prev?.dispose(); return null })
-      return
+      const frame = window.requestAnimationFrame(() => {
+        setTexture((prev) => {
+          prev?.dispose()
+          return null
+        })
+      })
+      return () => window.cancelAnimationFrame(frame)
     }
 
     let active = true
     const loader = new THREE.TextureLoader()
     loader.load(isAr ? communityArUrl : communityEnUrl, (tex) => {
-      if (!active) { tex.dispose(); return }
+      if (!active) {
+        tex.dispose()
+        return
+      }
+
       tex.colorSpace = THREE.SRGBColorSpace
-      tex.flipY = false
+      tex.flipY = true
       tex.center.set(0.5, 0.5)
-      tex.rotation = Math.PI / 2
+      tex.rotation = 0
+      tex.offset.set(0, 0)
+      tex.repeat.set(1, 1)
       tex.wrapS = THREE.ClampToEdgeWrapping
       tex.wrapT = THREE.ClampToEdgeWrapping
+      tex.generateMipmaps = false
+      tex.minFilter = THREE.LinearFilter
+      tex.magFilter = THREE.NearestFilter
+      tex.anisotropy = 16
+      tex.needsUpdate = true
       setTexture(tex)
     })
 
     return () => {
       active = false
-      setTexture((prev) => { prev?.dispose(); return null })
+      setTexture((prev) => {
+        prev?.dispose()
+        return null
+      })
     }
   }, [screenContent])
 

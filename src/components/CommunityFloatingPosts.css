@@ -1,0 +1,193 @@
+.community-floating-posts {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.community-floating-posts__layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.community-floating-posts__layer--back {
+  z-index: 0;
+}
+
+.community-floating-posts__layer--front {
+  z-index: 20;
+}
+
+.community-floating-card {
+  position: absolute;
+  display: grid;
+  gap: 8px;
+  width: clamp(168px, 14vw, 236px);
+  padding: 12px;
+  border: 1px solid rgb(var(--forest-green-rgb) / 0.1);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 0.98), rgb(249 255 244 / 0.94)),
+    #ffffff;
+  box-shadow:
+    0 18px 44px rgb(34 48 29 / 0.14),
+    0 3px 10px rgb(34 48 29 / 0.07);
+  color: var(--text-strong);
+  font: inherit;
+  text-align: right;
+  pointer-events: auto;
+  user-select: none;
+  will-change: opacity, transform;
+}
+
+.community-floating-card--back {
+  opacity: 0.42;
+  filter: blur(0.7px) saturate(0.92);
+  box-shadow:
+    0 16px 36px rgb(34 48 29 / 0.1),
+    0 2px 8px rgb(34 48 29 / 0.05);
+}
+
+.community-floating-card--front {
+  border-color: rgb(var(--forest-green-rgb) / 0.15);
+  z-index: 20;
+}
+
+.community-floating-card__header,
+.community-floating-card__identity,
+.community-floating-card__footer {
+  display: flex;
+  align-items: center;
+}
+
+.community-floating-card__header {
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.community-floating-card__identity {
+  min-width: 0;
+  gap: 8px;
+}
+
+.community-floating-card__avatar {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  border: 2px solid rgb(var(--fresh-leaf-rgb) / 0.28);
+  border-radius: 999px;
+  background: var(--light-leaf);
+  object-fit: cover;
+}
+
+.community-floating-card__user {
+  overflow: hidden;
+  color: var(--text-strong);
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.community-floating-card__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: rgb(var(--golden-yellow-rgb) / 0.16);
+  font-size: 0.9rem;
+}
+
+.community-floating-card__text {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--text-strong);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.7;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.community-floating-card__footer {
+  justify-content: flex-start;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid rgb(var(--forest-green-rgb) / 0.09);
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 900;
+}
+
+@media (max-width: 980px) {
+  .community-floating-card[data-density='desktop'] {
+    display: none;
+  }
+
+  .community-floating-card {
+    width: clamp(164px, 24vw, 220px);
+  }
+}
+
+@media (max-width: 640px) {
+  .community-floating-card[data-density='desktop'],
+  .community-floating-card[data-density='tablet'] {
+    display: none;
+  }
+
+  .community-floating-posts__layer--front {
+    z-index: 20;
+  }
+
+  .community-floating-card {
+    width: min(176px, 48vw);
+    padding: 10px;
+  }
+
+  .community-floating-card[data-post-id='recycling-bin-alert'] {
+    top: auto !important;
+    right: 8% !important;
+    bottom: 32% !important;
+    left: auto !important;
+  }
+
+  .community-floating-card[data-post-id='front-group-walk'] {
+    right: 3% !important;
+    bottom: 13% !important;
+    left: auto !important;
+  }
+
+  .community-floating-posts--ar .community-floating-card[data-post-id='recycling-bin-alert'] {
+    right: auto !important;
+    left: 8% !important;
+  }
+
+  .community-floating-posts--ar .community-floating-card[data-post-id='front-group-walk'] {
+    right: auto !important;
+    left: 3% !important;
+  }
+
+  .community-floating-card--front {
+    opacity: 0.72;
+    filter: blur(0.4px);
+  }
+
+  .community-floating-card__avatar {
+    width: 26px;
+    height: 26px;
+  }
+
+  .community-floating-card__icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .community-floating-card__text {
+    font-size: 0.7rem;
+    line-height: 1.58;
+    -webkit-line-clamp: 2;
+  }
+}

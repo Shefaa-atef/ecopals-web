@@ -18,8 +18,8 @@ const MODEL_POSES = {
   },
   portrait: {
     rotationX: Math.PI / 2,
-    rotationY: Math.PI / 2,
-    rotationZ: Math.PI / 2,
+    rotationY: 0,
+    rotationZ: 0,
     positionX: 0,
     positionY: 0,
     positionZ: 0,
@@ -118,17 +118,37 @@ function lerpModelPose(from, to, progress) {
   }, {})
 }
 
+function isDescriptionCommunityHandoff(from, to) {
+  return from.content === 'app-description' && to.content?.startsWith('community-')
+}
+
+function getHandoffContent(from, to, progress) {
+  if (!isDescriptionCommunityHandoff(from, to)) {
+    return progress < 0.5 ? from.content : to.content
+  }
+
+  if (progress < 0.1) return from.content
+  if (progress < 0.80) return 'blank-screen'
+  return to.content
+}
+
 function lerpPhonePose(from, to, progress) {
+  const isCommunityHandoff = isDescriptionCommunityHandoff(from, to)
+  const motionProgress = isCommunityHandoff
+    ? smoothStep((progress - 0.1) / 0.9)
+    : progress
+  const content = getHandoffContent(from, to, progress)
+
   return {
-    content: progress < 0.5 ? from.content : to.content,
-    cssRotate: lerp(from.cssRotate, to.cssRotate, progress),
-    height: lerp(from.height, to.height, progress),
-    model: lerpModelPose(from.model, to.model, progress),
-    opacity: lerp(from.opacity, to.opacity, progress),
-    screenProgress: progress < 0.5 ? from.screenProgress : to.screenProgress,
-    width: lerp(from.width, to.width, progress),
-    x: lerp(from.x, to.x, progress),
-    y: lerp(from.y, to.y, progress),
+    content,
+    cssRotate: lerp(from.cssRotate, to.cssRotate, motionProgress),
+    height: lerp(from.height, to.height, motionProgress),
+    model: lerpModelPose(from.model, to.model, motionProgress),
+    opacity: lerp(from.opacity, to.opacity, motionProgress),
+    screenProgress: content === to.content ? to.screenProgress : from.screenProgress,
+    width: lerp(from.width, to.width, motionProgress),
+    x: lerp(from.x, to.x, motionProgress),
+    y: lerp(from.y, to.y, motionProgress),
   }
 }
 
@@ -146,7 +166,7 @@ function getFallbackPose() {
   }
 }
 
-function usePhoneRoute() {
+function usePhoneRoute(routeKey) {
   const [pose, setPose] = useState(getFallbackPose)
   const rafRef = useRef(null)
 
@@ -215,14 +235,14 @@ function usePhoneRoute() {
       window.removeEventListener('scroll', scheduleRead)
       window.removeEventListener('resize', scheduleRead)
     }
-  }, [])
+  }, [routeKey])
 
   return pose
 }
 
 export default function PhoneScrollStage() {
-  const pose = usePhoneRoute()
-  const { isAr } = useLang()
+  const { isAr, lang } = useLang()
+  const pose = usePhoneRoute(lang)
   const [soundFlash, setSoundFlash] = useState(null)
   const [soundFlashId, setSoundFlashId] = useState(0)
   const [isSoundMuted, setIsSoundMuted] = useState(getHeroSoundMuted)
@@ -232,6 +252,11 @@ export default function PhoneScrollStage() {
   const isCommunityContent = pose.content === 'community-ar' || pose.content === 'community-en'
   const shouldFloat = !isDescriptionContent && !isCommunityContent
   const soundCue = isVideoContent ? soundFlash ?? (isSoundMuted ? 'muted' : null) : null
+  const phoneAriaLabel = isVideoContent
+    ? (isSoundMuted ? 'Turn video sound on' : 'Mute video sound')
+    : isCommunityContent
+      ? (isAr ? 'معاينة مجتمع إيكوبالز' : 'EcoPals community preview')
+      : undefined
 
   useEffect(() => {
     return () => clearTimeout(flashTimer.current)
@@ -286,18 +311,33 @@ export default function PhoneScrollStage() {
     handlePhoneClick()
   }
 
+  const maxPhoneSide = Math.max(pose.width, pose.height)
+  const overscanX = Math.round(clamp(maxPhoneSide * 0.58, 180, 560))
+  const overscanY = Math.round(clamp(maxPhoneSide * 0.28, 110, 300))
+  const phoneCanvasWidth = pose.width + overscanX * 2
+  const phoneCanvasHeight = pose.height + overscanY * 2
+  const modelScaleCorrection = pose.height / phoneCanvasHeight
+  const modelPose = {
+    ...pose.model,
+    scale: (pose.model.scale ?? MODEL_POSES.landscape.scale) * modelScaleCorrection,
+  }
+
   const phoneStyle = {
-    height: `${pose.height}px`,
+    '--phone-content-height': `${pose.height}px`,
+    '--phone-content-left': `${overscanX}px`,
+    '--phone-content-top': `${overscanY}px`,
+    '--phone-content-width': `${pose.width}px`,
+    height: `${phoneCanvasHeight}px`,
     opacity: pose.opacity,
     pointerEvents: pose.opacity > 0.05 && isVideoContent ? 'auto' : 'none',
-    transform: `translate3d(${pose.x - pose.width / 2}px, ${pose.y - pose.height / 2}px, 0) rotate(${pose.cssRotate}deg)`,
-    width: `${pose.width}px`,
+    transform: `translate3d(${pose.x - phoneCanvasWidth / 2}px, ${pose.y - phoneCanvasHeight / 2}px, 0) rotate(${pose.cssRotate}deg)`,
+    width: `${phoneCanvasWidth}px`,
   }
 
   return (
     <div
-      aria-label={isSoundMuted ? 'Turn video sound on' : 'Mute video sound'}
-      aria-pressed={!isSoundMuted}
+      aria-label={phoneAriaLabel}
+      aria-pressed={isVideoContent ? !isSoundMuted : undefined}
       className="hero-phone"
       onClick={handlePhoneClick}
       onKeyDown={handlePhoneKeyDown}
@@ -305,19 +345,6 @@ export default function PhoneScrollStage() {
       style={phoneStyle}
       tabIndex={isVideoContent ? 0 : -1}
     >
-      {soundCue && (
-        <div
-          aria-hidden="true"
-          className={`phone-sound-flash phone-sound-flash--${soundCue} ${soundFlash ? '' : 'phone-sound-prompt'}`}
-          key={soundFlash ? `${soundFlash}-${soundFlashId}` : 'sound-prompt'}
-        >
-          {soundCue === 'on' ? (
-            <svg viewBox="0 0 24 24" fill="#1e3a1e" width="36" height="36"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" /></svg>
-          ) : (
-            <svg viewBox="0 0 24 24" fill="#1e3a1e" width="36" height="36"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" /></svg>
-          )}
-        </div>
-      )}
       <motion.div
         animate={shouldFloat ? {
           opacity: 1,
@@ -340,13 +367,28 @@ export default function PhoneScrollStage() {
           rotate: { duration: 0.2, ease: 'easeOut' },
         }}
       >
-        <HeroPhoneScene modelPose={pose.model} screenContent={pose.content} />
+        <HeroPhoneScene modelPose={modelPose} screenContent={pose.content} />
       </motion.div>
-      <AnimatePresence mode="wait">
-        {isDescriptionContent && (
-          <PhoneDescriptionScreen key={isAr ? 'ar' : 'en'} isAr={isAr} />
+      <div className="hero-phone-content">
+        {soundCue && (
+          <div
+            aria-hidden="true"
+            className={`phone-sound-flash phone-sound-flash--${soundCue} ${soundFlash ? '' : 'phone-sound-prompt'}`}
+            key={soundFlash ? `${soundFlash}-${soundFlashId}` : 'sound-prompt'}
+          >
+            {soundCue === 'on' ? (
+              <svg viewBox="0 0 24 24" fill="#1e3a1e" width="36" height="36"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" /></svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="#1e3a1e" width="36" height="36"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" /></svg>
+            )}
+          </div>
         )}
-      </AnimatePresence>
+        <AnimatePresence mode="wait">
+          {isDescriptionContent && (
+            <PhoneDescriptionScreen key={isAr ? 'ar' : 'en'} isAr={isAr} />
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   )
 }

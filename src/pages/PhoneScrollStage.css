@@ -10,6 +10,7 @@
   transition: opacity 180ms ease;
   will-change: width, height, opacity, transform;
   pointer-events: auto;
+  overflow: visible;
 }
 
 .hero-phone:focus-visible {
@@ -18,8 +19,20 @@
 }
 
 .hero-phone-motion {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
+}
+
+.hero-phone-content {
+  position: absolute;
+  top: var(--phone-content-top);
+  left: var(--phone-content-left);
+  z-index: 4;
+  width: var(--phone-content-width);
+  height: var(--phone-content-height);
+  pointer-events: none;
 }
 
 .hero-phone-canvas {
@@ -31,11 +44,11 @@
 
 .phone-description-screen {
   position: absolute;
-  top: 18.5%;
-  left: 10%;
+  top: 19%;
+  left: 11.2%;
   z-index: 4;
-  width: 80%;
-  height: 64%;
+  width: 77.5%;
+  height: 61%;
   padding: clamp(18px, 2.3vw, 34px);
   border-radius: clamp(14px, 1.8vw, 28px);
   overflow: hidden;
@@ -46,6 +59,7 @@
     inset 0 0 0 1px rgb(var(--forest-green-rgb) / 0.08),
     inset 0 -18px 40px rgb(var(--forest-green-rgb) / 0.06);
   pointer-events: none;
+  will-change: clip-path, opacity;
 }
 
 .phone-description-glow {
