@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { playMenuSound } from '../utils/menuAudio'
 import earthieAvatarUrl from '../assets/logo@4x.png'
 import './CommunityFloatingPosts.css'
 
@@ -401,6 +402,8 @@ export default function CommunityFloatingPosts({ isAr = false }) {
     const existingTimer = timersRef.current.get(post.id)
     if (existingTimer) {
       window.clearTimeout(existingTimer)
+    } else {
+      playMenuSound('community-card')
     }
 
     setHiddenPostIds((current) => {

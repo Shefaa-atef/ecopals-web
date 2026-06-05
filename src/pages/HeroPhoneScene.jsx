@@ -7,6 +7,8 @@ import earthieVideoUrl from '../assets/earthie video.mp4?url'
 import phoneModelUrl from '../assets/low_poly_android_phone.glb?url'
 import communityArUrl from '../assets/community_ar.jpg'
 import communityEnUrl from '../assets/community_en.jpg'
+import challengesArUrl from '../assets/challenges_ar.jpg'
+import challengesEnUrl from '../assets/challenges_en.jpg'
 
 const DEFAULT_PHONE_MODEL_POSE = {
   rotationX: Math.PI / 2,
@@ -20,6 +22,8 @@ const DEFAULT_PHONE_MODEL_POSE = {
 }
 
 export default function HeroPhoneScene({ modelPose = DEFAULT_PHONE_MODEL_POSE, screenContent = 'earthie-video' }) {
+  const depthMotion = modelPose.depthMotion ?? 0
+
   return (
     <Canvas
       camera={{ position: [0, 0, 4.6], fov: 33 }}
@@ -30,6 +34,7 @@ export default function HeroPhoneScene({ modelPose = DEFAULT_PHONE_MODEL_POSE, s
       <ambientLight intensity={1.25} />
       <directionalLight color="#fff4d6" intensity={2.3} position={[1.8, 3.4, 4]} />
       <directionalLight color="#dff6ff" intensity={1.5} position={[-3, 1.5, 2.5]} />
+      <DepthPhoneLights amount={depthMotion} />
       <Suspense fallback={null}>
         <HeroPhoneModel modelPose={modelPose} screenContent={screenContent} />
       </Suspense>
@@ -37,19 +42,73 @@ export default function HeroPhoneScene({ modelPose = DEFAULT_PHONE_MODEL_POSE, s
   )
 }
 
+function DepthPhoneLights({ amount }) {
+  const leftRimRef = useRef(null)
+  const rightRimRef = useRef(null)
+  const highlightRef = useRef(null)
+  const amountRef = useRef(amount)
+
+  useEffect(() => {
+    amountRef.current = amount
+  }, [amount])
+
+  useFrame(({ clock }) => {
+    const activeAmount = amountRef.current
+    if (!leftRimRef.current || !rightRimRef.current || !highlightRef.current) return
+
+    const time = clock.elapsedTime
+    const sweep = Math.sin(time * 0.32)
+    const glint = (Math.sin(time * 0.48 + 1.1) + 1) * 0.5
+
+    leftRimRef.current.intensity = activeAmount * (0.85 + glint * 0.25)
+    rightRimRef.current.intensity = activeAmount * (0.7 + (1 - glint) * 0.22)
+    highlightRef.current.intensity = activeAmount * (0.35 + glint * 0.25)
+    highlightRef.current.position.x = sweep * 0.85
+  })
+
+  return (
+    <>
+      <directionalLight ref={leftRimRef} color="#e7fff4" intensity={0} position={[-3.2, 1.4, 3.4]} />
+      <directionalLight ref={rightRimRef} color="#fff1c8" intensity={0} position={[3.2, 1.7, 2.9]} />
+      <pointLight ref={highlightRef} color="#ffffff" intensity={0} position={[0, 2.2, 3.2]} distance={6} />
+    </>
+  )
+}
+
+function updateScreenTextureParallax(texture, screenContent, depthMotion, time) {
+  if (!texture) return
+
+  const isVideo = screenContent === 'earthie-video'
+  const amount = depthMotion * (isVideo ? 1 : 0.55)
+  const sway = Math.sin(time * 0.32)
+  const lift = Math.sin(time * 0.28 + 0.7)
+  const baseRepeatX = isVideo ? -1 : 1
+  const zoom = 1 - amount * (0.026 + (sway + 1) * 0.003)
+
+  texture.offset.set(sway * 0.024 * amount, lift * 0.016 * amount)
+  texture.repeat.set(baseRepeatX * zoom, zoom)
+  texture.updateMatrix()
+}
+
 function useEarthieVideoTexture(enabled) {
   const videoTexture = useMemo(() => {
     if (!enabled) return null
 
+    const startsMuted = getHeroSoundMuted()
     const video = document.createElement('video')
     video.src = earthieVideoUrl
     video.loop = true
-    video.muted = getHeroSoundMuted()
-    video.defaultMuted = getHeroSoundMuted()
+    video.muted = startsMuted
+    video.defaultMuted = startsMuted
     video.playsInline = true
     video.preload = 'auto'
-    video.setAttribute('muted', '')
     video.setAttribute('playsinline', '')
+
+    if (startsMuted) {
+      video.setAttribute('muted', '')
+    } else {
+      video.removeAttribute('muted')
+    }
 
     const texture = new THREE.VideoTexture(video)
     texture.colorSpace = THREE.SRGBColorSpace
@@ -76,7 +135,7 @@ function useEarthieVideoTexture(enabled) {
         video.defaultMuted = true
         video.setAttribute('muted', '')
         setHeroSoundMuted(true)
-        video.play().catch(() => {})
+        video.play().catch(() => { })
       })
     }
 
@@ -97,13 +156,20 @@ function useEarthieVideoTexture(enabled) {
   return videoTexture
 }
 
-function useCommunityTexture(screenContent) {
+const staticScreenImages = {
+  'community-ar': communityArUrl,
+  'community-en': communityEnUrl,
+  'challenges-ar': challengesArUrl,
+  'challenges-en': challengesEnUrl,
+}
+
+function useStaticScreenTexture(screenContent) {
   const [texture, setTexture] = useState(null)
 
   useEffect(() => {
-    const isAr = screenContent === 'community-ar'
-    const isEn = screenContent === 'community-en'
-    if (!isAr && !isEn) {
+    const screenImageUrl = staticScreenImages[screenContent]
+
+    if (!screenImageUrl) {
       const frame = window.requestAnimationFrame(() => {
         setTexture((prev) => {
           prev?.dispose()
@@ -115,7 +181,7 @@ function useCommunityTexture(screenContent) {
 
     let active = true
     const loader = new THREE.TextureLoader()
-    loader.load(isAr ? communityArUrl : communityEnUrl, (tex) => {
+    loader.load(screenImageUrl, (tex) => {
       if (!active) {
         tex.dispose()
         return
@@ -129,9 +195,9 @@ function useCommunityTexture(screenContent) {
       tex.repeat.set(1, 1)
       tex.wrapS = THREE.ClampToEdgeWrapping
       tex.wrapT = THREE.ClampToEdgeWrapping
-      tex.generateMipmaps = false
-      tex.minFilter = THREE.LinearFilter
-      tex.magFilter = THREE.NearestFilter
+      tex.generateMipmaps = true
+      tex.minFilter = THREE.LinearMipmapLinearFilter
+      tex.magFilter = THREE.LinearFilter
       tex.anisotropy = 16
       tex.needsUpdate = true
       setTexture(tex)
@@ -152,10 +218,11 @@ function useCommunityTexture(screenContent) {
 function HeroPhoneModel({ modelPose, screenContent }) {
   const groupRef = useRef(null)
   const poseRef = useRef(modelPose)
+  const screenMeshesRef = useRef([])
   const { scene } = useGLTF(phoneModelUrl)
   const videoTexture = useEarthieVideoTexture(screenContent === 'earthie-video')
-  const communityTexture = useCommunityTexture(screenContent)
-  const screenTexture = videoTexture ?? communityTexture
+  const staticScreenTexture = useStaticScreenTexture(screenContent)
+  const screenTexture = videoTexture ?? staticScreenTexture
   const phoneScene = useMemo(() => scene.clone(true), [scene])
 
   useEffect(() => {
@@ -163,13 +230,23 @@ function HeroPhoneModel({ modelPose, screenContent }) {
   }, [modelPose])
 
   useEffect(() => {
+    screenMeshesRef.current = []
+
     phoneScene.traverse((node) => {
       if (!node.isMesh) return
 
       node.castShadow = true
       node.receiveShadow = true
+      node.userData.depthBasePosition ??= node.position.clone()
 
-      if (node.material?.name === 'phone_screen' || node.name.toLowerCase().includes('screen')) {
+      const isScreenMesh = node.userData.isPhoneScreen || node.material?.name === 'phone_screen' || node.name.toLowerCase().includes('screen')
+
+      if (isScreenMesh) {
+        node.userData.isPhoneScreen = true
+        screenMeshesRef.current.push({
+          basePosition: node.userData.depthBasePosition,
+          mesh: node,
+        })
         node.material = new THREE.MeshBasicMaterial({
           color: '#ffffff',
           map: screenTexture,
@@ -191,14 +268,38 @@ function HeroPhoneModel({ modelPose, screenContent }) {
     const time = clock.elapsedTime
     const pose = poseRef.current ?? DEFAULT_PHONE_MODEL_POSE
     const floatAmount = pose.floatAmount ?? 1
+    const depthMotion = pose.depthMotion ?? 0
+    const legacyFloat = floatAmount * (1 - depthMotion * 0.38)
+    const yaw = Math.sin(time * 0.32) * 0.068 * depthMotion
+    const tilt = Math.sin(time * 0.28 + 0.7) * 0.024 * depthMotion
+    const roll = Math.sin(time * 0.24 + 1.6) * 0.01 * depthMotion
 
-    groupRef.current.rotation.x = (pose.rotationX ?? DEFAULT_PHONE_MODEL_POSE.rotationX) + Math.sin(time * 0.5) * 0.018 * floatAmount
-    groupRef.current.rotation.y = (pose.rotationY ?? DEFAULT_PHONE_MODEL_POSE.rotationY) + Math.sin(time * 0.44) * 0.055 * floatAmount
-    groupRef.current.rotation.z = (pose.rotationZ ?? DEFAULT_PHONE_MODEL_POSE.rotationZ) + Math.sin(time * 0.38) * 0.018 * floatAmount
+    groupRef.current.rotation.x = (pose.rotationX ?? DEFAULT_PHONE_MODEL_POSE.rotationX) + Math.sin(time * 0.5) * 0.014 * legacyFloat + tilt
+    groupRef.current.rotation.y = (pose.rotationY ?? DEFAULT_PHONE_MODEL_POSE.rotationY) + Math.sin(time * 0.44) * 0.032 * legacyFloat + yaw
+    groupRef.current.rotation.z = (pose.rotationZ ?? DEFAULT_PHONE_MODEL_POSE.rotationZ) + Math.sin(time * 0.38) * 0.012 * legacyFloat + roll
     groupRef.current.position.x = pose.positionX ?? 0
     groupRef.current.position.y = (pose.positionY ?? 0) + Math.sin(time * 0.68) * 0.035 * floatAmount
     groupRef.current.position.z = pose.positionZ ?? 0
     groupRef.current.scale.setScalar(pose.scale ?? DEFAULT_PHONE_MODEL_POSE.scale)
+
+    const screenParallaxX = Math.sin(time * 0.32 + 0.28) * 0.018 * depthMotion
+    const screenParallaxY = Math.sin(time * 0.28 + 0.7) * 0.006 * depthMotion
+    const screenLift = (0.009 + Math.cos(time * 0.32) * 0.004) * depthMotion
+    const screenShade = 1 - depthMotion * 0.045 + (Math.sin(time * 0.32 + 0.9) + 1) * 0.032 * depthMotion
+
+    updateScreenTextureParallax(screenTexture, screenContent, depthMotion, time)
+
+    screenMeshesRef.current.forEach(({ mesh, basePosition }) => {
+      mesh.position.set(
+        basePosition.x + screenParallaxX,
+        basePosition.y + screenParallaxY,
+        basePosition.z + screenLift,
+      )
+
+      if (mesh.material?.color) {
+        mesh.material.color.setRGB(screenShade, screenShade, screenShade)
+      }
+    })
   })
 
   return (

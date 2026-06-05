@@ -1,4 +1,4 @@
-import { Home, Info, ShieldCheck, Sparkles, Trash2, Users } from 'lucide-react'
+import { Home, Info, ShieldCheck, Trash2, Trophy, Users } from 'lucide-react'
 
 export const appName = 'Ecopals'
 export const appNameAr = 'إيكوبالز'
@@ -35,14 +35,14 @@ export const mainNavItems = [
     soft: 'var(--challenge-water-soft)',
   },
   {
-    key: 'earthie',
-    label: 'Earthie',
-    labelAr: 'إيرثي',
+    key: 'challenges',
+    label: 'Challenges',
+    labelAr: 'التحديات',
     path: '/',
-    hash: 'earthie',
-    icon: Sparkles,
-    color: 'var(--challenge-water)',
-    soft: 'var(--challenge-air-soft)',
+    hash: 'challenges',
+    icon: Trophy,
+    color: 'var(--challenge-energy)',
+    soft: 'var(--challenge-energy-soft)',
   },
 ]
 

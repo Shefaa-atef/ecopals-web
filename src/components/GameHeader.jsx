@@ -47,6 +47,11 @@ export default function GameHeader({ route, onNavigate }) {
     setIsMenuOpen(false)
   }
 
+  function handleLangToggle() {
+    playMenuSound('lang')
+    toggleLang()
+  }
+
   return (
     <header className="site-header">
       <div className="nav-stage">
@@ -72,7 +77,7 @@ export default function GameHeader({ route, onNavigate }) {
             className="lang-button"
             onMouseEnter={() => playMenuSound('hover')}
             onFocus={() => playMenuSound('hover')}
-            onClick={toggleLang}
+            onClick={handleLangToggle}
             transition={{
               rotate: { duration: 5.8, ease: 'easeInOut', repeat: Infinity },
               y: { duration: 3.9, ease: 'easeInOut', repeat: Infinity },

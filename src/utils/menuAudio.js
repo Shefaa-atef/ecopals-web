@@ -1,5 +1,6 @@
 let menuAudioContext
 let lastMenuSoundAt = 0
+let lastMenuSoundType = null
 
 function getMenuAudioContext() {
   if (typeof window === 'undefined') return null
@@ -34,39 +35,136 @@ function playMenuTone(audioContext, destination, startTime, frequency, duration,
   oscillator.stop(startTime + duration + 0.03)
 }
 
+function playMenuNoise(audioContext, destination, startTime, duration, volume, filterFrequency = 1400) {
+  const sampleRate = audioContext.sampleRate
+  const bufferSize = Math.max(1, Math.floor(sampleRate * duration))
+  const buffer = audioContext.createBuffer(1, bufferSize, sampleRate)
+  const data = buffer.getChannelData(0)
+
+  for (let i = 0; i < bufferSize; i += 1) {
+    data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize)
+  }
+
+  const source = audioContext.createBufferSource()
+  const filter = audioContext.createBiquadFilter()
+  const gain = audioContext.createGain()
+
+  filter.type = 'bandpass'
+  filter.frequency.setValueAtTime(filterFrequency, startTime)
+  filter.Q.setValueAtTime(4.8, startTime)
+
+  gain.gain.setValueAtTime(0.0001, startTime)
+  gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.01)
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration)
+
+  source.buffer = buffer
+  source.connect(filter)
+  filter.connect(gain)
+  gain.connect(destination)
+  source.start(startTime)
+  source.stop(startTime + duration + 0.02)
+}
+
 export function playMenuSound(type) {
   const currentTime = performance.now()
 
-  if (currentTime - lastMenuSoundAt < 70) return
+  if (currentTime - lastMenuSoundAt < (type === lastMenuSoundType ? 110 : 58)) return
 
   const audioContext = getMenuAudioContext()
   if (!audioContext) return
 
   lastMenuSoundAt = currentTime
+  lastMenuSoundType = type
 
   const now = audioContext.currentTime
   const masterGain = audioContext.createGain()
   masterGain.gain.setValueAtTime(0.0001, now)
-  masterGain.gain.exponentialRampToValueAtTime(0.52, now + 0.018)
-  masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.72)
+  masterGain.gain.exponentialRampToValueAtTime(0.34, now + 0.018)
+  masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.58)
   masterGain.connect(audioContext.destination)
 
   if (type === 'open') {
-    playMenuTone(audioContext, masterGain, now, 523.25, 0.18, 0.04)
-    playMenuTone(audioContext, masterGain, now + 0.055, 659.25, 0.18, 0.035)
-    playMenuTone(audioContext, masterGain, now + 0.11, 880, 0.22, 0.032)
+    playMenuTone(audioContext, masterGain, now, 523.25, 0.16, 0.034)
+    playMenuTone(audioContext, masterGain, now + 0.055, 659.25, 0.16, 0.03)
+    playMenuTone(audioContext, masterGain, now + 0.11, 783.99, 0.2, 0.026)
     return
   }
 
   if (type === 'select') {
-    playMenuTone(audioContext, masterGain, now, 783.99, 0.09, 0.035, 'triangle')
-    playMenuTone(audioContext, masterGain, now + 0.035, 1046.5, 0.12, 0.026, 'sine')
+    playMenuTone(audioContext, masterGain, now, 659.25, 0.08, 0.028, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.035, 880, 0.11, 0.02, 'sine')
     return
   }
 
   if (type === 'hover') {
-    playMenuTone(audioContext, masterGain, now, 932.33, 0.075, 0.018, 'triangle')
-    playMenuTone(audioContext, masterGain, now + 0.024, 1174.66, 0.08, 0.012, 'sine')
+    playMenuTone(audioContext, masterGain, now, 783.99, 0.062, 0.012, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.02, 987.77, 0.07, 0.008, 'sine')
+    return
+  }
+
+  if (type === 'eco-recycle') {
+    playMenuNoise(audioContext, masterGain, now, 0.06, 0.012, 950)
+    playMenuTone(audioContext, masterGain, now + 0.025, 493.88, 0.075, 0.02, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.065, 659.25, 0.095, 0.015, 'sine')
+    return
+  }
+
+  if (type === 'eco-water') {
+    playMenuTone(audioContext, masterGain, now, 987.77, 0.075, 0.014, 'sine')
+    playMenuTone(audioContext, masterGain, now + 0.038, 739.99, 0.11, 0.014, 'triangle')
+    playMenuNoise(audioContext, masterGain, now + 0.018, 0.055, 0.006, 2000)
+    return
+  }
+
+  if (type === 'eco-plant') {
+    playMenuTone(audioContext, masterGain, now, 392, 0.095, 0.02, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.045, 587.33, 0.115, 0.021, 'sine')
+    playMenuTone(audioContext, masterGain, now + 0.092, 783.99, 0.125, 0.015, 'sine')
+    return
+  }
+
+  if (type === 'eco-mood') {
+    playMenuTone(audioContext, masterGain, now, 523.25, 0.13, 0.02, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.06, 659.25, 0.15, 0.02, 'sine')
+    playMenuTone(audioContext, masterGain, now + 0.125, 880, 0.18, 0.016, 'sine')
+    return
+  }
+
+  if (type === 'phone-on') {
+    playMenuTone(audioContext, masterGain, now, 523.25, 0.07, 0.018, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.035, 783.99, 0.1, 0.016, 'sine')
+    return
+  }
+
+  if (type === 'phone-off') {
+    playMenuTone(audioContext, masterGain, now, 493.88, 0.07, 0.016, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.032, 329.63, 0.11, 0.014, 'sine')
+    return
+  }
+
+  if (type === 'cta') {
+    playMenuTone(audioContext, masterGain, now, 440, 0.075, 0.02, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.042, 659.25, 0.1, 0.02, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.09, 880, 0.15, 0.017, 'sine')
+    return
+  }
+
+  if (type === 'character') {
+    playMenuTone(audioContext, masterGain, now, 659.25, 0.06, 0.014, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.025, 987.77, 0.075, 0.01, 'sine')
+    return
+  }
+
+  if (type === 'community-card') {
+    playMenuNoise(audioContext, masterGain, now, 0.065, 0.011, 1450)
+    playMenuTone(audioContext, masterGain, now + 0.03, 587.33, 0.065, 0.009, 'triangle')
+    return
+  }
+
+  if (type === 'lang') {
+    playMenuTone(audioContext, masterGain, now, 739.99, 0.07, 0.014, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.032, 554.37, 0.075, 0.012, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.064, 830.61, 0.1, 0.012, 'sine')
     return
   }
 

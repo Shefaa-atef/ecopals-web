@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { appName } from './constants/nav'
 import { getPublicPath, getRouteState, isModifiedClick } from './utils/routing'
@@ -14,6 +14,7 @@ import logoUrl from './assets/logo@4x.png'
 function App() {
   const [loading, setLoading] = useState(true)
   const [route, setRoute] = useState(() => getRouteState())
+  const didCheckInitialHashRef = useRef(false)
 
   useEffect(() => {
     document.title = appName
@@ -42,6 +43,16 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    if (loading || didCheckInitialHashRef.current) return undefined
+
+    didCheckInitialHashRef.current = true
+
+    if (!route.hash) return undefined
+
+    return scheduleHashScroll(route.hash, 'auto', [140, 620, 1400, 2400])
+  }, [loading, route.hash, route.path])
+
   function handleNavigate(event, nextPath, hash) {
     if (isModifiedClick(event)) return false
 
@@ -56,9 +67,8 @@ function App() {
     setRoute({ path: nextPath, hash: hash ?? '' })
 
     if (hash) {
-      window.requestAnimationFrame(() => {
-        document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      })
+      const delays = route.path === nextPath ? [140, 620] : [140, 620, 1400, 2400]
+      scheduleHashScroll(hash, 'smooth', delays)
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
@@ -84,6 +94,37 @@ function App() {
       )}
     </LanguageProvider>
   )
+}
+
+function scrollToHashTarget(hash, behavior) {
+  const target = document.getElementById(hash)
+  if (!target) return false
+
+  const top = Math.max(0, Math.round(target.getBoundingClientRect().top + window.scrollY))
+  window.scrollTo({ top, behavior })
+  return true
+}
+
+function scheduleHashScroll(hash, behavior = 'smooth', delays = [140, 620]) {
+  const timeoutIds = []
+  let frameId = 0
+  let secondFrameId = 0
+
+  frameId = window.requestAnimationFrame(() => {
+    secondFrameId = window.requestAnimationFrame(() => {
+      scrollToHashTarget(hash, behavior)
+      delays.forEach((delay, index) => {
+        const nextBehavior = index === delays.length - 1 ? 'auto' : behavior
+        timeoutIds.push(window.setTimeout(() => scrollToHashTarget(hash, nextBehavior), delay))
+      })
+    })
+  })
+
+  return () => {
+    window.cancelAnimationFrame(frameId)
+    window.cancelAnimationFrame(secondFrameId)
+    timeoutIds.forEach((timeoutId) => window.clearTimeout(timeoutId))
+  }
 }
 
 export default App
