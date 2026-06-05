@@ -4,7 +4,7 @@ import './DeleteAccountPage.css'
 const deletionMailto = `mailto:${supportEmail}?subject=${encodeURIComponent(
   'Delete my Ecopals account',
 )}&body=${encodeURIComponent(
-  'Hello Ecopals team,\n\nPlease delete my Ecopals account and associated personal data.\n\nAccount email:\nReason, optional:\n\nThank you.',
+  'Hello Ecopals team,\n\nPlease delete my Ecopals account and eligible personal data.\n\nAccount email:\nReason, optional:\n\nThank you.',
 )}`
 
 export default function DeleteAccountPage() {
@@ -42,19 +42,22 @@ export default function DeleteAccountPage() {
         </section>
 
         <section className="delete-panel">
-          <h2>What May Be Deleted</h2>
+          <h2>What Is Deleted</h2>
           <ul>
-            <li>Your account profile and login details.</li>
-            <li>Your saved eco actions, goals, progress, and preferences.</li>
-            <li>Content associated with your account where deletion is technically possible.</li>
+            <li>Your login account.</li>
+            <li>Your main app profile record.</li>
+            <li>Your name, email address, phone number, profile picture, and notification token.</li>
           </ul>
         </section>
 
         <section className="delete-panel">
           <h2>What May Be Kept</h2>
           <p>
-            Ecopals may retain limited records when required for legal, security, fraud prevention,
-            dispute resolution, or service operation purposes.
+            Some shared activity may remain when needed to keep community features, challenge
+            records, group records, rewards, moderation, security, fraud prevention, legal
+            compliance, dispute resolution, or service operations working. This may include posts,
+            comments, chats, challenge participation records, group records, reward history, and
+            security logs.
           </p>
         </section>
       </div>
