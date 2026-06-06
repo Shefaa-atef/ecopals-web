@@ -592,7 +592,6 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  will-change: transform;
 }
 
 .challenge-plane--1 {
@@ -621,7 +620,9 @@
     0 2px 0 rgb(255 255 255 / 0.72) inset;
   object-fit: cover;
   pointer-events: none;
-  transform: rotate(var(--challenge-rotate));
+  transform: rotate(var(--challenge-rotate)) translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   user-select: none;
   -webkit-user-drag: none;
 }
