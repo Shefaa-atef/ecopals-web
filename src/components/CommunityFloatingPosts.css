@@ -19,106 +19,114 @@
   z-index: 20;
 }
 
+/* ── Game-style card (matches menu link aesthetic) ── */
 .community-floating-card {
   position: absolute;
   display: grid;
-  gap: 8px;
-  width: clamp(168px, 14vw, 236px);
-  padding: 12px;
-  border: 1px solid rgb(var(--forest-green-rgb) / 0.1);
-  border-radius: 8px;
-  background:
-    linear-gradient(145deg, rgb(255 255 255 / 0.98), rgb(249 255 244 / 0.94)),
-    #ffffff;
+  gap: 0;
+  width: clamp(172px, 14vw, 244px);
+  padding: 0;
+  border: 3px solid var(--ink-brown);
+  border-radius: 20px;
+  background: var(--surface);
   box-shadow:
-    0 18px 44px rgb(34 48 29 / 0.14),
-    0 3px 10px rgb(34 48 29 / 0.07);
+    0 5px 0 color-mix(in srgb, var(--forest-green), var(--ink-brown) 28%),
+    0 10px 28px rgb(var(--ink-brown-rgb) / 0.14);
   color: var(--text-strong);
   font: inherit;
   text-align: right;
   pointer-events: auto;
   user-select: none;
   will-change: opacity, transform;
+  overflow: hidden;
 }
 
 .community-floating-card--back {
-  opacity: 0.42;
-  filter: blur(0.7px) saturate(0.92);
+  opacity: 0.46;
+  filter: blur(0.6px) saturate(0.9);
   box-shadow:
-    0 16px 36px rgb(34 48 29 / 0.1),
-    0 2px 8px rgb(34 48 29 / 0.05);
+    0 4px 0 color-mix(in srgb, var(--forest-green), var(--ink-brown) 28%),
+    0 8px 22px rgb(var(--ink-brown-rgb) / 0.10);
 }
 
 .community-floating-card--front {
-  border-color: rgb(var(--forest-green-rgb) / 0.15);
   z-index: 20;
 }
 
-.community-floating-card__header,
-.community-floating-card__identity,
-.community-floating-card__footer {
-  display: flex;
-  align-items: center;
-}
-
+/* Header strip — pastel mint band with subtle gradient */
 .community-floating-card__header {
+  display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 10px;
+  padding: 9px 11px 8px;
+  background: linear-gradient(110deg, #ffffff 0%, var(--surface) 100%);
+  border-bottom: 2.5px solid var(--ink-brown);
 }
 
 .community-floating-card__identity {
+  display: flex;
+  align-items: center;
   min-width: 0;
-  gap: 8px;
+  gap: 7px;
 }
 
+/* Avatar — bold ink outline, game-style */
 .community-floating-card__avatar {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   flex: 0 0 auto;
-  border: 2px solid rgb(var(--fresh-leaf-rgb) / 0.28);
+  border: 2px solid var(--ink-brown);
   border-radius: 999px;
-  background: var(--light-leaf);
+  background: var(--surface);
   object-fit: cover;
 }
 
 .community-floating-card__user {
   overflow: hidden;
   color: var(--text-strong);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 900;
+  font-family: var(--font-heading-ar);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+/* Icon badge — color set per-post via --badge-bg CSS custom property */
 .community-floating-card__icon {
   display: inline-grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   flex: 0 0 auto;
+  border: 2px solid var(--ink-brown);
   border-radius: 999px;
-  background: rgb(var(--golden-yellow-rgb) / 0.16);
-  font-size: 0.9rem;
+  background: var(--badge-bg, #f6c85f);
+  font-size: 0.88rem;
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--badge-bg, #f6c85f), #3d3327 28%);
 }
 
 .community-floating-card__text {
   display: -webkit-box;
   overflow: hidden;
+  padding: 9px 11px 5px;
   color: var(--text-strong);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 800;
-  line-height: 1.7;
+  line-height: 1.65;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
 
 .community-floating-card__footer {
+  display: flex;
   justify-content: flex-start;
-  gap: 12px;
-  padding-top: 8px;
-  border-top: 1px solid rgb(var(--forest-green-rgb) / 0.09);
-  color: var(--muted);
-  font-size: 0.68rem;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 11px 9px;
+  border-top: 2px dashed rgb(var(--forest-green-rgb) / 0.25);
+  color: var(--forest-green);
+  font-size: 0.67rem;
   font-weight: 900;
 }
 
@@ -128,11 +136,12 @@
   }
 
   .community-floating-card {
-    width: clamp(164px, 24vw, 220px);
+    width: clamp(164px, 24vw, 222px);
   }
 }
 
 @media (max-width: 640px) {
+
   .community-floating-card[data-density='desktop'],
   .community-floating-card[data-density='tablet'] {
     display: none;
@@ -143,8 +152,7 @@
   }
 
   .community-floating-card {
-    width: min(176px, 48vw);
-    padding: 10px;
+    width: min(174px, 48vw);
   }
 
   .community-floating-card[data-post-id='recycling-bin-alert'] {
@@ -171,23 +179,34 @@
   }
 
   .community-floating-card--front {
-    opacity: 0.72;
+    opacity: 0.74;
     filter: blur(0.4px);
   }
 
+  .community-floating-card__header {
+    padding: 8px 10px 7px;
+  }
+
   .community-floating-card__avatar {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
   }
 
   .community-floating-card__icon {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
+    font-size: 0.8rem;
   }
 
   .community-floating-card__text {
     font-size: 0.7rem;
     line-height: 1.58;
+    padding: 7px 10px 4px;
     -webkit-line-clamp: 2;
+  }
+
+  .community-floating-card__footer {
+    padding: 4px 10px 8px;
+    font-size: 0.63rem;
   }
 }

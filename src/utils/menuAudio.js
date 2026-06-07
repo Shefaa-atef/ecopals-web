@@ -161,6 +161,28 @@ export function playMenuSound(type) {
     return
   }
 
+  if (type === 'coin') {
+    // bright metallic clink — two short high tones with a shimmer
+    playMenuTone(audioContext, masterGain, now, 1318.51, 0.055, 0.022, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.028, 1567.98, 0.08, 0.018, 'sine')
+    playMenuNoise(audioContext, masterGain, now + 0.01, 0.045, 0.006, 3200)
+    return
+  }
+
+  if (type === 'score-pop') {
+    // punchy upward blip — like a game point counter tick
+    playMenuTone(audioContext, masterGain, now, 659.25, 0.038, 0.016, 'square')
+    playMenuTone(audioContext, masterGain, now + 0.022, 987.77, 0.055, 0.014, 'triangle')
+    return
+  }
+
+  if (type === 'progress-tick') {
+    // soft ascending tick for gradual bar fill
+    playMenuTone(audioContext, masterGain, now, 783.99, 0.042, 0.009, 'sine')
+    playMenuTone(audioContext, masterGain, now + 0.018, 880, 0.05, 0.007, 'triangle')
+    return
+  }
+
   if (type === 'lang') {
     playMenuTone(audioContext, masterGain, now, 739.99, 0.07, 0.014, 'triangle')
     playMenuTone(audioContext, masterGain, now + 0.032, 554.37, 0.075, 0.012, 'triangle')

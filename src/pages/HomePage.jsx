@@ -1,72 +1,23 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLang } from '../context/LanguageContext'
 import { playMenuSound } from '../utils/menuAudio'
 import PhoneScrollStage from './PhoneScrollStage'
-import raUrl from '../assets/ra.png'
-import sh1Url from '../assets/sh1.png'
-import sh2Url from '../assets/sh2.png'
-import suUrl from '../assets/su.png'
-import waUrl from '../assets/wa.png'
-import catUrl from '../assets/cat.png'
-import duckUrl from '../assets/duck.png'
-import googlePlayUrl from '../assets/google-play-svgrepo-com.svg'
-import ch1Url from '../assets/ch1.png'
-import ch2Url from '../assets/ch2.png'
-import ch3Url from '../assets/ch3.png'
-import ch4Url from '../assets/ch4.png'
-import ch5Url from '../assets/ch5.png'
-import ch6Url from '../assets/ch6.png'
-import ch7Url from '../assets/ch7.png'
-import ch9Url from '../assets/ch9.png'
 import EarthieShowcase from '../components/EarthieShowcase'
 import HeroParticles from '../components/HeroParticles'
 import CommunityFloatingPosts from '../components/CommunityFloatingPosts'
+import useChallengePointerParallax from './home/useChallengePointerParallax'
+import useExactSectionScroll from './home/useExactSectionScroll'
+import useHomeScrollAnimations from './home/useHomeScrollAnimations'
+import {
+  challengeCopy,
+  challengePlanes,
+  coinUrl,
+  googlePlayUrl,
+  heroCharacters,
+  preparedSections,
+} from './home/homePageData'
 import './HomePage.css'
-
-gsap.registerPlugin(ScrollTrigger)
-const heroCharacters = [
-  { key: 'sh2', src: sh2Url, alt: 'EcoPals character holding a plant', className: 'hero-character-sh2' },
-  { key: 'ra', src: raUrl, alt: 'EcoPals character in a beige dress', className: 'hero-character-ra' },
-  { key: 'sh1', src: sh1Url, alt: 'EcoPals character in a lavender outfit', className: 'hero-character-sh1' },
-  { key: 'su', src: suUrl, alt: 'EcoPals character holding flowers', className: 'hero-character-su' },
-  { key: 'wa', src: waUrl, alt: 'EcoPals character making a heart gesture', className: 'hero-character-wa' },
-  { key: 'cat', src: catUrl, alt: 'Cat companion', className: 'hero-character-cat' },
-  { key: 'duck', src: duckUrl, alt: 'Duck companion', className: 'hero-character-duck' },
-]
-
-const challengePlanes = [
-  [
-    { key: 'plant-care', src: ch1Url, className: 'challenge-photo--one', alt: 'EcoPals plant care challenge artwork' },
-    { key: 'watering', src: ch2Url, className: 'challenge-photo--two', alt: 'EcoPals watering challenge artwork' },
-    { key: 'recycling', src: ch9Url, className: 'challenge-photo--three', alt: 'EcoPals recycling challenge artwork' },
-  ],
-  [
-    { key: 'cleanup', src: ch3Url, className: 'challenge-photo--four', alt: 'EcoPals clean up challenge artwork' },
-    { key: 'energy', src: ch4Url, className: 'challenge-photo--five', alt: 'EcoPals eco action challenge artwork' },
-    { key: 'garden', src: ch5Url, className: 'challenge-photo--six', alt: 'EcoPals garden challenge artwork' },
-  ],
-  [
-    { key: 'water-save', src: ch6Url, className: 'challenge-photo--seven', alt: 'EcoPals water saving challenge artwork' },
-    { key: 'daily-streak', src: ch7Url, className: 'challenge-photo--eight', alt: 'EcoPals daily challenge artwork' },
-  ],
-]
-
-const challengeCopy = {
-  en: {
-    kicker: 'Eco challenges',
-    title: 'Complete challenges. Earn coins.',
-    body: 'Pick simple eco missions inside the app, finish real actions, and earn coins and points as your progress grows.',
-  },
-  ar: {
-    kicker: 'التحديات البيئية',
-    title: 'أنجز التحديات واجمع العملات',
-    body: 'اختر تحديات بيئية بسيطة داخل التطبيق، أنجز أفعالاً حقيقية، واجمع العملات والنقاط مع تقدمك.',
-  },
-}
 
 export default function HomePage() {
   const { lang, isAr } = useLang()
@@ -77,271 +28,29 @@ export default function HomePage() {
   const challengesSectionRef = useRef(null)
   const challengePhoneAnchorRef = useRef(null)
   const challengePlaneRefs = useRef([])
+  const photoCardRefs = useRef([])
+  const coinRefs = useRef([])
+  const scorePopContainerRef = useRef(null)
   const [earthieEnergy, setEarthieEnergy] = useState(0)
 
-  useGSAP(() => {
-    const sticky = aboutStickyRef.current
-    const community = communitySectionRef.current
-    const challenges = challengesSectionRef.current
-    if (!sticky) return
+  useExactSectionScroll(communitySectionRef, 'community', '#game')
+  useExactSectionScroll(challengesSectionRef, 'challenges', '#community')
 
-    ScrollTrigger.create({
-      trigger: sticky,
-      start: 'top top',
-      end: '+=260%',
-      pin: true,
-      pinSpacing: true,
-      onUpdate: ({ progress }) => {
-        setEarthieEnergy(Math.min(progress * 100, 100))
-      },
-    })
-
-    if (community) {
-      gsap.fromTo(
-        community,
-        { '--community-merge-scale': 1 },
-        {
-          '--community-merge-scale': 0,
-          ease: 'none',
-          immediateRender: true,
-          scrollTrigger: {
-            trigger: community,
-            start: 'top bottom',
-            end: 'top top',
-            invalidateOnRefresh: true,
-            scrub: true,
-          },
-        },
-      )
-    }
-
-    const rootStyle = getComputedStyle(document.documentElement)
-    const readPastel = (name) => rootStyle.getPropertyValue(name).trim()
-    const pastelMerges = [
-      {
-        element: challenges,
-        from: readPastel('--pastel-community-bg'),
-        to: readPastel('--light-cream'),
-      },
-    ]
-
-    pastelMerges.forEach(({ element, from, to }) => {
-      if (!element || !from || !to) return
-
-      gsap.fromTo(
-        element,
-        { backgroundColor: from },
-        {
-          backgroundColor: to,
-          ease: 'none',
-          immediateRender: false,
-          scrollTrigger: {
-            trigger: element,
-            start: 'top bottom',
-            end: 'top top',
-            invalidateOnRefresh: true,
-            scrub: 0.45,
-          },
-        },
-      )
-    })
-  }, [])
-
-  useEffect(() => {
-    const community = communitySectionRef.current
-    if (!community) return undefined
-
-    let settleTimeoutId = 0
-    let releaseTimeoutId = 0
-    let isSnapping = false
-    let hasSettled = Math.abs(community.getBoundingClientRect().top) <= 2
-
-    const scrollToCommunity = (behavior = 'smooth') => {
-      const top = Math.max(0, Math.round(community.getBoundingClientRect().top + window.scrollY))
-      window.scrollTo({ top, behavior })
-    }
-
-    const settleCommunityScroll = () => {
-      if (window.location.hash && window.location.hash !== '#community') return
-
-      window.clearTimeout(settleTimeoutId)
-
-      settleTimeoutId = window.setTimeout(() => {
-        const rect = community.getBoundingClientRect()
-        const viewportHeight = window.innerHeight || 1
-        const distanceFromTop = Math.abs(rect.top)
-
-        if (rect.top > viewportHeight * 0.82 || rect.top < -viewportHeight * 0.7) {
-          hasSettled = false
-          return
-        }
-
-        if (distanceFromTop <= 2) {
-          hasSettled = true
-          return
-        }
-
-        if (isSnapping || hasSettled) return
-
-        const isNearCommunityStart = rect.top <= viewportHeight * 0.72 && rect.top >= -viewportHeight * 0.34
-        const isMostlyOnScreen = rect.bottom >= viewportHeight * 0.66
-
-        if (!isNearCommunityStart || !isMostlyOnScreen) return
-
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-        isSnapping = true
-        hasSettled = true
-        scrollToCommunity(prefersReducedMotion ? 'auto' : 'smooth')
-
-        window.clearTimeout(releaseTimeoutId)
-        releaseTimeoutId = window.setTimeout(() => {
-          isSnapping = false
-
-          if (Math.abs(community.getBoundingClientRect().top) > 2) {
-            scrollToCommunity('auto')
-          }
-        }, prefersReducedMotion ? 80 : 900)
-      }, 140)
-    }
-
-    window.addEventListener('scroll', settleCommunityScroll, { passive: true })
-    window.addEventListener('resize', settleCommunityScroll)
-    settleCommunityScroll()
-
-    return () => {
-      window.removeEventListener('scroll', settleCommunityScroll)
-      window.removeEventListener('resize', settleCommunityScroll)
-      window.clearTimeout(settleTimeoutId)
-      window.clearTimeout(releaseTimeoutId)
-    }
-  }, [])
-
-  useEffect(() => {
-    const section = challengesSectionRef.current
-    if (!section) return undefined
-
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReducedMotion) return undefined
-
-    const planes = challengePlaneRefs.current
-    const phoneAnchor = challengePhoneAnchorRef.current
-    let requestAnimationFrameId = 0
-    const easing = 0.12
-    const strengths = [1, 0.72, 0.48]
-    const currentOffset = { x: 0, y: 0 }
-    const targetOffset = { x: 0, y: 0 }
-    const basePhoneRotation = {
-      x: Math.PI / 2,
-      y: 0,
-      z: 0,
-    }
-    const currentPhoneRotation = { ...basePhoneRotation }
-    const targetPhoneRotation = { ...basePhoneRotation }
-    const localLerp = (start, target, amount) => start * (1 - amount) + target * amount
-
-    const applyPhoneRotation = () => {
-      if (!phoneAnchor) return false
-
-      currentPhoneRotation.x = localLerp(currentPhoneRotation.x, targetPhoneRotation.x, 0.14)
-      currentPhoneRotation.y = localLerp(currentPhoneRotation.y, targetPhoneRotation.y, 0.14)
-      currentPhoneRotation.z = localLerp(currentPhoneRotation.z, targetPhoneRotation.z, 0.14)
-
-      phoneAnchor.dataset.phoneRotationX = currentPhoneRotation.x.toFixed(4)
-      phoneAnchor.dataset.phoneRotationY = currentPhoneRotation.y.toFixed(4)
-      phoneAnchor.dataset.phoneRotationZ = currentPhoneRotation.z.toFixed(4)
-
-      return Math.abs(currentPhoneRotation.x - targetPhoneRotation.x) > 0.001
-        || Math.abs(currentPhoneRotation.y - targetPhoneRotation.y) > 0.001
-        || Math.abs(currentPhoneRotation.z - targetPhoneRotation.z) > 0.001
-    }
-
-    const animatePlanes = () => {
-      currentOffset.x = localLerp(currentOffset.x, targetOffset.x, easing)
-      currentOffset.y = localLerp(currentOffset.y, targetOffset.y, easing)
-
-      const shouldKeepRotatingPhone = applyPhoneRotation()
-      const shouldKeepMoving = Math.abs(currentOffset.x - targetOffset.x) > 0.001
-        || Math.abs(currentOffset.y - targetOffset.y) > 0.001
-
-      planes.forEach((plane, index) => {
-        if (!plane) return
-
-        const strength = strengths[index] ?? 0.24
-        gsap.set(plane, {
-          x: currentOffset.x * 42 * strength,
-          y: currentOffset.y * 26 * strength,
-        })
-      })
-
-      if (phoneAnchor) {
-        gsap.set(phoneAnchor, {
-          x: currentOffset.x * 16,
-          y: currentOffset.y * 10,
-        })
-        window.dispatchEvent(new Event('phone-route-refresh'))
-      }
-
-      if (shouldKeepMoving || shouldKeepRotatingPhone) {
-        requestAnimationFrameId = window.requestAnimationFrame(animatePlanes)
-        return
-      }
-
-      requestAnimationFrameId = 0
-    }
-
-    const handleMouseMove = (event) => {
-      const rect = section.getBoundingClientRect()
-      if (rect.bottom < 0 || rect.top > window.innerHeight) return
-
-      const pointerX = Math.max(-1, Math.min(1, ((event.clientX - rect.left) / rect.width) * 2 - 1))
-      const pointerY = Math.max(-1, Math.min(1, ((event.clientY - rect.top) / rect.height) * 2 - 1))
-
-      targetOffset.x = pointerX
-      targetOffset.y = pointerY
-      targetPhoneRotation.x = basePhoneRotation.x + pointerY * 0.075
-      targetPhoneRotation.y = basePhoneRotation.y + pointerX * 0.18
-      targetPhoneRotation.z = basePhoneRotation.z - pointerX * 0.045
-
-      if (!requestAnimationFrameId) {
-        requestAnimationFrameId = window.requestAnimationFrame(animatePlanes)
-      }
-    }
-
-    const resetPointer = () => {
-      targetOffset.x = 0
-      targetOffset.y = 0
-      targetPhoneRotation.x = basePhoneRotation.x
-      targetPhoneRotation.y = basePhoneRotation.y
-      targetPhoneRotation.z = basePhoneRotation.z
-
-      if (!requestAnimationFrameId) {
-        requestAnimationFrameId = window.requestAnimationFrame(animatePlanes)
-      }
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    section.addEventListener('mouseleave', resetPointer)
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      section.removeEventListener('mouseleave', resetPointer)
-
-      if (requestAnimationFrameId) {
-        window.cancelAnimationFrame(requestAnimationFrameId)
-      }
-
-      gsap.set([...planes.filter(Boolean), phoneAnchor].filter(Boolean), { clearProps: 'transform' })
-
-      if (phoneAnchor) {
-        phoneAnchor.dataset.phoneRotationX = basePhoneRotation.x.toFixed(4)
-        phoneAnchor.dataset.phoneRotationY = basePhoneRotation.y.toFixed(4)
-        phoneAnchor.dataset.phoneRotationZ = basePhoneRotation.z.toFixed(4)
-        window.dispatchEvent(new Event('phone-route-refresh'))
-      }
-    }
-  }, [])
-
+  useHomeScrollAnimations({
+    aboutBandRef,
+    aboutStickyRef,
+    challengesSectionRef,
+    coinRefs,
+    communitySectionRef,
+    photoCardRefs,
+    scorePopContainerRef,
+    setEarthieEnergy,
+  })
+  useChallengePointerParallax({
+    challengePhoneAnchorRef,
+    challengePlaneRefs,
+    challengesSectionRef,
+  })
   return (
     <>
       <PhoneScrollStage />
@@ -442,23 +151,6 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-
-      {/* ── Wave divider: hero → about ── */}
-      <div className="hero-about-divider" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 88" preserveAspectRatio="none">
-          <path
-            d="M0,0 L0,38 C240,78 480,84 720,50 C960,16 1200,74 1440,42 L1440,0 Z"
-            fill="#5a913e"
-          />
-          <path
-            d="M0,38 C240,78 480,84 720,50 C960,16 1200,74 1440,42"
-            fill="none"
-            stroke="#3b2f27"
-            strokeWidth="3.5"
-            strokeLinecap="round"
-          />
-        </svg>
-      </div>
 
       <section className="home-band home-band-about" id="game" aria-label="EcoPals app description" ref={aboutBandRef}>
         <div className="about-sticky" ref={aboutStickyRef}>
@@ -572,32 +264,94 @@ export default function HomePage() {
                   challengePlaneRefs.current[planeIndex] = node
                 }}
               >
-                {plane.map((image) => (
-                  <img
-                    alt={image.alt}
-                    className={`challenge-photo ${image.className}`}
-                    draggable="false"
-                    key={image.key}
-                    src={image.src}
-                  />
-                ))}
+                {plane.map((image, imageIndex) => {
+                  const flatIndex = challengePlanes.slice(0, planeIndex).reduce((sum, p) => sum + p.length, 0) + imageIndex
+                  return (
+                    <div
+                      className={`challenge-photo ${image.className}`}
+                      key={image.key}
+                    >
+                      <div
+                        aria-hidden="true"
+                        className="challenge-coin"
+                        ref={(node) => { coinRefs.current[flatIndex] = node }}
+                      >
+                        <img alt="" draggable="false" src={coinUrl} />
+                      </div>
+                      <div
+                        className="challenge-photo__card"
+                        ref={(node) => { photoCardRefs.current[flatIndex] = node }}
+                      >
+                        <img
+                          alt={image.alt}
+                          className="challenge-photo__img"
+                          draggable="false"
+                          src={image.src}
+                        />
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             ))}
 
             <div
               aria-hidden="true"
+              className="challenges-score-pops"
+              ref={scorePopContainerRef}
+            />
+
+            <div
+              aria-hidden="true"
               className="challenges-phone-anchor phone-scene-anchor"
               data-phone-content={isAr ? 'challenges-ar' : 'challenges-en'}
+              data-phone-depth-auto-motion="0"
               data-phone-depth-motion="1"
               data-phone-float-amount="0"
               data-phone-orientation="portrait"
-              data-phone-rotate="-1.5"
-              data-phone-scale="1.08"
+              data-phone-rotate="0"
+              data-phone-scale="1.16"
               ref={challengePhoneAnchorRef}
             />
           </div>
         </div>
       </section>
+
+      {preparedSections.map((section, sectionIndex) => (
+        <section
+          aria-labelledby={`${section.key}-title`}
+          className={`home-band-prep home-band-prep--${section.key}`}
+          id={section.key}
+          key={section.key}
+        >
+          <motion.div
+            className="prep-section-shell"
+            dir={isAr ? 'rtl' : 'ltr'}
+            initial={{ opacity: 0, y: 28 }}
+            transition={{ type: 'spring', stiffness: 220, damping: 24 }}
+            viewport={{ once: true, amount: 0.45 }}
+            whileInView={{ opacity: 1, y: 0 }}
+          >
+            <p className="prep-section-label">{section.label}</p>
+            <p className="prep-section-kicker">{section.kicker[isAr ? 'ar' : 'en']}</p>
+            <h2 id={`${section.key}-title`}>{section.title[isAr ? 'ar' : 'en']}</h2>
+          </motion.div>
+          {sectionIndex === 0 ? (
+            <div
+              aria-hidden="true"
+              className="prep-phone-exit-anchor phone-scene-anchor"
+              data-phone-content={isAr ? 'challenges-ar' : 'challenges-en'}
+              data-phone-depth-auto-motion="0"
+              data-phone-depth-motion="1"
+              data-phone-float-amount="0"
+              data-phone-opacity="0"
+              data-phone-orientation="portrait"
+              data-phone-rotate="0"
+              data-phone-scale="1.16"
+            />
+          ) : null}
+        </section>
+      ))}
     </>
   )
 }

@@ -18,48 +18,25 @@
   min-width: 280px;
   aspect-ratio: 1;
   border-radius: 50%;
+  background: #ffffff;
   isolation: isolate;
-  box-shadow: 0 36px 42px rgb(34 48 29 / 0.18);
+  border: 4px solid var(--ink-brown);
+  box-shadow:
+    0 14px 0 color-mix(in srgb, var(--forest-green), var(--ink-brown) 12%),
+    0 22px 52px rgb(var(--ink-brown-rgb) / 0.22);
 }
 
 .earthie-meter-shell::before {
-  position: absolute;
-  inset: 12%;
-  z-index: -2;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 50% 42%, rgb(255 255 255 / 0.92), rgb(255 255 255 / 0.42) 48%, transparent 72%),
-    radial-gradient(circle, rgb(var(--fresh-leaf-rgb) / calc(0.16 + var(--earthie-energy, 0) * 0.28)), transparent 70%);
+  display: none;
   content: '';
-  transform: scale(calc(0.9 + var(--earthie-energy, 0) * 0.09));
 }
 
 .earthie-meter-ring {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: 50%;
-  background:
-    conic-gradient(from -90deg,
-      var(--fresh-leaf) 0 var(--earthie-energy-pct),
-      rgb(var(--forest-green-rgb) / 0.11) var(--earthie-energy-pct) 100%);
-  box-shadow:
-    inset 0 0 0 clamp(12px, 1.1vw, 18px) rgb(255 255 255 / 0.72),
-    inset 0 0 0 clamp(17px, 1.55vw, 26px) rgb(var(--forest-green-rgb) / 0.08),
-    0 0 calc(var(--earthie-energy, 0) * 44px) rgb(var(--fresh-leaf-rgb) / calc(var(--earthie-energy, 0) * 0.28));
-  transform: rotate(calc(var(--earthie-energy, 0) * 2deg));
-  transition: background 70ms linear, transform 120ms ease-out;
+  display: none;
 }
 
 .earthie-meter-ring::after {
-  position: absolute;
-  inset: clamp(20px, 2.1vw, 34px);
-  border-radius: 50%;
-  background: var(--pastel-game-bg);
-  box-shadow:
-    inset 0 0 0 1px rgb(var(--forest-green-rgb) / 0.08),
-    inset 0 24px 54px rgb(255 255 255 / 0.72);
-  content: '';
+  display: none;
 }
 
 .earthie-rive-stage {
@@ -73,16 +50,7 @@
 }
 
 .earthie-rive-stage::after {
-  content: '';
-  position: absolute;
-  bottom: -14%;
-  left: 10%;
-  z-index: -1;
-  width: 80%;
-  height: 38%;
-  background: radial-gradient(ellipse at 50% 0%, rgb(34 48 29 / 0.22), transparent 70%);
-  filter: blur(22px);
-  pointer-events: none;
+  display: none;
 }
 
 .earthie-rive-layer {
@@ -100,120 +68,137 @@
 
 .earthie-meter-readout {
   position: absolute;
-  right: 7%;
-  bottom: 11%;
-  z-index: 2;
-  display: grid;
-  justify-items: end;
-  min-width: 116px;
-  padding: 10px 12px 12px;
+  top: clamp(-34px, -2.5vw, -22px);
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(7px, 1vw, 12px);
+  width: max-content;
+  min-width: 0;
+  max-width: min(92vw, 340px);
+  padding: 8px 12px 9px;
+  border: 3px solid var(--ink-brown);
   border-radius: 8px;
-  background: rgb(255 255 255 / 0.78);
+  background: #ffffff;
   box-shadow:
-    0 12px 28px rgb(34 48 29 / 0.11),
-    inset 0 0 0 1px rgb(var(--forest-green-rgb) / 0.09);
-  backdrop-filter: blur(10px);
+    0 7px 0 color-mix(in srgb, var(--fresh-leaf), var(--ink-brown) 16%),
+    0 14px 28px rgb(var(--ink-brown-rgb) / 0.14);
+  white-space: nowrap;
+  translate: -50% 0;
 }
 
 .earthie-energy-label {
   color: rgb(var(--forest-green-rgb) / 0.58);
-  font-size: clamp(0.56rem, 0.72vw, 0.76rem);
+  font-size: clamp(0.56rem, 0.7vw, 0.72rem);
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   line-height: 1.2;
   text-transform: uppercase;
 }
 
 .earthie-energy-value {
   color: var(--forest-green);
-  font-size: clamp(2.15rem, 3.8vw, 4.2rem);
+  font-size: clamp(1.45rem, 2.1vw, 2.15rem);
   font-variant-numeric: tabular-nums;
   font-weight: 950;
-  line-height: 0.96;
+  line-height: 1;
 }
 
 .earthie-state-label {
   color: rgb(var(--forest-green-rgb) / 0.72);
-  font-size: clamp(0.78rem, 1vw, 0.98rem);
+  padding: 4px 7px;
+  border-radius: 6px;
+  background: rgb(var(--fresh-leaf-rgb) / 0.14);
+  font-size: clamp(0.66rem, 0.78vw, 0.82rem);
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1;
 }
 
 .earthie-action-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
+  gap: clamp(12px, 2.2vw, 22px);
   width: min(510px, 100%);
 }
 
 .earthie-action-chip {
-  display: inline-grid;
-  grid-template-columns: 28px max-content max-content;
+  --chip-color: var(--fresh-leaf);
+  --chip-color-rgb: var(--fresh-leaf-rgb);
+  --chip-bg: var(--light-leaf);
+
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  min-height: 42px;
-  padding: 6px 11px 6px 7px;
-  border: 1px solid rgb(var(--forest-green-rgb) / 0.12);
-  border-radius: 8px;
-  background: rgb(255 255 255 / 0.64);
-  color: rgb(var(--forest-green-rgb) / 0.58);
-  font-size: clamp(0.76rem, 0.92vw, 0.9rem);
+  justify-content: center;
+  gap: 4px;
+  width: clamp(82px, 8.2vw, 114px);
+  aspect-ratio: 1;
+  padding: 10px 6px 8px;
+  border: 3px solid var(--ink-brown);
+  border-radius: 50%;
+  background: var(--chip-bg);
+  color: var(--text-strong);
   font-weight: 900;
-  opacity: 0.64;
-  transform: translateY(5px) scale(0.97);
+  opacity: 0.62;
+  box-shadow:
+    0 7px 0 color-mix(in srgb, var(--chip-color), var(--ink-brown) 16%),
+    0 10px 26px rgb(var(--chip-color-rgb) / 0.14);
   transition:
     background 180ms ease,
     box-shadow 180ms ease,
-    color 180ms ease,
     opacity 180ms ease,
     transform 180ms ease;
 }
 
 .earthie-action-chip--active {
-  background: rgb(255 255 255 / 0.92);
-  color: var(--text-strong);
   opacity: 1;
-  transform: translateY(0) scale(1);
   box-shadow:
-    0 13px 24px rgb(var(--forest-green-rgb) / 0.11),
-    0 0 0 4px rgb(var(--fresh-leaf-rgb) / 0.12);
+    0 8px 0 color-mix(in srgb, var(--chip-color), var(--ink-brown) 16%),
+    0 14px 36px rgb(var(--chip-color-rgb) / 0.28);
 }
 
 .earthie-action-icon {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: clamp(28px, 2.8vw, 38px);
+  height: clamp(28px, 2.8vw, 38px);
   border-radius: 50%;
-  background: rgb(var(--fresh-leaf-rgb) / 0.12);
-  color: var(--forest-green);
+  background: rgb(var(--chip-color-rgb) / 0.18);
+  color: rgb(var(--chip-color-rgb) / 1);
+  flex-shrink: 0;
 }
 
 .earthie-action-chip--active .earthie-action-icon {
-  background: var(--fresh-leaf);
+  background: rgb(var(--chip-color-rgb) / 1);
   color: #ffffff;
   animation: earthie-chip-pop 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+.earthie-action-text {
+  font-size: clamp(0.52rem, 0.62vw, 0.66rem);
+  font-weight: 900;
+  text-align: center;
+  line-height: 1.1;
+  color: var(--text-strong);
+}
+
 .earthie-action-value {
-  color: var(--forest-green);
+  font-size: clamp(0.68rem, 0.82vw, 0.84rem);
+  font-weight: 950;
+  color: rgb(var(--chip-color-rgb) / 1);
   font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 
 .earthie-showcase--ar .earthie-meter-readout {
   right: auto;
-  left: 7%;
-  justify-items: start;
-}
-
-.earthie-showcase--ar .earthie-action-chip {
-  grid-template-columns: max-content max-content 28px;
-  padding: 6px 7px 6px 11px;
-}
-
-.earthie-showcase--ar .earthie-action-icon {
-  order: 3;
+  left: 50%;
+  justify-content: center;
 }
 
 @keyframes earthie-chip-pop {
@@ -248,14 +233,12 @@
   }
 
   .earthie-meter-readout {
-    right: 4%;
-    bottom: 8%;
-    min-width: 98px;
-    padding: 8px 10px 10px;
+    top: -24px;
+    padding: 7px 10px 8px;
   }
 
   .earthie-energy-value {
-    font-size: clamp(1.8rem, 5.5vw, 2.6rem);
+    font-size: clamp(1.3rem, 4.8vw, 1.8rem);
   }
 
   .earthie-action-row {
@@ -274,32 +257,34 @@
   }
 
   .earthie-meter-readout {
-    min-width: 82px;
+    top: -22px;
+    gap: 6px;
+    padding: 6px 8px 7px;
   }
 
   .earthie-energy-label {
-    font-size: 0.5rem;
+    font-size: 0.48rem;
   }
 
   .earthie-energy-value {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 
   .earthie-state-label {
-    font-size: 0.72rem;
+    padding: 3px 5px;
+    font-size: 0.62rem;
   }
 
   .earthie-action-row {
-    gap: 7px;
+    gap: 10px;
     width: min(310px, 92vw);
   }
 
   .earthie-action-chip {
-    grid-template-columns: 24px max-content max-content;
-    min-height: 34px;
-    padding: 5px 8px 5px 5px;
-    gap: 6px;
-    font-size: 0.68rem;
+    width: clamp(70px, 22vw, 88px);
+    padding: 8px 4px 6px;
+    border-width: 2.5px;
+    gap: 3px;
   }
 
   .earthie-action-icon {

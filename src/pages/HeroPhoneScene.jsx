@@ -11,6 +11,9 @@ import challengesArUrl from '../assets/challenges_ar.jpg'
 import challengesEnUrl from '../assets/challenges_en.jpg'
 
 const DEFAULT_PHONE_MODEL_POSE = {
+  depthAutoMotion: 1,
+  depthPointerX: 0,
+  depthPointerY: 0,
   rotationX: Math.PI / 2,
   rotationY: Math.PI / 2,
   rotationZ: 0,
@@ -23,6 +26,8 @@ const DEFAULT_PHONE_MODEL_POSE = {
 
 export default function HeroPhoneScene({ modelPose = DEFAULT_PHONE_MODEL_POSE, screenContent = 'earthie-video' }) {
   const depthMotion = modelPose.depthMotion ?? 0
+  const depthAutoMotion = THREE.MathUtils.clamp(modelPose.depthAutoMotion ?? 1, 0, 1)
+  const depthPointerX = THREE.MathUtils.clamp(modelPose.depthPointerX ?? 0, -1, 1)
 
   return (
     <Canvas
@@ -32,9 +37,9 @@ export default function HeroPhoneScene({ modelPose = DEFAULT_PHONE_MODEL_POSE, s
       gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
     >
       <ambientLight intensity={1.25} />
-      <directionalLight color="#fff4d6" intensity={2.3} position={[1.8, 3.4, 4]} />
-      <directionalLight color="#dff6ff" intensity={1.5} position={[-3, 1.5, 2.5]} />
-      <DepthPhoneLights amount={depthMotion} />
+      <directionalLight color="#fff1c7" intensity={2.3} position={[1.8, 3.4, 4]} />
+      <directionalLight color="#e3faf5" intensity={1.5} position={[-3, 1.5, 2.5]} />
+      <DepthPhoneLights amount={depthMotion} autoMotion={depthAutoMotion} pointerX={depthPointerX} />
       <Suspense fallback={null}>
         <HeroPhoneModel modelPose={modelPose} screenContent={screenContent} />
       </Suspense>
@@ -42,23 +47,31 @@ export default function HeroPhoneScene({ modelPose = DEFAULT_PHONE_MODEL_POSE, s
   )
 }
 
-function DepthPhoneLights({ amount }) {
+function DepthPhoneLights({ amount, autoMotion = 1, pointerX = 0 }) {
   const leftRimRef = useRef(null)
   const rightRimRef = useRef(null)
   const highlightRef = useRef(null)
   const amountRef = useRef(amount)
+  const autoMotionRef = useRef(autoMotion)
+  const pointerXRef = useRef(pointerX)
 
   useEffect(() => {
     amountRef.current = amount
-  }, [amount])
+    autoMotionRef.current = autoMotion
+    pointerXRef.current = pointerX
+  }, [amount, autoMotion, pointerX])
 
   useFrame(({ clock }) => {
     const activeAmount = amountRef.current
+    const activeAutoMotion = autoMotionRef.current
+    const manualMotion = 1 - activeAutoMotion
+    const activePointerX = pointerXRef.current
     if (!leftRimRef.current || !rightRimRef.current || !highlightRef.current) return
 
     const time = clock.elapsedTime
-    const sweep = Math.sin(time * 0.32)
-    const glint = (Math.sin(time * 0.48 + 1.1) + 1) * 0.5
+    const sweep = Math.sin(time * 0.32) * activeAutoMotion + activePointerX * manualMotion
+    const glint = ((Math.sin(time * 0.48 + 1.1) + 1) * 0.5) * activeAutoMotion
+      + (0.48 + Math.abs(activePointerX) * 0.28) * manualMotion
 
     leftRimRef.current.intensity = activeAmount * (0.85 + glint * 0.25)
     rightRimRef.current.intensity = activeAmount * (0.7 + (1 - glint) * 0.22)
@@ -75,15 +88,25 @@ function DepthPhoneLights({ amount }) {
   )
 }
 
-function updateScreenTextureParallax(texture, screenContent, depthMotion, time) {
+function updateScreenTextureParallax(
+  texture,
+  screenContent,
+  depthMotion,
+  time,
+  depthPointerX = 0,
+  depthPointerY = 0,
+  depthAutoMotion = 1,
+) {
   if (!texture) return
 
   const isVideo = screenContent === 'earthie-video'
   const amount = depthMotion * (isVideo ? 1 : 0.55)
-  const sway = Math.sin(time * 0.32)
-  const lift = Math.sin(time * 0.28 + 0.7)
+  const autoAmount = depthAutoMotion
+  const manualAmount = 1 - depthAutoMotion
+  const sway = Math.sin(time * 0.32) * autoAmount + depthPointerX * manualAmount
+  const lift = Math.sin(time * 0.28 + 0.7) * autoAmount + depthPointerY * manualAmount
   const baseRepeatX = isVideo ? -1 : 1
-  const zoom = 1 - amount * (0.026 + (sway + 1) * 0.003)
+  const zoom = 1 - amount * (0.026 + Math.abs(sway) * 0.006)
 
   texture.offset.set(sway * 0.024 * amount, lift * 0.016 * amount)
   texture.repeat.set(baseRepeatX * zoom, zoom)
@@ -269,10 +292,15 @@ function HeroPhoneModel({ modelPose, screenContent }) {
     const pose = poseRef.current ?? DEFAULT_PHONE_MODEL_POSE
     const floatAmount = pose.floatAmount ?? 1
     const depthMotion = pose.depthMotion ?? 0
+    const depthAutoMotion = THREE.MathUtils.clamp(pose.depthAutoMotion ?? 1, 0, 1)
+    const depthPointerX = THREE.MathUtils.clamp(pose.depthPointerX ?? 0, -1, 1)
+    const depthPointerY = THREE.MathUtils.clamp(pose.depthPointerY ?? 0, -1, 1)
+    const autoDepthMotion = depthMotion * depthAutoMotion
+    const manualDepthMotion = depthMotion * (1 - depthAutoMotion)
     const legacyFloat = floatAmount * (1 - depthMotion * 0.38)
-    const yaw = Math.sin(time * 0.32) * 0.068 * depthMotion
-    const tilt = Math.sin(time * 0.28 + 0.7) * 0.024 * depthMotion
-    const roll = Math.sin(time * 0.24 + 1.6) * 0.01 * depthMotion
+    const yaw = Math.sin(time * 0.32) * 0.068 * autoDepthMotion + depthPointerX * 0.62 * manualDepthMotion
+    const tilt = Math.sin(time * 0.28 + 0.7) * 0.024 * autoDepthMotion - depthPointerY * 0.36 * manualDepthMotion
+    const roll = Math.sin(time * 0.24 + 1.6) * 0.01 * autoDepthMotion - depthPointerX * 0.035 * manualDepthMotion
 
     groupRef.current.rotation.x = (pose.rotationX ?? DEFAULT_PHONE_MODEL_POSE.rotationX) + Math.sin(time * 0.5) * 0.014 * legacyFloat + tilt
     groupRef.current.rotation.y = (pose.rotationY ?? DEFAULT_PHONE_MODEL_POSE.rotationY) + Math.sin(time * 0.44) * 0.032 * legacyFloat + yaw
@@ -282,12 +310,20 @@ function HeroPhoneModel({ modelPose, screenContent }) {
     groupRef.current.position.z = pose.positionZ ?? 0
     groupRef.current.scale.setScalar(pose.scale ?? DEFAULT_PHONE_MODEL_POSE.scale)
 
-    const screenParallaxX = Math.sin(time * 0.32 + 0.28) * 0.018 * depthMotion
-    const screenParallaxY = Math.sin(time * 0.28 + 0.7) * 0.006 * depthMotion
-    const screenLift = (0.009 + Math.cos(time * 0.32) * 0.004) * depthMotion
-    const screenShade = 1 - depthMotion * 0.045 + (Math.sin(time * 0.32 + 0.9) + 1) * 0.032 * depthMotion
+    const screenParallaxX = (Math.sin(time * 0.32 + 0.28) * autoDepthMotion + depthPointerX * manualDepthMotion) * 0.018
+    const screenParallaxY = (Math.sin(time * 0.28 + 0.7) * autoDepthMotion + depthPointerY * manualDepthMotion) * 0.006
+    const screenLift = (0.009 + Math.cos(time * 0.32) * 0.004 * depthAutoMotion) * depthMotion
+    const screenShade = 1 - depthMotion * 0.045 + ((Math.sin(time * 0.32 + 0.9) + 1) * depthAutoMotion + Math.abs(depthPointerX) * manualDepthMotion) * 0.032 * depthMotion
 
-    updateScreenTextureParallax(screenTexture, screenContent, depthMotion, time)
+    updateScreenTextureParallax(
+      screenTexture,
+      screenContent,
+      depthMotion,
+      time,
+      depthPointerX,
+      depthPointerY,
+      depthAutoMotion,
+    )
 
     screenMeshesRef.current.forEach(({ mesh, basePosition }) => {
       mesh.position.set(

@@ -1,20 +1,28 @@
+/* ── Background ───────────────────────────────────────────── */
 .loading-screen {
   position: fixed;
   inset: 0;
   z-index: 999;
   display: grid;
   place-items: center;
-  background: #162910;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 55% 44% at 50% 46%, rgb(246 200 95 / 0.13) 0%, transparent 68%),
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgb(105 185 95 / 0.18) 0%, transparent 80%),
+    linear-gradient(168deg, #0d2212 0%, #183a1d 32%, #255931 62%, #3a7d47 88%, #5a9e5a 100%);
 }
 
+/* ── Center stack ─────────────────────────────────────────── */
 .loading-center {
   position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 28px;
+  gap: 22px;
 }
 
+/* ── Logo + rings ─────────────────────────────────────────── */
 .loading-logo-wrap {
   position: relative;
   width: 120px;
@@ -30,49 +38,53 @@
   height: 120px;
   object-fit: contain;
   filter:
-    drop-shadow(0 0 28px rgb(100 200 70 / 0.55))
-    drop-shadow(0 8px 20px rgb(0 0 0 / 0.5));
+    drop-shadow(0 0 32px rgb(246 200 95 / 0.55))
+    drop-shadow(0 8px 24px rgb(61 51 39 / 0.52));
 }
 
+/* Sonar rings — each a different brand colour */
 .loading-ring {
   position: absolute;
   top: 50%;
   left: 50%;
   width: 120px;
   height: 120px;
-  border: 2px solid rgb(120 210 80 / 0.45);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   opacity: 0;
-  animation: loading-sonar 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
-.loading-ring--1 { animation-delay: 0s; }
-.loading-ring--2 { animation-delay: 0.55s; }
-.loading-ring--3 { animation-delay: 1.1s; }
+.loading-ring--1 {
+  border: 2.5px solid rgb(105 185 95 / 0.7);
+  animation: loading-sonar 2.1s cubic-bezier(0.16, 1, 0.3, 1) 0s infinite;
+}
+.loading-ring--2 {
+  border: 2px solid rgb(246 200 95 / 0.65);
+  animation: loading-sonar 2.1s cubic-bezier(0.16, 1, 0.3, 1) 0.58s infinite;
+}
+.loading-ring--3 {
+  border: 2px solid rgb(116 203 213 / 0.55);
+  animation: loading-sonar 2.1s cubic-bezier(0.16, 1, 0.3, 1) 1.16s infinite;
+}
 
 @keyframes loading-sonar {
-  0% {
-    transform: translate(-50%, -50%) scale(0.85);
-    opacity: 0.75;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(3.6);
-    opacity: 0;
-  }
+  0%   { transform: translate(-50%, -50%) scale(0.82); opacity: 0.85; }
+  100% { transform: translate(-50%, -50%) scale(3.8);  opacity: 0; }
 }
 
+/* ── Brand name ───────────────────────────────────────────── */
 .loading-name {
   position: relative;
   z-index: 2;
   font-family: var(--font-heading-en);
-  font-size: 3rem;
+  font-size: 3.2rem;
   font-weight: 400;
-  color: #ffffff;
-  letter-spacing: 0.02em;
+  color: #f5ffe8;
+  letter-spacing: 0.03em;
   text-shadow:
-    0 0 48px rgb(120 210 80 / 0.55),
-    0 4px 16px rgb(0 0 0 / 0.4);
+    0 0 56px rgb(246 200 95 / 0.55),
+    0 0 24px rgb(105 185 95 / 0.45),
+    0 4px 18px rgb(61 51 39 / 0.45);
 }
 
 .loading-name--ar {
@@ -81,3 +93,106 @@
   font-weight: 800;
   letter-spacing: 0;
 }
+
+/* ── Coin-bounce loading dots ─────────────────────────────── */
+.loading-dots {
+  display: flex;
+  gap: 9px;
+  align-items: flex-end;
+  height: 18px;
+}
+
+.loading-dots span {
+  display: block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--golden-yellow, #f6c85f);
+  box-shadow: 0 0 8px rgb(246 200 95 / 0.7);
+  animation: loading-bounce 1.1s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(1) { animation-delay: 0s; }
+.loading-dots span:nth-child(2) { animation-delay: 0.18s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes loading-bounce {
+  0%, 80%, 100% { transform: translateY(0);   opacity: 0.55; }
+  40%            { transform: translateY(-9px); opacity: 1; }
+}
+
+/* ── Floating particles ───────────────────────────────────── */
+.loading-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Leaf shape */
+.loading-leaf {
+  position: absolute;
+  width: 10px;
+  height: 14px;
+  border-radius: 50% 0 50% 0;
+  background: rgb(105 185 95 / 0.75);
+  box-shadow: 0 0 6px rgb(105 185 95 / 0.4);
+  opacity: 0;
+  animation: loading-leaf-float var(--lf-dur, 5s) ease-in-out var(--lf-delay, 0s) infinite;
+}
+
+/* Sparkle shape — diamond */
+.loading-star {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: rgb(246 200 95 / 0.85);
+  box-shadow: 0 0 8px rgb(246 200 95 / 0.6);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  opacity: 0;
+  animation: loading-star-twinkle var(--ls-dur, 3s) ease-in-out var(--ls-delay, 0s) infinite;
+}
+
+/* Teal circle – water drop */
+.loading-drop {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgb(116 203 213 / 0.7);
+  box-shadow: 0 0 7px rgb(116 203 213 / 0.5);
+  opacity: 0;
+  animation: loading-leaf-float var(--lf-dur, 6s) ease-in-out var(--lf-delay, 0s) infinite;
+}
+
+@keyframes loading-leaf-float {
+  0%   { transform: translateY(0)     translateX(0px)                  rotate(0deg);   opacity: 0; }
+  12%  { opacity: 0.85; }
+  88%  { opacity: 0.75; }
+  100% { transform: translateY(-220px) translateX(var(--lf-dx, 18px)) rotate(var(--lf-re, 120deg)); opacity: 0; }
+}
+
+@keyframes loading-star-twinkle {
+  0%   { transform: scale(0.6) rotate(0deg);   opacity: 0; }
+  20%  { transform: scale(1.1) rotate(45deg);  opacity: 0.9; }
+  50%  { transform: scale(0.8) rotate(90deg);  opacity: 0.5; }
+  80%  { transform: scale(1.2) rotate(135deg); opacity: 0.85; }
+  100% { transform: scale(0.5) rotate(180deg); opacity: 0; }
+}
+
+/* Individual particle positions & timings */
+.loading-leaf--1  { left: 14%;  bottom: 18%; --lf-dur: 5.2s; --lf-delay: 0.0s; --lf-dx:  14px; --lf-re: 110deg; }
+.loading-leaf--2  { left: 28%;  bottom: 10%; --lf-dur: 6.1s; --lf-delay: 0.7s; --lf-dx: -20px; --lf-re: -90deg; width: 8px; height: 11px; }
+.loading-leaf--3  { left: 62%;  bottom: 22%; --lf-dur: 4.8s; --lf-delay: 1.2s; --lf-dx:  22px; --lf-re: 140deg; background: rgb(47 111 62 / 0.8); }
+.loading-leaf--4  { left: 78%;  bottom: 12%; --lf-dur: 5.7s; --lf-delay: 0.4s; --lf-dx: -16px; --lf-re: -75deg; width: 9px; height: 13px; }
+.loading-leaf--5  { left: 44%;  bottom:  8%; --lf-dur: 6.5s; --lf-delay: 1.8s; --lf-dx:  10px; --lf-re: 100deg; }
+.loading-leaf--6  { left: 88%;  bottom: 25%; --lf-dur: 5.0s; --lf-delay: 2.5s; --lf-dx: -12px; --lf-re: -60deg; width: 7px; height: 10px; background: rgb(90 158 90 / 0.8); }
+
+.loading-star--1  { left: 22%;  bottom: 55%; --ls-dur: 2.8s; --ls-delay: 0.3s; }
+.loading-star--2  { left: 70%;  bottom: 60%; --ls-dur: 3.4s; --ls-delay: 1.1s; width: 9px; height: 9px; }
+.loading-star--3  { left: 50%;  bottom: 72%; --ls-dur: 2.5s; --ls-delay: 0.9s; width: 5px; height: 5px; background: rgb(255 255 255 / 0.7); }
+.loading-star--4  { left: 36%;  bottom: 42%; --ls-dur: 3.1s; --ls-delay: 2.0s; width: 6px; height: 6px; }
+
+.loading-drop--1  { left: 56%;  bottom: 48%; --lf-dur: 7.0s; --lf-delay: 0.6s; --lf-dx: -8px;  --lf-re: 0deg; }
+.loading-drop--2  { left: 82%;  bottom: 38%; --lf-dur: 5.8s; --lf-delay: 2.2s; --lf-dx: 10px;  --lf-re: 0deg; width: 6px; height: 6px; }

@@ -39,6 +39,12 @@ const actionThresholds = [18, 48, 78]
 const actionSounds = ['eco-recycle', 'eco-water', 'eco-plant']
 const moodThresholds = [25, 50, 75, 100]
 
+const chipStyles = [
+  { '--chip-color': 'var(--fresh-leaf)', '--chip-color-rgb': '105 185 95', '--chip-bg': 'var(--light-leaf)' },
+  { '--chip-color': 'var(--ocean-blue)', '--chip-color-rgb': '116 203 213', '--chip-bg': 'var(--light-aqua)' },
+  { '--chip-color': 'var(--golden-yellow)', '--chip-color-rgb': '246 200 95', '--chip-bg': 'var(--light-cream)' },
+]
+
 function RiveLayer({ className, progress, src }) {
   const layout = useMemo(() => new Layout({
     alignment: Alignment.Center,
@@ -50,8 +56,6 @@ function RiveLayer({ className, progress, src }) {
     layout,
     src,
     stateMachines: STATE_MACHINE,
-  }, {
-    shouldResizeCanvasToContainer: true,
   })
 
   useEffect(() => {
@@ -70,11 +74,22 @@ function RiveLayer({ className, progress, src }) {
     const observer = container ? new ResizeObserver(resizeLayer) : null
     observer?.observe(container)
 
-    const timeoutId = window.setTimeout(resizeLayer, 120)
+    // Re-sync drawing surface when the OS display scaling changes (e.g. moving
+    // the window between monitors with different DPR on Windows/macOS).
+    const dprQuery = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`)
+    const handleDPRChange = () => resizeLayer()
+    dprQuery.addEventListener('change', handleDPRChange)
+
+    const t1 = window.setTimeout(resizeLayer, 80)
+    const t2 = window.setTimeout(resizeLayer, 300)
+    const t3 = window.setTimeout(resizeLayer, 800)
 
     return () => {
       observer?.disconnect()
-      window.clearTimeout(timeoutId)
+      dprQuery.removeEventListener('change', handleDPRChange)
+      window.clearTimeout(t1)
+      window.clearTimeout(t2)
+      window.clearTimeout(t3)
     }
   }, [rive])
 
@@ -116,6 +131,12 @@ export default function EarthieShowcase({ isAr, energy = 0 }) {
     const crossedMood = moodThresholds.some((threshold) => previousEnergy < threshold && energy >= threshold)
     if (crossedMood) {
       playMenuSound('eco-mood')
+      return
+    }
+
+    // soft tick for gradual bar fill (throttled to every ~4% change)
+    if (Math.floor(energy / 4) > Math.floor(previousEnergy / 4)) {
+      playMenuSound('progress-tick')
     }
   }, [energy])
 
@@ -165,20 +186,18 @@ export default function EarthieShowcase({ isAr, energy = 0 }) {
           const isActive = energy >= actionThresholds[index]
 
           return (
-            <motion.div
+            <div
               className={`earthie-action-chip ${isActive ? 'earthie-action-chip--active' : ''}`}
+              data-earthie-chip=""
               key={action.label}
-              initial={{ opacity: 0, y: 28, scale: 0.88 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.55 + index * 0.12 }}
+              style={chipStyles[index]}
             >
               <span className="earthie-action-icon" aria-hidden="true">
-                <Icon size={17} strokeWidth={2.7} />
+                <Icon size={20} strokeWidth={2.5} />
               </span>
               <span className="earthie-action-text">{action.label}</span>
               <span className="earthie-action-value">{action.value}</span>
-            </motion.div>
+            </div>
           )
         })}
       </div>

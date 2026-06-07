@@ -25,34 +25,40 @@
 }
 
 :root {
-  --forest-green: #5a913e;
-  --soft-mint: #ddead7;
-  --ocean-blue: #5bbbe8;
-  --light-aqua: #dff6ff;
-  --warm-terracotta: #e29a7b;
-  --soft-peach: #fce8df;
-  --golden-yellow: #f4c542;
-  --light-cream: #fff4d6;
-  --rich-brown: #9c6b4e;
-  --sand: #f1e3d3;
-  --fresh-leaf: #7fb366;
-  --light-leaf: #e7f4df;
-  --sky-cyan: #7cd3e6;
-  --mist: #eaf9fc;
-  --lavender: #a88fe8;
-  --light-lavender: #f0ebff;
-  --pastel-game-bg: #ffffff;
-  --pastel-community-bg: #c8e8a8;
-  --pastel-earthie-bg: #e8f1ff;
+  --forest-green: #2f6f3e;
+  --soft-mint: #d9f2df;
+  --ocean-blue: #74cbd5;
+  --light-aqua: #e3faf5;
+  --warm-terracotta: #e9a26d;
+  --soft-peach: #ffe1ca;
+  --golden-yellow: #f6c85f;
+  --light-cream: #f7f4d8;
+  --rich-brown: #8b6949;
+  --sand: #f2dfbf;
+  --fresh-leaf: #69b95f;
+  --light-leaf: #edf9db;
+  --sky-cyan: #9de1dd;
+  --mist: #edfaff;
+  --lavender: #bfa7ee;
+  --light-lavender: #f2ecff;
+  --berry-pink: #e96c8f;
+  --soft-berry: #ffd4dc;
+  --ink-brown: #3d3327;
+  --pastel-game-bg: #f6ffe9;
+  --pastel-community-bg: #ccefd4;
+  --pastel-earthie-bg: #e7f5ff;
 
-  --forest-green-rgb: 90 145 62;
-  --ocean-blue-rgb: 91 187 232;
-  --warm-terracotta-rgb: 226 154 123;
-  --golden-yellow-rgb: 244 197 66;
-  --rich-brown-rgb: 156 107 78;
-  --fresh-leaf-rgb: 127 179 102;
-  --sky-cyan-rgb: 124 211 230;
-  --lavender-rgb: 168 143 232;
+  --forest-green-rgb: 47 111 62;
+  --ocean-blue-rgb: 116 203 213;
+  --warm-terracotta-rgb: 233 162 109;
+  --golden-yellow-rgb: 246 200 95;
+  --rich-brown-rgb: 139 105 73;
+  --fresh-leaf-rgb: 105 185 95;
+  --sky-cyan-rgb: 157 225 221;
+  --lavender-rgb: 191 167 238;
+  --berry-pink-rgb: 233 108 143;
+  --ink-brown-rgb: 61 51 39;
+  --surface-rgb: 255 253 245;
 
   --brand-primary: var(--forest-green);
   --brand-soft: var(--soft-mint);
@@ -71,13 +77,13 @@
   --challenge-air: var(--sky-cyan);
   --challenge-air-soft: var(--mist);
 
-  --bg: #fbfdf9;
-  --surface: #ffffff;
+  --bg: #fbfff3;
+  --surface: #fffdf5;
   --surface-alt: var(--soft-mint);
-  --text: #4e5d48;
-  --text-strong: #22301d;
-  --muted: #697966;
-  --border: #d7e4d0;
+  --text: #536348;
+  --text-strong: #1d3425;
+  --muted: #6e7c62;
+  --border: #d7e8ca;
   --green: var(--brand-primary);
   --blue: var(--challenge-water);
   --sun: var(--challenge-energy);
