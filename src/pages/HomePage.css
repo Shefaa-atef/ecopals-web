@@ -492,7 +492,7 @@
   --text-strong: #3b2e10;
 
   position: relative;
-  isolation: isolate;
+  z-index: 0;
   height: 100svh;
   min-height: 0;
   padding: 92px clamp(24px, 5vw, 76px) 34px;
@@ -665,26 +665,21 @@
   width: 150px;
   aspect-ratio: 1;
   pointer-events: none;
-  /* translateZ(0) promotes to a 3D compositing layer, which forces Chrome/Windows
-     to rasterize at the full devicePixelRatio — fixes blurry images + CSS frame */
-  transform: rotate(var(--challenge-rotate)) translateZ(0);
+  transform: rotate(var(--challenge-rotate));
   user-select: none;
+  will-change: transform;
 }
 
 .challenge-photo__card {
   position: absolute;
   inset: 0;
   z-index: 2;
-  overflow: hidden;
   border: 3px solid var(--ink-brown);
   border-radius: 18px;
   background: var(--surface);
   box-shadow:
     0 8px 0 color-mix(in srgb, var(--rich-brown), var(--ink-brown) 20%),
     0 14px 28px rgb(var(--ink-brown-rgb) / 0.18);
-  /* Own 3D layer ensures overflow+border-radius renders at full DPR on high-DPI */
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 }
 
 .challenge-photo__img {
@@ -695,9 +690,7 @@
   pointer-events: none;
   -webkit-user-drag: none;
   user-select: none;
-  /* Hint browser to use high-quality interpolation on high-DPI displays */
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: high-quality;
+  border-radius: 15px;
 }
 
 /* Coin sits BEHIND the card (z-index: 1) as a sibling — visible after card fades out */
