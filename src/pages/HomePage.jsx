@@ -6,6 +6,7 @@ import PhoneScrollStage from './PhoneScrollStage'
 import EarthieShowcase from '../components/EarthieShowcase'
 import HeroParticles from '../components/HeroParticles'
 import CommunityFloatingPosts from '../components/CommunityFloatingPosts'
+import RecyclePortalSection from '../components/RecyclePortalSection'
 import useChallengePointerParallax from './home/useChallengePointerParallax'
 import useExactSectionScroll from './home/useExactSectionScroll'
 import useHomeScrollAnimations from './home/useHomeScrollAnimations'
@@ -182,10 +183,10 @@ export default function HomePage() {
           <div className={`community-copy ${isAr ? 'community-copy--ar' : ''}`} dir={isAr ? 'rtl' : 'ltr'}>
             <motion.p
               className="community-kicker"
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 18, filter: 'blur(6px)' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               viewport={{ once: true, amount: 0.5 }}
-              transition={{ type: 'spring', stiffness: 320, damping: 24 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >{isAr ? 'مجتمع إيكوبالز' : 'EcoPals community'}</motion.p>
             <h2 className="community-heading" id="community-title">
               {(isAr
@@ -194,19 +195,21 @@ export default function HomePage() {
               ).map((word, i) => (
                 <motion.span
                   key={word}
-                  initial={{ opacity: 0, y: 28 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 42, filter: 'blur(10px)' }}
+                  whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                   viewport={{ once: true, amount: 0.4 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 22, delay: 0.08 + i * 0.1 }}
-                >{word}</motion.span>
+                  transition={{ duration: 0.72, ease: [0.16, 1, 0.3, 1], delay: 0.08 + i * 0.12 }}
+                >
+                  {word}
+                </motion.span>
               ))}
             </h2>
             <motion.p
               className="community-body"
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 18, filter: 'blur(6px)' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               viewport={{ once: true, amount: 0.5 }}
-              transition={{ type: 'spring', stiffness: 280, damping: 24, delay: 0.32 }}
+              transition={{ duration: 0.58, ease: [0.16, 1, 0.3, 1], delay: 0.34 }}
             >
               {isAr
                 ? 'شوف أفعال الأصدقاء وتحدياتهم وتعليقاتهم وهي تتحول إلى أثر واضح داخل إيكوبالز.'
@@ -317,41 +320,37 @@ export default function HomePage() {
         </div>
       </section>
 
-      {preparedSections.map((section, sectionIndex) => (
-        <section
-          aria-labelledby={`${section.key}-title`}
-          className={`home-band-prep home-band-prep--${section.key}`}
-          id={section.key}
-          key={section.key}
-        >
-          <motion.div
-            className="prep-section-shell"
-            dir={isAr ? 'rtl' : 'ltr'}
-            initial={{ opacity: 0, y: 28 }}
-            transition={{ type: 'spring', stiffness: 220, damping: 24 }}
-            viewport={{ once: true, amount: 0.45 }}
-            whileInView={{ opacity: 1, y: 0 }}
+      {preparedSections.flatMap((section, sectionIndex) => {
+        if (sectionIndex === 0) {
+          // The shared PhoneScrollStage phone continues directly into Recycle & Earn.
+          // A phone-scene-anchor inside RecyclePortalSection guides its position.
+          return [
+            <RecyclePortalSection key="recycle-portal" isAr={isAr} />,
+          ]
+        }
+
+        return [(
+          <section
+            aria-labelledby={`${section.key}-title`}
+            className={`home-band-prep home-band-prep--${section.key}`}
+            id={section.key}
+            key={section.key}
           >
-            <p className="prep-section-label">{section.label}</p>
-            <p className="prep-section-kicker">{section.kicker[isAr ? 'ar' : 'en']}</p>
-            <h2 id={`${section.key}-title`}>{section.title[isAr ? 'ar' : 'en']}</h2>
-          </motion.div>
-          {sectionIndex === 0 ? (
-            <div
-              aria-hidden="true"
-              className="prep-phone-exit-anchor phone-scene-anchor"
-              data-phone-content={isAr ? 'challenges-ar' : 'challenges-en'}
-              data-phone-depth-auto-motion="0"
-              data-phone-depth-motion="1"
-              data-phone-float-amount="0"
-              data-phone-opacity="0"
-              data-phone-orientation="portrait"
-              data-phone-rotate="0"
-              data-phone-scale="1.16"
-            />
-          ) : null}
-        </section>
-      ))}
+            <motion.div
+              className="prep-section-shell"
+              dir={isAr ? 'rtl' : 'ltr'}
+              initial={{ opacity: 0, y: 28 }}
+              transition={{ type: 'spring', stiffness: 220, damping: 24 }}
+              viewport={{ once: true, amount: 0.45 }}
+              whileInView={{ opacity: 1, y: 0 }}
+            >
+              <p className="prep-section-label">{section.label}</p>
+              <p className="prep-section-kicker">{section.kicker[isAr ? 'ar' : 'en']}</p>
+              <h2 id={`${section.key}-title`}>{section.title[isAr ? 'ar' : 'en']}</h2>
+            </motion.div>
+          </section>
+        )]
+      })}
     </>
   )
 }

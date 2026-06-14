@@ -421,22 +421,74 @@ const RECYCLE_ICONS = [
       </svg>
     ),
   },
+]
+
+const MONEY_ICONS = [
   {
-    id: 'recycle-earth',
+    id: 'money-coin',
     element: (
       <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-        <circle cx="22" cy="25" r="14" fill="var(--ocean-blue)" stroke="var(--ink-brown)" strokeWidth="2"/>
-        <path d="M13 19 C15 15 21 14 25 17 C27 18.5 28 21 26 23 C24 25 21 25 19 23 C16 21 13 23 13 19Z" fill="var(--fresh-leaf)" stroke="var(--ink-brown)" strokeWidth="1.2"/>
-        <path d="M24 27 C26 25 29 26 30 29 C31 31 29 33 27 33 C25 33 23 31 24 27Z" fill="var(--fresh-leaf)" stroke="var(--ink-brown)" strokeWidth="1.2"/>
-        <path d="M22 7 C26 8 30 10 32 14" stroke="#9fd17a" strokeWidth="3" strokeLinecap="round" fill="none"/>
-        <polygon points="32,14 28,12 30,16" fill="#9fd17a" stroke="var(--ink-brown)" strokeWidth="1.2" strokeLinejoin="round"/>
-        <path d="M22 7 C18 8 14 10 12 14" stroke="var(--fresh-leaf)" strokeWidth="3" strokeLinecap="round" fill="none"/>
-        <polygon points="12,14 10,10 14,12" fill="var(--fresh-leaf)" stroke="var(--ink-brown)" strokeWidth="1.2" strokeLinejoin="round"/>
+        <circle cx="22" cy="22" r="18" fill="#f5c518" stroke="#7c4a00" strokeWidth="2.5"/>
+        <circle cx="22" cy="22" r="13.5" fill="#ffd84d" stroke="#7c4a00" strokeWidth="1.8"/>
+        <path d="M15 17 C17 14 27 14 29 17" stroke="#7c4a00" strokeWidth="1.6" strokeLinecap="round" opacity="0.45"/>
+        <circle cx="17" cy="20" r="1.2" fill="#7c4a00" opacity="0.3"/>
+        <circle cx="27" cy="20" r="1.2" fill="#7c4a00" opacity="0.3"/>
+      </svg>
+    ),
+  },
+  {
+    id: 'money-stack',
+    element: (
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+        <ellipse cx="22" cy="36" rx="14" ry="4.5" fill="#a87000" stroke="#7c4a00" strokeWidth="1.8"/>
+        <rect x="8" y="10" width="28" height="26" fill="#e8a800"/>
+        <line x1="8" y1="10" x2="8" y2="36" stroke="#7c4a00" strokeWidth="1.8"/>
+        <line x1="36" y1="10" x2="36" y2="36" stroke="#7c4a00" strokeWidth="1.8"/>
+        <line x1="8" y1="19.5" x2="36" y2="19.5" stroke="#c88a00" strokeWidth="1.8"/>
+        <line x1="8" y1="28" x2="36" y2="28" stroke="#c88a00" strokeWidth="1.8"/>
+        <ellipse cx="22" cy="10" rx="14" ry="4.5" fill="#fde862" stroke="#7c4a00" strokeWidth="1.8"/>
+      </svg>
+    ),
+  },
+  {
+    id: 'money-bill',
+    element: (
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+        <rect x="4" y="13" width="36" height="20" rx="3" fill="#5db85d" stroke="#7c4a00" strokeWidth="2"/>
+        <rect x="9" y="18" width="26" height="10" rx="2" fill="#7acc7a" stroke="#7c4a00" strokeWidth="1.4"/>
+        <circle cx="22" cy="23" r="5" fill="#f5c518" stroke="#7c4a00" strokeWidth="1.6"/>
+        <circle cx="22" cy="23" r="2.5" fill="#ffd84d" stroke="#7c4a00" strokeWidth="1.2"/>
+        <line x1="6" y1="20" x2="6" y2="26" stroke="#7c4a00" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
+        <line x1="38" y1="20" x2="38" y2="26" stroke="#7c4a00" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
+      </svg>
+    ),
+  },
+  {
+    id: 'money-bag',
+    element: (
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+        <path d="M17 10 L14 5 L30 5 L27 10 Z" fill="#cda352" stroke="#7c4a00" strokeWidth="2" strokeLinejoin="round"/>
+        <path d="M16 10 L28 10 C34 15 38 24 38 31 C38 38 32 41 22 41 C12 41 6 38 6 31 C6 24 10 15 16 10Z" fill="#f5c518" stroke="#7c4a00" strokeWidth="2" strokeLinejoin="round"/>
+        <path d="M15 14 L29 14" stroke="#7c4a00" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M13 28 C13 22 31 22 31 28" stroke="#7c4a00" strokeWidth="1.6" strokeLinecap="round" opacity="0.4"/>
+        <path d="M11 33 C11 27 33 27 33 33" stroke="#7c4a00" strokeWidth="1.6" strokeLinecap="round" opacity="0.25"/>
+      </svg>
+    ),
+  },
+  {
+    id: 'money-wallet',
+    element: (
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+        <path d="M7 14 C7 11.5 9 10 11.5 10 L31 10 C33 10 35 11.5 35 14 L35 17 L9 17 C7.8 17 7 16 7 14Z" fill="#8ccf68" stroke="var(--ink-brown)" strokeWidth="2" strokeLinejoin="round"/>
+        <rect x="6" y="16" width="32" height="21" rx="4" fill="var(--fresh-leaf)" stroke="var(--ink-brown)" strokeWidth="2"/>
+        <path d="M27 22 L39 22 L39 31 L27 31 C24.5 31 23 29.4 23 26.5 C23 23.6 24.5 22 27 22Z" fill="var(--golden-yellow)" stroke="var(--ink-brown)" strokeWidth="2" strokeLinejoin="round"/>
+        <circle cx="28.5" cy="26.5" r="2" fill="var(--ink-brown)"/>
+        <path d="M12 13 C15 11.5 20 11.5 23 13" stroke="white" strokeWidth="1.8" strokeLinecap="round" opacity="0.55"/>
       </svg>
     ),
   },
 ]
 
-export const ICON_SETS = [NATURE_ICONS, FACE_ICONS, COMM_ICONS, RECYCLE_ICONS]
+export const ICON_SETS = [NATURE_ICONS, FACE_ICONS, COMM_ICONS, RECYCLE_ICONS, MONEY_ICONS]
 
-export const SECTION_TO_SET = { home: 0, game: 1, community: 2, challenges: 3 }
+export const SECTION_TO_SET = { home: 0, game: 1, community: 2, challenges: 3, 'recycle-portal': 4 }

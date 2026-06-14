@@ -1,5 +1,5 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { getHeroSoundMuted, setHeroSoundMuted, setHeroVideoRef } from './heroState'
@@ -24,6 +24,8 @@ const DEFAULT_PHONE_MODEL_POSE = {
   floatAmount: 1,
 }
 
+const PHONE_CANVAS_DPR = [2, 3]
+
 export default function HeroPhoneScene({ modelPose = DEFAULT_PHONE_MODEL_POSE, screenContent = 'earthie-video' }) {
   const depthMotion = modelPose.depthMotion ?? 0
   const depthAutoMotion = THREE.MathUtils.clamp(modelPose.depthAutoMotion ?? 1, 0, 1)
@@ -33,7 +35,7 @@ export default function HeroPhoneScene({ modelPose = DEFAULT_PHONE_MODEL_POSE, s
     <Canvas
       camera={{ position: [0, 0, 4.6], fov: 33 }}
       className="hero-phone-canvas"
-      dpr={[1.5, 3]}
+      dpr={PHONE_CANVAS_DPR}
       gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
     >
       <ambientLight intensity={1.25} />
@@ -188,6 +190,8 @@ const staticScreenImages = {
 
 function useStaticScreenTexture(screenContent) {
   const [texture, setTexture] = useState(null)
+  const gl = useThree((state) => state.gl)
+  const maxAnisotropy = gl.capabilities.getMaxAnisotropy()
 
   useEffect(() => {
     const screenImageUrl = staticScreenImages[screenContent]
@@ -221,7 +225,7 @@ function useStaticScreenTexture(screenContent) {
       tex.generateMipmaps = true
       tex.minFilter = THREE.LinearMipmapLinearFilter
       tex.magFilter = THREE.LinearFilter
-      tex.anisotropy = 16
+      tex.anisotropy = maxAnisotropy
       tex.needsUpdate = true
       setTexture(tex)
     })
@@ -233,7 +237,7 @@ function useStaticScreenTexture(screenContent) {
         return null
       })
     }
-  }, [screenContent])
+  }, [maxAnisotropy, screenContent])
 
   return texture
 }
@@ -241,6 +245,7 @@ function useStaticScreenTexture(screenContent) {
 function HeroPhoneModel({ modelPose, screenContent }) {
   const groupRef = useRef(null)
   const poseRef = useRef(modelPose)
+  const screenContentRef = useRef(screenContent)
   const screenMeshesRef = useRef([])
   const { scene } = useGLTF(phoneModelUrl)
   const videoTexture = useEarthieVideoTexture(screenContent === 'earthie-video')
@@ -251,6 +256,10 @@ function HeroPhoneModel({ modelPose, screenContent }) {
   useEffect(() => {
     poseRef.current = modelPose
   }, [modelPose])
+
+  useEffect(() => {
+    screenContentRef.current = screenContent
+  }, [screenContent])
 
   useEffect(() => {
     screenMeshesRef.current = []
@@ -271,7 +280,7 @@ function HeroPhoneModel({ modelPose, screenContent }) {
           mesh: node,
         })
         node.material = new THREE.MeshBasicMaterial({
-          color: '#ffffff',
+          color: screenContent === 'recycle-portal' ? '#0e3520' : '#ffffff',
           map: screenTexture,
           side: THREE.DoubleSide,
           toneMapped: false,
@@ -283,7 +292,7 @@ function HeroPhoneModel({ modelPose, screenContent }) {
       node.material.roughness = 0.62
       node.material.metalness = 0.08
     })
-  }, [phoneScene, screenTexture])
+  }, [phoneScene, screenTexture, screenContent])
 
   useFrame(({ clock }) => {
     if (!groupRef.current) return
@@ -325,6 +334,8 @@ function HeroPhoneModel({ modelPose, screenContent }) {
       depthAutoMotion,
     )
 
+    const isColorScreen = screenContentRef.current === 'recycle-portal'
+
     screenMeshesRef.current.forEach(({ mesh, basePosition }) => {
       mesh.position.set(
         basePosition.x + screenParallaxX,
@@ -332,7 +343,9 @@ function HeroPhoneModel({ modelPose, screenContent }) {
         basePosition.z + screenLift,
       )
 
-      if (mesh.material?.color) {
+      // Skip the shade override for solid-color screens — their color is
+      // set once in the material useEffect and must not be overwritten here.
+      if (mesh.material?.color && !isColorScreen) {
         mesh.material.color.setRGB(screenShade, screenShade, screenShade)
       }
     })

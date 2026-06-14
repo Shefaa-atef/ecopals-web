@@ -62,29 +62,12 @@ export default function useHomeScrollAnimations({
       })
     }
 
-    const bgTransitions = [
-      { trigger: about, from: '--forest-green', to: '--light-aqua' },
-      { trigger: community, from: '--light-aqua', to: '--light-lavender' },
-      { trigger: challenges, from: '--light-lavender', to: '--light-cream' },
-    ]
-
-    const prepTransitions = [
-      { key: 'recycle-challenges', from: '--light-cream', to: '--light-leaf' },
-      { key: 'clothing-game', from: '--light-leaf', to: '--soft-peach' },
-      { key: 'match-3-game', from: '--soft-peach', to: '--light-lavender' },
-      { key: 'do-you-like-me-game', from: '--light-lavender', to: '--light-cream' },
-    ]
-
-    const allTransitions = [
-      ...bgTransitions,
-      ...prepTransitions.map(({ key, from, to }) => ({
-        trigger: document.querySelector(`.home-band-prep--${key}`),
-        from,
-        to,
-      })),
-    ]
-
-    allTransitions.forEach(({ trigger: triggerEl, from, to }) => {
+    // Body bg for about and community — these sit above the challenges pin spacer
+    // so their trigger positions are correct at creation time.
+    ;[
+      { trigger: about,      from: '--forest-green',  to: '--light-aqua'    },
+      { trigger: community,  from: '--light-aqua',    to: '--light-lavender' },
+    ].forEach(({ trigger: triggerEl, from, to }) => {
       if (!triggerEl) return
       gsap.fromTo(
         document.body,
@@ -104,6 +87,28 @@ export default function useHomeScrollAnimations({
       )
     })
 
+    // Animate the challenges section's own background (lavender → light-leaf green)
+    // so the green colour shows through the dense card/coin layout.
+    if (challenges) {
+      gsap.fromTo(
+        challenges,
+        { backgroundColor: readPastel('--light-lavender') },
+        {
+          backgroundColor: readPastel('--light-leaf'),
+          ease: 'none',
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: challenges,
+            start: 'top bottom',
+            end: 'top top',
+            invalidateOnRefresh: true,
+            scrub: 0.6,
+          },
+        },
+      )
+    }
+
+    // ── Challenges coin/card animation ────────────────────────────────────────
     if (challenges) {
       const photoCards = photoCardRefs.current
       const coins = coinRefs.current
@@ -165,6 +170,7 @@ export default function useHomeScrollAnimations({
         )
       }
 
+      // ── Challenges pin (created BEFORE body-bg triggers for challenges/rp) ──
       ScrollTrigger.create({
         trigger: challenges,
         start: 'top top',
@@ -191,5 +197,87 @@ export default function useHomeScrollAnimations({
         },
       })
     }
+
+    // Refresh here so the challenges pin spacer is added to the DOM before we
+    // read element positions. getBoundingClientRect() after this call returns
+    // the correct document positions for challenges and recycle-portal.
+    ScrollTrigger.refresh()
+
+    // Body bg for challenges and recycle-portal — computed with ABSOLUTE pixel
+    // positions so they are immune to any subsequent ScrollTrigger.refresh()
+    // that might shift positions before these tweens execute.
+    const vh = window.innerHeight
+    const chTop = challenges
+      ? challenges.getBoundingClientRect().top + (window.scrollY || document.documentElement.scrollTop)
+      : 0
+
+    const rpEl = document.getElementById('recycle-portal')
+    const rpTop = rpEl
+      ? rpEl.getBoundingClientRect().top + (window.scrollY || document.documentElement.scrollTop)
+      : 0
+
+    if (chTop > 0) {
+      gsap.fromTo(
+        document.body,
+        { backgroundColor: readPastel('--light-lavender') },
+        {
+          backgroundColor: readPastel('--light-leaf'),
+          ease: 'none',
+          immediateRender: false,
+          scrollTrigger: {
+            start: chTop - vh,
+            end: chTop,
+            scrub: 0.6,
+          },
+        },
+      )
+    }
+
+    if (rpTop > 0) {
+      gsap.fromTo(
+        document.body,
+        { backgroundColor: readPastel('--light-leaf') },
+        {
+          backgroundColor: readPastel('--soft-peach'),
+          ease: 'none',
+          immediateRender: false,
+          scrollTrigger: {
+            start: rpTop - vh,
+            end: rpTop,
+            scrub: 0.6,
+          },
+        },
+      )
+    }
+
+    // Prep section body-bg transitions (sections after recycle-portal).
+    // Their positions are corrected by ScrollTrigger.refresh() called inside
+    // RecyclePortalSection after the rp pin spacer is added.
+    const prepTransitions = [
+      { key: 'recycle-challenges', from: '--light-cream',    to: '--light-leaf'     },
+      { key: 'clothing-game',      from: '--light-leaf',     to: '--soft-peach'     },
+      { key: 'match-3-game',       from: '--soft-peach',     to: '--light-lavender' },
+      { key: 'do-you-like-me-game', from: '--light-lavender', to: '--light-cream'   },
+    ]
+    prepTransitions.forEach(({ key, from, to }) => {
+      const triggerEl = document.querySelector(`.home-band-prep--${key}`)
+      if (!triggerEl) return
+      gsap.fromTo(
+        document.body,
+        { backgroundColor: readPastel(from) },
+        {
+          backgroundColor: readPastel(to),
+          ease: 'none',
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: triggerEl,
+            start: 'top bottom',
+            end: 'top top',
+            invalidateOnRefresh: true,
+            scrub: 0.6,
+          },
+        },
+      )
+    })
   }, [])
 }

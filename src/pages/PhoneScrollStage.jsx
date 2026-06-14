@@ -5,7 +5,34 @@ import { getHeroSoundMuted, getHeroVideoRef, setHeroSoundMuted } from './heroSta
 import { playMenuSound } from '../utils/menuAudio'
 import HeroPhoneScene from './HeroPhoneScene'
 import { clamp, MODEL_POSES, phoneDescription, usePhoneRoute } from './phoneRoute'
+import { recyclePhoneRefs } from './recyclePortalRefs'
+import recycle1 from '../assets/recycle_1.png'
+import recycle2 from '../assets/recycle_2.png'
+import recycle3 from '../assets/recycle_3.png'
+import recycle4 from '../assets/recycle_4.png'
+import recycle5 from '../assets/recycle_5.png'
 import './PhoneScrollStage.css'
+
+const RECYCLE_PORTAL_ITEMS = [recycle1, recycle2, recycle3, recycle4, recycle5]
+
+function smoothStep(value) {
+  const t = clamp(value, 0, 1)
+  return t * t * (3 - 2 * t)
+}
+
+function readRecycleHandoffMask() {
+  const section = document.getElementById('recycle-portal')
+  if (!section) return 1
+
+  const top = section.getBoundingClientRect().top
+  const viewportHeight = Math.max(window.innerHeight, 1)
+  if (top <= 1 || top >= viewportHeight * 0.82) return 1
+
+  const entry = smoothStep((viewportHeight * 0.82 - top) / (viewportHeight * 0.82))
+  const pinned = smoothStep((viewportHeight * 0.32 - top) / (viewportHeight * 0.32))
+  const dip = entry * (1 - pinned)
+  return 1 - (0.76 * smoothStep(dip))
+}
 
 export default function PhoneScrollStage() {
   const { isAr, lang } = useLang()
@@ -13,13 +40,18 @@ export default function PhoneScrollStage() {
   const [soundFlash, setSoundFlash] = useState(null)
   const [soundFlashId, setSoundFlashId] = useState(0)
   const [isSoundMuted, setIsSoundMuted] = useState(getHeroSoundMuted)
+  const [recycleHandoffMask, setRecycleHandoffMask] = useState(1)
   const flashTimer = useRef(null)
+  const maskRaf = useRef(null)
+  const maskInterval = useRef(null)
+  const maskSettleTimer = useRef(null)
   const isVideoContent = pose.content === 'earthie-video'
   const isDescriptionContent = pose.content === 'app-description'
   const isCommunityContent = pose.content === 'community-ar' || pose.content === 'community-en'
   const isChallengesContent = pose.content === 'challenges-ar' || pose.content === 'challenges-en'
+  const isRecyclePortalContent = pose.content === 'recycle-portal'
   const isStaticPreviewContent = isCommunityContent || isChallengesContent
-  const shouldFloat = !isDescriptionContent && !isStaticPreviewContent
+  const shouldFloat = !isDescriptionContent && !isStaticPreviewContent && !isRecyclePortalContent
   const soundCue = isVideoContent ? soundFlash ?? (isSoundMuted ? 'muted' : null) : null
   const phoneAriaLabel = isVideoContent
     ? (isSoundMuted ? 'Turn video sound on' : 'Mute video sound')
@@ -31,6 +63,51 @@ export default function PhoneScrollStage() {
 
   useEffect(() => {
     return () => clearTimeout(flashTimer.current)
+  }, [])
+
+  useEffect(() => {
+    const updateMask = () => {
+      maskRaf.current = null
+      const nextMask = readRecycleHandoffMask()
+      setRecycleHandoffMask((currentMask) => (
+        Math.abs(currentMask - nextMask) < 0.015 ? currentMask : nextMask
+      ))
+    }
+
+    const scheduleMaskUpdate = () => {
+      if (!maskRaf.current) {
+        maskRaf.current = window.requestAnimationFrame(updateMask)
+      }
+
+      if (maskSettleTimer.current) {
+        window.clearTimeout(maskSettleTimer.current)
+      }
+      maskSettleTimer.current = window.setTimeout(updateMask, 90)
+    }
+
+    scheduleMaskUpdate()
+    maskInterval.current = window.setInterval(updateMask, 140)
+    window.addEventListener('scroll', scheduleMaskUpdate, { passive: true })
+    window.addEventListener('resize', scheduleMaskUpdate)
+    window.addEventListener('phone-route-refresh', scheduleMaskUpdate)
+
+    return () => {
+      if (maskRaf.current) {
+        window.cancelAnimationFrame(maskRaf.current)
+        maskRaf.current = null
+      }
+      if (maskSettleTimer.current) {
+        window.clearTimeout(maskSettleTimer.current)
+        maskSettleTimer.current = null
+      }
+      if (maskInterval.current) {
+        window.clearInterval(maskInterval.current)
+        maskInterval.current = null
+      }
+      window.removeEventListener('scroll', scheduleMaskUpdate)
+      window.removeEventListener('resize', scheduleMaskUpdate)
+      window.removeEventListener('phone-route-refresh', scheduleMaskUpdate)
+    }
   }, [])
 
   function showSoundFlash(nextFlash) {
@@ -120,7 +197,7 @@ export default function PhoneScrollStage() {
     '--phone-shadow-top': `${overscanY + pose.height * 0.82}px`,
     '--phone-shadow-width': `${pose.width * 0.92}px`,
     height: `${phoneCanvasHeight}px`,
-    opacity: pose.opacity,
+    opacity: pose.opacity * recycleHandoffMask,
     transform: `translate3d(${Math.round(pose.x - phoneCanvasWidth / 2)}px, ${Math.round(visualPoseY - phoneCanvasHeight / 2)}px, 0) rotate(${pose.cssRotate}deg)`,
     width: `${phoneCanvasWidth}px`,
   }
@@ -215,6 +292,7 @@ export default function PhoneScrollStage() {
               <PhoneDescriptionScreen key={isAr ? 'ar' : 'en'} isAr={isAr} />
             )}
           </AnimatePresence>
+          {isRecyclePortalContent && <RecyclePortalOverlay />}
         </div>
       </div>
       {isVideoContent && (
@@ -228,6 +306,43 @@ export default function PhoneScrollStage() {
         />
       )}
     </>
+  )
+}
+
+function RecyclePortalOverlay() {
+  return (
+    <div className="rp-portal-overlay" aria-hidden="true">
+      {RECYCLE_PORTAL_ITEMS.map((src, i) => (
+        <img
+          key={src}
+          className="rp-phone-fly-item"
+          src={src}
+          alt=""
+          draggable="false"
+          ref={(node) => { recyclePhoneRefs.flyItems[i] = node }}
+        />
+      ))}
+      <div className="rp-portal" ref={(node) => { recyclePhoneRefs.portal.current = node }}>
+        <div className="rp-ring rp-ring--1" />
+        <div className="rp-ring rp-ring--2" />
+        <div className="rp-ring rp-ring--3" />
+        <div className="rp-leaf rp-leaf--a" />
+        <div className="rp-leaf rp-leaf--b" />
+        <svg className="rp-portal-icon" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+          <path d="M22 9 A13 13 0 0 1 33 29" stroke="white" strokeWidth="5.5" strokeLinecap="butt" fill="none" />
+          <path d="M33 29 A13 13 0 0 1 11 29" stroke="white" strokeWidth="5.5" strokeLinecap="butt" fill="none" />
+          <path d="M11 29 A13 13 0 0 1 22 9" stroke="white" strokeWidth="5.5" strokeLinecap="butt" fill="none" />
+          <polygon points="33,29 33,33.5 28.5,31.5" fill="white" />
+          <polygon points="11,29 6.5,27 11,24.5" fill="white" />
+          <polygon points="22,9 26.5,6.5 26.5,11.5" fill="white" />
+        </svg>
+      </div>
+      <div className="rp-sparkles" ref={(node) => { recyclePhoneRefs.sparkles.current = node }} aria-hidden="true">
+        {[1, 2, 3, 4, 5, 6].map((n) => (
+          <div key={n} className={`rp-sparkle rp-sparkle--${n}`} />
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -279,14 +394,52 @@ function PhoneDescriptionScreen({ isAr }) {
         <motion.div
           animate={{ opacity: 1, y: 0 }}
           className="phone-description-copy"
-          initial={{ opacity: 0, y: 9 }}
-          transition={{ delay: 0.08, duration: 0.22, ease: 'easeOut' }}
+          initial="hidden"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.08,
+              },
+            },
+          }}
+          animate="visible"
         >
-          <p className="phone-description-kicker">{copy.kicker}</p>
-          <h3>{copy.title}</h3>
-          <p className="phone-description-text">{copy.body}</p>
+          <motion.p
+            className="phone-description-kicker"
+            variants={phoneTextReveal}
+          >
+            {copy.kicker}
+          </motion.p>
+          <motion.h3 variants={phoneTextReveal}>
+            {copy.title}
+          </motion.h3>
+          <motion.p
+            className="phone-description-text"
+            variants={phoneTextReveal}
+          >
+            {copy.body}
+          </motion.p>
         </motion.div>
       </section>
     </motion.div>
   )
+}
+
+const phoneTextReveal = {
+  hidden: {
+    opacity: 0,
+    y: 14,
+    filter: 'blur(6px)',
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 0.52,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  },
 }

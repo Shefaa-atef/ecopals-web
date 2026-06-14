@@ -1,3 +1,5 @@
+/* ─── Header ─────────────────────────────────────────────── */
+
 .site-header {
   position: fixed;
   top: 0;
@@ -51,6 +53,8 @@
   height: 64px;
   object-fit: contain;
 }
+
+/* ─── Buttons ─────────────────────────────────────────────── */
 
 .menu-button {
   display: flex;
@@ -141,6 +145,8 @@
   z-index: 1;
 }
 
+/* ─── Backdrop ───────────────────────────────────────────── */
+
 .menu-backdrop {
   position: fixed;
   inset: 0;
@@ -152,35 +158,18 @@
   pointer-events: auto;
 }
 
-.game-menu {
-  position: fixed;
-  top: 106px;
-  right: 34px;
-  z-index: 40;
-  display: grid;
-  gap: 20px;
-  width: min(390px, calc(100vw - 28px));
-  height: min(540px, calc(100svh - 124px));
-  max-height: calc(100svh - 124px);
-  padding: 24px;
-  border: 0;
-  border-radius: 32px;
-  background: var(--surface);
-  box-shadow: 0 26px 76px rgb(var(--forest-green-rgb) / 0.18);
-  overflow: hidden;
-  pointer-events: auto;
-  transform-origin: calc(100% - 42px) -52px;
-  will-change: clip-path, filter, opacity, transform;
+.site-header--menu-open {
+  z-index: 50;
 }
+
+/* ─── Pre-layers (colour burst) ──────────────────────────── */
 
 .menu-prelayers {
   position: fixed;
-  top: 106px;
-  right: 34px;
+  inset: 0;
   z-index: 39;
-  width: min(390px, calc(100vw - 28px));
-  height: min(540px, calc(100svh - 124px));
-  max-height: calc(100svh - 124px);
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 }
 
@@ -191,197 +180,336 @@
   border-radius: 32px;
   background: var(--prelayer-color);
   box-shadow: 0 12px 28px color-mix(in srgb, var(--prelayer-color), transparent 86%);
-  transform-origin: calc(100% - 42px) -52px;
+  transform-origin: calc(100% - 52px) 52px;
   will-change: clip-path, opacity, transform;
 }
 
-.game-menu::before {
-  display: none;
-}
+/* ─── Game menu panel ────────────────────────────────────── */
 
-.game-menu > * {
-  position: relative;
-}
-
-.menu-top {
+.game-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
   display: flex;
-  gap: 14px;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 90px 40px 48px;
+  border: 0;
+  border-radius: 0;
+  overflow-y: auto;
+  background-color: var(--surface);
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--ink-brown), transparent 88%) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 26px 26px;
+  pointer-events: auto;
+  transform-origin: calc(100% - 52px) 52px;
+  will-change: clip-path, filter, opacity, transform;
 }
 
-.menu-top img {
-  width: 54px;
-  height: 54px;
-  object-fit: contain;
+/* ─── Decorative blobs ───────────────────────────────────── */
+
+.menu-bg-decor {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: 0;
+}
+
+.mbd {
+  position: absolute;
   border-radius: 50%;
 }
 
-.menu-top p {
-  color: var(--muted);
+.mbd-1 {
+  width: 320px;
+  height: 320px;
+  top: -10%;
+  left: -6%;
+  background: var(--challenge-plants);
+  opacity: 0.07;
+  animation: blobFloat 7s ease-in-out infinite;
+}
+
+.mbd-2 {
+  width: 260px;
+  height: 260px;
+  top: 5%;
+  right: -4%;
+  background: var(--challenge-water);
+  opacity: 0.07;
+  animation: blobFloat 9s ease-in-out infinite reverse;
+  animation-delay: -2.5s;
+}
+
+.mbd-3 {
+  width: 200px;
+  height: 200px;
+  bottom: 12%;
+  left: 3%;
+  background: var(--challenge-energy);
+  opacity: 0.07;
+  animation: blobFloat 6s ease-in-out infinite;
+  animation-delay: -4s;
+}
+
+.mbd-4 {
+  width: 280px;
+  height: 280px;
+  bottom: -8%;
+  right: 5%;
+  background: var(--challenge-community);
+  opacity: 0.07;
+  animation: blobFloat 8s ease-in-out infinite reverse;
+  animation-delay: -1s;
+}
+
+.mbd-5 {
+  width: 160px;
+  height: 160px;
+  top: 45%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--challenge-air);
+  opacity: 0.05;
+  animation: blobFloat 10s ease-in-out infinite;
+  animation-delay: -6s;
+}
+
+@keyframes blobFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-28px) scale(1.07); }
+}
+
+/* ─── Menu eyebrow label ─────────────────────────────────── */
+
+.menu-eyebrow {
+  position: relative;
+  z-index: 1;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-brown);
+  opacity: 0.3;
+  user-select: none;
+}
+
+/* ─── Main nav tile grid ─────────────────────────────────── */
+
+.menu-tiles {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+  width: 100%;
+  max-width: 920px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Row 1 — 3 equal tiles (2 cols each) */
+.menu-tiles .menu-tile:nth-child(-n + 3) {
+  grid-column: span 2;
+}
+
+/* Row 2 — 2 wider tiles (3 cols each) */
+.menu-tiles .menu-tile:nth-child(4) {
+  grid-column: 1 / span 3;
+}
+
+.menu-tiles .menu-tile:nth-child(5) {
+  grid-column: 4 / span 3;
+}
+
+/* Tile base */
+.menu-tile {
+  isolation: isolate;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  min-height: 158px;
+  padding: 28px 20px 22px;
+  border: 3px solid var(--ink-brown);
+  border-radius: 28px;
+  background: var(--item-color);
+  box-shadow:
+    0 8px 0 color-mix(in srgb, var(--item-color), #000 30%),
+    0 14px 28px color-mix(in srgb, var(--item-color), transparent 55%);
+  color: #fff;
+  font-size: 1rem;
   font-weight: 900;
   line-height: 1.2;
-}
-
-.menu-top h2 {
-  font-size: 2rem;
-}
-
-.menu-links {
-  display: grid;
-  align-content: start;
-  gap: 12px;
-}
-
-.menu-link {
-  isolation: isolate;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-height: 68px;
-  padding: 10px 42px 10px 14px;
-  border: 3px solid var(--ink-brown);
-  border-radius: 999px;
-  color: var(--text-strong);
-  background: var(--item-soft);
-  box-shadow:
-    0 8px 0 color-mix(in srgb, var(--item-color), var(--ink-brown) 10%),
-    0 12px 20px color-mix(in srgb, var(--item-color), transparent 86%);
-  font-size: 1.08rem;
-  font-weight: 900;
+  text-align: center;
   text-decoration: none;
-  transition:
-    background 180ms ease,
-    box-shadow 180ms ease;
+  text-shadow: 0 1px 4px rgb(0 0 0 / 0.22);
+  cursor: pointer;
   will-change: transform;
 }
 
-.menu-link::before {
+/* Gloss highlight */
+.menu-tile::before {
+  content: '';
   position: absolute;
-  inset: 4px;
-  z-index: 0;
+  inset: 0;
   border-radius: inherit;
-  background:
-    linear-gradient(110deg, transparent 0 24%, rgb(255 255 255 / 0.68) 44%, transparent 64%),
-    color-mix(in srgb, var(--item-color), transparent 86%);
-  opacity: 0;
-  transform: translateX(-82%);
-  transition:
-    opacity 220ms ease,
-    transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
-  content: '';
+  background: linear-gradient(
+    148deg,
+    rgba(255, 255, 255, 0.26) 0%,
+    rgba(255, 255, 255, 0.06) 38%,
+    transparent 66%
+  );
+  pointer-events: none;
+  z-index: 1;
 }
 
-.menu-link::after {
+/* Stripe pattern overlay for texture */
+.menu-tile::after {
+  content: '';
   position: absolute;
-  right: 22px;
-  z-index: 1;
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: var(--item-color);
-  opacity: 0;
-  transform: scale(0.4);
-  transition:
-    opacity 180ms ease,
-    transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  content: '';
+  inset: 0;
+  border-radius: inherit;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 8px,
+    rgba(255, 255, 255, 0.04) 8px,
+    rgba(255, 255, 255, 0.04) 9px
+  );
+  pointer-events: none;
+  z-index: 0;
 }
 
-.menu-link > span {
+/* Icon circle */
+.menu-tile-icon {
   position: relative;
-  z-index: 1;
-}
-
-.menu-link:hover {
-  background: color-mix(in srgb, var(--item-soft), var(--surface) 24%);
-  box-shadow:
-    0 11px 0 color-mix(in srgb, var(--item-color), var(--ink-brown) 10%),
-    0 18px 28px color-mix(in srgb, var(--item-color), transparent 76%);
-}
-
-.menu-link:hover::before {
-  opacity: 1;
-  transform: translateX(58%);
-}
-
-.menu-link:hover::after,
-.menu-link[aria-current='page']::after {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.menu-link[aria-current='page'] {
-  background: color-mix(in srgb, var(--item-soft), var(--surface) 32%);
-  outline: 4px solid rgb(255 255 255 / 0.76);
-  animation: menuActiveGlow 2.8s ease-in-out infinite;
-}
-
-.menu-link-icon {
+  z-index: 2;
   display: grid;
   place-items: center;
-  width: 46px;
-  height: 46px;
-  border: 2px solid var(--ink-brown);
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  color: #ffffff;
-  background: var(--item-color);
-  transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 2.5px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  flex-shrink: 0;
+  transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.menu-link:hover .menu-link-icon {
-  transform: rotate(-9deg) scale(1.1);
+.menu-tile:hover .menu-tile-icon {
+  transform: scale(1.12) rotate(-8deg);
 }
 
-.menu-link svg {
-  transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+/* Label */
+.menu-tile-label {
+  position: relative;
+  z-index: 2;
+  font-size: 1rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.01em;
 }
 
-.menu-link:hover svg {
-  transform: rotate(8deg) scale(1.06);
-}
-
-.menu-links--rtl .menu-link {
-  flex-direction: row-reverse;
-  padding: 10px 14px 10px 42px;
-  text-align: right;
-}
-
-.menu-links--rtl .menu-link::after {
-  right: auto;
-  left: 22px;
-}
-
-.menu-links--rtl .menu-link::before {
-  transform: translateX(82%);
-}
-
-.menu-links--rtl .menu-link:hover::before {
-  transform: translateX(-58%);
-}
-
-.menu-link-label--ar {
+.menu-tile-label--ar {
   font-family: var(--font-heading-ar);
   font-size: 1.05rem;
   font-weight: 800;
   letter-spacing: 0;
 }
 
-@keyframes menuActiveGlow {
-  0%,
-  100% {
+/* Spinning corner ✦ */
+.menu-tile-deco {
+  position: absolute;
+  top: 11px;
+  right: 14px;
+  z-index: 2;
+  font-size: 13px;
+  opacity: 0.6;
+  animation: decoSpin 9s linear infinite;
+  color: #fff;
+}
+
+.menu-tiles--rtl .menu-tile-deco {
+  right: auto;
+  left: 14px;
+}
+
+@keyframes decoSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Active / current page tile */
+.menu-tile[aria-current='page'] {
+  outline: 3px solid rgba(255, 255, 255, 0.85);
+  outline-offset: -6px;
+  animation: tilePulse 2.6s ease-in-out infinite;
+}
+
+@keyframes tilePulse {
+  0%, 100% {
     box-shadow:
-      0 8px 0 color-mix(in srgb, var(--item-color), var(--ink-brown) 10%),
-      0 0 0 color-mix(in srgb, var(--item-color), transparent 100%);
+      0 8px 0 color-mix(in srgb, var(--item-color), #000 30%),
+      0 0 0 rgba(255, 255, 255, 0);
   }
 
   50% {
     box-shadow:
-      0 8px 0 color-mix(in srgb, var(--item-color), var(--ink-brown) 10%),
-      0 18px 30px color-mix(in srgb, var(--item-color), transparent 78%);
+      0 8px 0 color-mix(in srgb, var(--item-color), #000 30%),
+      0 0 32px color-mix(in srgb, var(--item-color), transparent 36%);
   }
 }
+
+/* Tile rotation is set by Framer Motion (menuTile variant) so transforms stay consistent */
+
+/* ─── Legal pill links ────────────────────────────────────── */
+
+.menu-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.menu-legal--rtl {
+  direction: rtl;
+}
+
+.menu-legal-link {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 22px;
+  border: 2.5px solid var(--ink-brown);
+  border-radius: 100px;
+  background: var(--surface);
+  box-shadow:
+    0 4px 0 color-mix(in srgb, var(--surface), var(--ink-brown) 20%),
+    0 6px 16px rgb(0 0 0 / 0.06);
+  color: var(--text-strong);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-decoration: none;
+  will-change: transform;
+}
+
+.menu-legal-label--ar {
+  font-family: var(--font-heading-ar);
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+/* ─── Media queries ──────────────────────────────────────── */
 
 @media (max-width: 980px) {
   .site-header {
@@ -403,6 +531,19 @@
     width: 46px;
     height: 46px;
   }
+
+  /* Switch to 2-column grid on tablet */
+  .menu-tiles {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 580px;
+    gap: 12px;
+  }
+
+  .menu-tiles .menu-tile:nth-child(-n + 3),
+  .menu-tiles .menu-tile:nth-child(4),
+  .menu-tiles .menu-tile:nth-child(5) {
+    grid-column: span 1;
+  }
 }
 
 @media (max-width: 560px) {
@@ -421,33 +562,34 @@
   }
 
   .game-menu {
-    top: 92px;
-    right: 14px;
-    bottom: auto;
-    left: 14px;
-    width: auto;
-    height: min(540px, calc(100svh - 108px));
-    max-height: calc(100svh - 108px);
-    padding: 22px 18px;
-    border-radius: 28px;
-    overflow-y: auto;
+    padding: 88px 14px 36px;
+    gap: 14px;
   }
 
-  .menu-prelayers {
-    top: 92px;
-    right: 14px;
-    left: 14px;
-    width: auto;
-    height: min(540px, calc(100svh - 108px));
-    max-height: calc(100svh - 108px);
+  .menu-tiles {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 9px;
   }
 
-  .menu-top h2 {
-    font-size: 1.8rem;
+  .menu-tiles .menu-tile:nth-child(-n + 3),
+  .menu-tiles .menu-tile:nth-child(4),
+  .menu-tiles .menu-tile:nth-child(5) {
+    grid-column: span 1;
   }
 
-  .menu-link {
-    min-height: 62px;
-    font-size: 0.98rem;
+  .menu-tile {
+    min-height: 118px;
+    padding: 18px 14px 16px;
+    border-radius: 22px;
   }
+
+  .menu-tile-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .menu-tile-label {
+    font-size: 0.88rem;
+  }
+
 }

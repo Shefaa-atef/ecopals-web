@@ -9,6 +9,12 @@ import './EarthieShowcase.css'
 
 const STATE_MACHINE = 'State Machine 1'
 const PROGRESS_INPUT = 'progress'
+const RIVE_MIN_DPR = 2
+const RIVE_MAX_DPR = 3
+
+function getSharpRiveDpr() {
+  return Math.min(Math.max(window.devicePixelRatio || 1, RIVE_MIN_DPR), RIVE_MAX_DPR)
+}
 
 const earthieCopy = {
   ar: {
@@ -62,7 +68,7 @@ function RiveLayer({ className, progress, src }) {
     if (!rive) return undefined
 
     const resizeLayer = () => {
-      rive.resizeDrawingSurfaceToCanvas()
+      rive.resizeDrawingSurfaceToCanvas(getSharpRiveDpr())
       rive.startRendering()
     }
 

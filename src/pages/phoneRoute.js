@@ -148,7 +148,15 @@ function isChallengesHandoff(to) {
   return to.content?.startsWith('challenges-')
 }
 
+function isRecyclePortalHandoff(to) {
+  return to.content === 'recycle-portal'
+}
+
 function getHandoffContent(from, to, progress) {
+  if (isRecyclePortalHandoff(to)) {
+    return progress < 0.28 ? from.content : to.content
+  }
+
   if (!isDescriptionCommunityHandoff(from, to)) {
     return progress < 0.5 ? from.content : to.content
   }
@@ -161,11 +169,16 @@ function getHandoffContent(from, to, progress) {
 function lerpPhonePose(from, to, progress) {
   const isCommunityHandoff = isDescriptionCommunityHandoff(from, to)
   const isChallengeHandoff = isChallengesHandoff(to)
+  const isRecycleHandoff = isRecyclePortalHandoff(to)
   const motionProgress = isCommunityHandoff
     ? smoothStep((progress - 0.1) / 0.9)
+    : isRecycleHandoff
+      ? smoothStep((progress - 0.08) / 0.72)
     : progress
   const xProgress = isChallengeHandoff
     ? smoothStep((progress - 0.18) / 0.34)
+    : isRecycleHandoff
+      ? smoothStep((progress - 0.04) / 0.62)
     : motionProgress
   const content = getHandoffContent(from, to, progress)
 

@@ -7,13 +7,13 @@ export const menuColorLayers = [
 
 export const menuPanel = {
   initial: {
-    clipPath: 'circle(0% at calc(100% - 42px) 0%)',
+    clipPath: 'circle(0% at calc(100% - 52px) 52px)',
     filter: 'blur(12px)',
     opacity: 0,
     scale: 0.94,
   },
   enter: {
-    clipPath: 'circle(145% at calc(100% - 42px) 0%)',
+    clipPath: 'circle(170% at calc(100% - 52px) 52px)',
     filter: 'blur(0px)',
     opacity: 1,
     scale: 1,
@@ -28,7 +28,7 @@ export const menuPanel = {
     },
   },
   exit: {
-    clipPath: 'circle(0% at calc(100% - 42px) 0%)',
+    clipPath: 'circle(0% at calc(100% - 52px) 52px)',
     filter: 'blur(10px)',
     opacity: 0,
     scale: 0.97,
@@ -55,9 +55,45 @@ export const menuLink = {
   exit: { opacity: 0, x: 24, y: 10, scale: 0.98, transition: { duration: 0.16 } },
 }
 
+export const TILE_TILTS = [-1.5, 0.8, -0.5, 1.2, -0.9]
+
+export const menuTile = {
+  initial: { opacity: 0, y: 40, scale: 0.82, rotate: 0 },
+  enter: (index) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    rotate: TILE_TILTS[index % TILE_TILTS.length] || 0,
+    transition: {
+      type: 'spring',
+      stiffness: 260,
+      damping: 20,
+      mass: 0.8,
+      delay: 0.22 + index * 0.075,
+    },
+  }),
+  exit: { opacity: 0, y: 22, scale: 0.9, rotate: 0, transition: { duration: 0.16 } },
+}
+
+export const menuLegalLink = {
+  initial: { opacity: 0, y: 14, scale: 0.9 },
+  enter: (index) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 320,
+      damping: 22,
+      delay: 0.62 + index * 0.06,
+    },
+  }),
+  exit: { opacity: 0, y: 8, scale: 0.96, transition: { duration: 0.12 } },
+}
+
 export const menuColorLayer = {
   initial: {
-    clipPath: 'circle(0% at calc(100% - 38px) 0%)',
+    clipPath: 'circle(0% at calc(100% - 52px) 52px)',
     opacity: 0,
     scale: 0.96,
     x: 0,
@@ -65,7 +101,7 @@ export const menuColorLayer = {
     rotate: 0,
   },
   enter: (index) => ({
-    clipPath: 'circle(145% at calc(100% - 38px) 0%)',
+    clipPath: 'circle(170% at calc(100% - 52px) 52px)',
     opacity: [0, 0.86 - index * 0.08, 0],
     scale: [0.96, 1.015, 1],
     x: 0,
@@ -81,7 +117,7 @@ export const menuColorLayer = {
     },
   }),
   exit: (index) => ({
-    clipPath: 'circle(0% at calc(100% - 38px) 0%)',
+    clipPath: 'circle(0% at calc(100% - 52px) 52px)',
     opacity: 0,
     scale: 0.96,
     x: 0,

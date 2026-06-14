@@ -1,8 +1,15 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Globe2, Menu, X } from 'lucide-react'
-import { allNavItems, mainNavItems } from '../constants/nav'
-import { menuColorLayer, menuColorLayers, menuLink, menuPanel } from '../constants/animations'
+import { allNavItems, legalNavItems, mainNavItems } from '../constants/nav'
+import {
+  TILE_TILTS,
+  menuColorLayer,
+  menuColorLayers,
+  menuLegalLink,
+  menuPanel,
+  menuTile,
+} from '../constants/animations'
 import { getPublicPath } from '../utils/routing'
 import { playMenuSound } from '../utils/menuAudio'
 import { useLang } from '../context/LanguageContext'
@@ -53,7 +60,7 @@ export default function GameHeader({ route, onNavigate }) {
   }
 
   return (
-    <header className="site-header">
+    <header className={`site-header${isMenuOpen ? ' site-header--menu-open' : ''}`}>
       <div className="nav-stage">
         <motion.a
           aria-label={isAr ? 'إيكوبالز الرئيسية' : 'Ecopals home'}
@@ -141,6 +148,7 @@ export default function GameHeader({ route, onNavigate }) {
               onClick={handleMenuClose}
               type="button"
             />
+
             <motion.div
               aria-hidden="true"
               className="menu-prelayers"
@@ -160,53 +168,95 @@ export default function GameHeader({ route, onNavigate }) {
                 />
               ))}
             </motion.div>
+
             <motion.aside
               animate="enter"
-              aria-label={isAr ? 'قائمة التنقل' : 'Expanded game navigation'}
+              aria-label={isAr ? 'قائمة التنقل' : 'Game navigation'}
               className="game-menu"
               exit="exit"
               id="game-menu"
               initial="initial"
               variants={menuPanel}
             >
+              {/* Decorative floating blobs */}
+              <div className="menu-bg-decor" aria-hidden="true">
+                <span className="mbd mbd-1" />
+                <span className="mbd mbd-2" />
+                <span className="mbd mbd-3" />
+                <span className="mbd mbd-4" />
+                <span className="mbd mbd-5" />
+              </div>
+
+              {/* Section label */}
+              <p className="menu-eyebrow" aria-hidden="true">✦ MAIN MENU ✦</p>
+
+              {/* Main navigation tiles */}
               <nav
-                className={`menu-links${isAr ? ' menu-links--rtl' : ''}`}
-                aria-label={isAr ? 'قائمة التنقل' : 'Expanded navigation'}
+                className={`menu-tiles${isAr ? ' menu-tiles--rtl' : ''}`}
+                aria-label={isAr ? 'التنقل الرئيسي' : 'Main navigation'}
               >
-                {allNavItems.map((item, index) => (
+                {mainNavItems.map((item, index) => (
                   <motion.a
-                    aria-current={isNavItemActive(route, item) ? 'page' : undefined}
-                    className="menu-link"
-                    custom={index}
-                    whileHover={{
-                      x: isAr ? -14 : 14,
-                      y: -3,
-                      rotate: index % 2 === 0 ? -0.8 : 0.8,
-                      scale: 1.035,
-                      transition: { type: 'spring', stiffness: 420, damping: 18 },
-                    }}
-                    whileTap={{ scale: 0.965, y: 2 }}
-                    href={getPublicPath(item.path, item.hash)}
                     key={item.key}
+                    aria-current={isNavItemActive(route, item) ? 'page' : undefined}
+                    className="menu-tile"
+                    custom={index}
+                    variants={menuTile}
+                    href={getPublicPath(item.path, item.hash)}
                     onFocus={() => playMenuSound('hover')}
                     onClick={(event) => handleItemClick(event, item)}
                     onMouseEnter={() => playMenuSound('hover')}
                     style={{
                       '--item-color': item.color,
                       '--item-soft': item.soft,
-                      '--item-index': index,
                     }}
-                    variants={menuLink}
+                    whileHover={{
+                      y: -9,
+                      scale: 1.05,
+                      rotate: TILE_TILTS[index % TILE_TILTS.length] * 0.4,
+                      transition: { type: 'spring', stiffness: 380, damping: 14 },
+                    }}
+                    whileTap={{ y: 4, scale: 0.95 }}
                   >
-                    <span className="menu-link-icon">
-                      <item.icon aria-hidden="true" size={23} />
+                    <span className="menu-tile-icon" aria-hidden="true">
+                      <item.icon size={30} />
                     </span>
-                    <span className={isAr ? 'menu-link-label--ar' : undefined}>
+                    <span className={isAr ? 'menu-tile-label menu-tile-label--ar' : 'menu-tile-label'}>
+                      {isAr ? item.labelAr : item.label}
+                    </span>
+                    <span className="menu-tile-deco" aria-hidden="true">✦</span>
+                  </motion.a>
+                ))}
+              </nav>
+
+              {/* Legal links */}
+              <div
+                className={`menu-legal${isAr ? ' menu-legal--rtl' : ''}`}
+                role="navigation"
+                aria-label={isAr ? 'روابط قانونية' : 'Legal'}
+              >
+                {legalNavItems.map((item, index) => (
+                  <motion.a
+                    key={item.key}
+                    aria-current={isNavItemActive(route, item) ? 'page' : undefined}
+                    className="menu-legal-link"
+                    custom={index}
+                    variants={menuLegalLink}
+                    href={getPublicPath(item.path, item.hash)}
+                    onFocus={() => playMenuSound('hover')}
+                    onClick={(event) => handleItemClick(event, item)}
+                    onMouseEnter={() => playMenuSound('hover')}
+                    style={{ '--item-color': item.color }}
+                    whileHover={{ y: -3, scale: 1.04 }}
+                    whileTap={{ y: 2, scale: 0.97 }}
+                  >
+                    <item.icon size={15} aria-hidden="true" />
+                    <span className={isAr ? 'menu-legal-label--ar' : undefined}>
                       {isAr ? item.labelAr : item.label}
                     </span>
                   </motion.a>
                 ))}
-              </nav>
+              </div>
             </motion.aside>
           </>
         )}
