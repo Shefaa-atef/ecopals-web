@@ -60,7 +60,7 @@
   align-items: center;
   margin-bottom: 20px;
   padding: 7px 18px;
-  border: 3px solid var(--ink-brown);
+  border: 2.5px solid var(--ink-brown);
   border-radius: 999px;
   background: color-mix(in srgb, var(--golden-yellow), #fff 30%);
   box-shadow:
@@ -98,14 +98,22 @@
 
 .rp-copy--ar .rp-title {
   font-family: var(--font-heading-ar);
-  font-size: clamp(2.6rem, 4.8vw, 6rem);
+  font-size: clamp(1.8rem, 3vw, 3.8rem);
   font-weight: 800;
   line-height: 1.04;
+  white-space: nowrap;
 }
 
 .rp-copy--ar .rp-subtitle {
   font-size: 1.06rem;
   line-height: 1.9;
+}
+
+@media (max-width: 680px) {
+  .rp-copy--ar .rp-title {
+    white-space: normal;
+    font-size: clamp(1.5rem, 5vw, 2.6rem);
+  }
 }
 
 /* Scene */
