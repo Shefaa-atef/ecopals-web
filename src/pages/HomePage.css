@@ -312,6 +312,8 @@
 
 .home-band-community {
   --community-merge-scale: 0;
+  --community-purple-dark: #4d2d78;
+  --community-purple-dark-rgb: 77 45 120;
   --text: #3a2862;
   --text-strong: #2a1a4a;
 
@@ -417,7 +419,7 @@
   font-size: clamp(3rem, 4.6vw, 5.8rem) !important;
   line-height: 0.96 !important;
   text-shadow:
-    0 6px 0 color-mix(in srgb, var(--forest-green), transparent 58%),
+    0 6px 0 color-mix(in srgb, var(--community-purple-dark), transparent 58%),
     0 12px 32px rgb(var(--ink-brown-rgb) / 0.1);
 }
 
@@ -455,13 +457,13 @@
   align-items: center;
   min-height: 38px;
   padding: 0 14px;
-  border: 1px solid rgb(var(--forest-green-rgb) / 0.12);
+  border: 1px solid rgb(var(--community-purple-dark-rgb) / 0.16);
   border-radius: 8px;
   background: rgb(var(--surface-rgb) / 0.72);
   color: var(--text-strong);
   font-size: 0.82rem;
   font-weight: 900;
-  box-shadow: 0 10px 24px rgb(var(--forest-green-rgb) / 0.09);
+  box-shadow: 0 10px 24px rgb(var(--community-purple-dark-rgb) / 0.11);
 }
 
 .community-phone-zone {
@@ -626,17 +628,77 @@
 
 .challenge-score-pop {
   position: absolute;
-  font-size: clamp(1.6rem, 2.8vw, 2.8rem);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.12em;
+  min-width: 1.7em;
+  padding: 0.16em 0.44em 0.2em 0.22em;
+  border: 3px solid var(--ink-brown);
+  border-radius: 999px;
+  background: var(--fresh-leaf);
+  box-shadow:
+    0 5px 0 color-mix(in srgb, var(--forest-green), var(--ink-brown) 20%),
+    0 10px 20px rgb(var(--forest-green-rgb) / 0.26),
+    inset 0 2px 0 rgb(255 255 255 / 0.32);
+  color: #ffffff;
+  font-family: var(--font-heading-en);
+  font-size: clamp(1.35rem, 2.2vw, 2.28rem);
   font-weight: 950;
   line-height: 1;
-  color: var(--forest-green);
-  text-shadow:
-    0 2px 0 rgb(255 255 255 / 0.95),
-    0 4px 16px rgb(var(--rich-brown-rgb) / 0.18);
+  isolation: isolate;
+  text-shadow: 0 2px 0 color-mix(in srgb, var(--forest-green), var(--ink-brown) 18%);
   pointer-events: none;
   white-space: nowrap;
   user-select: none;
   will-change: transform, opacity;
+}
+
+.challenge-score-pop::after {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 0.34em;
+  height: 0.34em;
+  border: 2px solid var(--ink-brown);
+  border-radius: 50%;
+  background: var(--golden-yellow);
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--golden-yellow), var(--ink-brown) 28%);
+  content: '';
+  pointer-events: none;
+}
+
+.challenge-score-pop__plus {
+  display: grid;
+  place-items: center;
+  width: 0.82em;
+  height: 0.82em;
+  flex: 0 0 auto;
+  border: 2px solid var(--ink-brown);
+  border-radius: 50%;
+  background: var(--golden-yellow);
+  box-shadow:
+    0 2px 0 color-mix(in srgb, var(--golden-yellow), var(--ink-brown) 28%),
+    inset 0 1px 0 rgb(255 255 255 / 0.35);
+  color: var(--ink-brown);
+  font-size: 0.58em;
+  line-height: 1;
+  text-shadow: none;
+}
+
+.challenge-score-pop__value {
+  display: inline-block;
+  min-width: 0.55em;
+  transform: translateY(0.02em);
+}
+
+.challenge-score-pop--bonus {
+  background: var(--forest-green);
+  font-size: clamp(1.55rem, 2.55vw, 2.6rem);
+  box-shadow:
+    0 6px 0 color-mix(in srgb, var(--forest-green), var(--ink-brown) 26%),
+    0 13px 24px rgb(var(--forest-green-rgb) / 0.34),
+    inset 0 2px 0 rgb(255 255 255 / 0.28);
 }
 
 .challenge-plane {
@@ -678,8 +740,8 @@
   border-radius: 18px;
   background: var(--surface);
   box-shadow:
-    0 8px 0 color-mix(in srgb, var(--rich-brown), var(--ink-brown) 20%),
-    0 14px 28px rgb(var(--ink-brown-rgb) / 0.18);
+    0 8px 0 color-mix(in srgb, var(--forest-green), var(--ink-brown) 12%),
+    0 14px 28px rgb(var(--forest-green-rgb) / 0.28);
 }
 
 .challenge-photo__img {
@@ -1252,7 +1314,7 @@
   .challenge-photo {
     border-width: 2px;
     border-radius: 14px;
-    box-shadow: 0 12px 22px rgb(var(--rich-brown-rgb) / 0.12);
+    box-shadow: 0 12px 22px rgb(var(--forest-green-rgb) / 0.18);
   }
 
   .challenge-photo--one {
@@ -1335,10 +1397,16 @@
 
   .community-heading {
     font-size: 4.8rem !important;
+    text-shadow:
+      0 5px 0 color-mix(in srgb, var(--lavender), var(--ink-brown) 28%),
+      0 11px 24px rgb(var(--ink-brown-rgb) / 0.11);
   }
 
   .community-copy--ar .community-heading {
     font-size: 3.2rem !important;
+    text-shadow:
+      0 4px 0 color-mix(in srgb, var(--community-purple-dark), transparent 58%),
+      0 10px 22px rgb(var(--ink-brown-rgb) / 0.1);
   }
 
   .community-body {
@@ -1372,26 +1440,34 @@
 
 @media (max-width: 560px) {
   .ecopals-hero {
-    min-height: 100svh;
-    padding: 82px 0 24px;
+    height: 100dvh;
+    min-height: 640px;
+    padding: 0;
   }
 
   .ecopals-hero-word {
-    top: 90px;
-    font-size: clamp(4.5rem, 24vw, 8rem);
+    top: clamp(112px, 15svh, 132px);
+    font-size: clamp(4.7rem, 24vw, 6.7rem);
+    line-height: 0.8;
+    text-shadow:
+      0 5px 0 color-mix(in srgb, var(--forest-green), var(--ink-brown) 66%),
+      0 12px 24px rgb(var(--ink-brown-rgb) / 0.2);
   }
 
   .hero-poster {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    min-height: calc(100svh - 106px);
+    height: 100%;
+    min-height: 0;
   }
 
   .hero-phone-slot {
-    top: 50%;
+    top: clamp(292px, 36svh, 320px);
     left: 50%;
-    width: 92vw;
-    height: 52vw;
-    min-height: 200px;
+    width: min(96vw, 390px);
+    height: min(56vw, 220px);
+    min-height: 208px;
     transform: translate(-50%, -50%);
   }
 
@@ -1404,21 +1480,25 @@
   }
 
   .hero-character-cat {
-    left: 8%;
-    bottom: 18px;
-    height: 80px;
+    left: 6%;
+    top: clamp(500px, 67svh, 620px);
+    bottom: auto;
+    height: clamp(76px, 23vw, 96px);
     z-index: 6;
   }
 
   .hero-character-duck {
-    right: 8%;
-    bottom: 18px;
-    height: 72px;
+    right: 6%;
+    top: clamp(502px, 67svh, 622px);
+    bottom: auto;
+    height: clamp(70px, 21vw, 86px);
     z-index: 6;
   }
 
   .hero-google-play-wrap {
-    bottom: 28px;
+    top: clamp(520px, 70svh, 650px);
+    bottom: auto;
+    z-index: 8;
   }
 
   .hero-google-play {
@@ -1468,10 +1548,16 @@
 
   .challenges-copy h2 {
     font-size: clamp(3rem, 15vw, 4.4rem);
+    text-shadow:
+      0 4px 0 color-mix(in srgb, var(--forest-green), transparent 58%),
+      0 10px 22px rgb(var(--ink-brown-rgb) / 0.1);
   }
 
   .home-band-challenges--ar .challenges-copy h2 {
     font-size: clamp(2.6rem, 11vw, 4rem);
+    text-shadow:
+      0 4px 0 color-mix(in srgb, var(--forest-green), transparent 58%),
+      0 10px 22px rgb(var(--ink-brown-rgb) / 0.1);
   }
 
   .challenges-body {
@@ -1555,52 +1641,59 @@
   }
 
   .community-heading {
-    font-size: 3.8rem !important;
+    font-size: 3.1rem !important;
+    text-shadow:
+      0 3px 0 color-mix(in srgb, var(--lavender), var(--ink-brown) 24%),
+      0 8px 18px rgb(var(--ink-brown-rgb) / 0.1);
   }
 
   .community-copy--ar .community-heading {
-    font-size: 2.8rem !important;
+    font-size: 2.4rem !important;
+    text-shadow:
+      0 3px 0 color-mix(in srgb, var(--community-purple-dark), transparent 60%),
+      0 8px 18px rgb(var(--ink-brown-rgb) / 0.1);
   }
 
   .community-body {
-    margin-top: 18px;
-    font-size: 0.84rem;
-    line-height: 1.68;
+    margin-top: 14px;
+    font-size: 0.82rem;
+    line-height: 1.65;
+    max-width: 36ch;
   }
 
   .community-copy--ar .community-body {
-    margin-top: 24px;
-    font-size: 0.86rem;
-    line-height: 1.78;
+    margin-top: 18px;
+    font-size: 0.84rem;
+    line-height: 1.72;
   }
 
   .community-stat-row {
-    gap: 8px;
-    margin-top: 20px;
-    max-width: 260px;
+    gap: 6px;
+    margin-top: 14px;
+    max-width: 240px;
   }
 
   .community-stat-row span {
-    min-height: 34px;
+    min-height: 32px;
     padding: 0 10px;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
   }
 
   .community-phone-zone {
-    right: 22px;
-    bottom: 8px;
-    width: 190px;
-    min-height: 360px;
+    right: 14px;
+    bottom: 6px;
+    width: 170px;
+    min-height: 320px;
   }
 
   .home-band-community--ar .community-phone-zone {
     right: auto;
-    left: 22px;
+    left: 14px;
   }
 
   .community-phone-anchor {
-    min-width: 160px;
-    max-width: 210px;
-    height: clamp(340px, 54svh, 430px);
+    min-width: 140px;
+    max-width: 185px;
+    height: clamp(300px, 48svh, 380px);
   }
 }

@@ -30,7 +30,7 @@
   border-radius: 20px;
   background: var(--surface);
   box-shadow:
-    0 5px 0 color-mix(in srgb, var(--forest-green), var(--ink-brown) 28%),
+    0 5px 0 color-mix(in srgb, var(--community-purple-dark, #4d2d78), var(--ink-brown) 24%),
     0 10px 28px rgb(var(--ink-brown-rgb) / 0.14);
   color: var(--text-strong);
   font: inherit;
@@ -45,7 +45,7 @@
   opacity: 0.46;
   filter: blur(0.6px) saturate(0.9);
   box-shadow:
-    0 4px 0 color-mix(in srgb, var(--forest-green), var(--ink-brown) 28%),
+    0 4px 0 color-mix(in srgb, var(--community-purple-dark, #4d2d78), var(--ink-brown) 24%),
     0 8px 22px rgb(var(--ink-brown-rgb) / 0.10);
 }
 
@@ -124,8 +124,8 @@
   align-items: center;
   gap: 10px;
   padding: 5px 11px 9px;
-  border-top: 2px dashed rgb(var(--forest-green-rgb) / 0.25);
-  color: var(--forest-green);
+  border-top: 2px dashed rgb(var(--community-purple-dark-rgb, 77 45 120) / 0.25);
+  color: var(--community-purple-dark, #4d2d78);
   font-size: 0.67rem;
   font-weight: 900;
 }
@@ -157,30 +157,25 @@
 
   .community-floating-card[data-post-id='recycling-bin-alert'] {
     top: auto !important;
-    right: 8% !important;
-    bottom: 32% !important;
+    right: 6% !important;
+    bottom: 22% !important;
     left: auto !important;
   }
 
   .community-floating-card[data-post-id='front-group-walk'] {
-    right: 3% !important;
-    bottom: 13% !important;
-    left: auto !important;
+    right: auto !important;
+    bottom: 6% !important;
+    left: 4% !important;
   }
 
   .community-floating-posts--ar .community-floating-card[data-post-id='recycling-bin-alert'] {
     right: auto !important;
-    left: 8% !important;
+    left: 6% !important;
   }
 
   .community-floating-posts--ar .community-floating-card[data-post-id='front-group-walk'] {
-    right: auto !important;
-    left: 3% !important;
-  }
-
-  .community-floating-card--front {
-    opacity: 0.74;
-    filter: blur(0.4px);
+    right: 4% !important;
+    left: auto !important;
   }
 
   .community-floating-card__header {
@@ -208,5 +203,25 @@
   .community-floating-card__footer {
     padding: 4px 10px 8px;
     font-size: 0.63rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Hide the back-layer mobile card — it bleeds into the copy text zone */
+  .community-floating-card[data-post-id='recycling-bin-alert'] {
+    display: none !important;
+  }
+
+  /* Single front card centered near the bottom */
+  .community-floating-card[data-post-id='front-group-walk'] {
+    right: auto !important;
+    bottom: 5% !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .community-floating-posts--ar .community-floating-card[data-post-id='front-group-walk'] {
+    left: 50% !important;
+    right: auto !important;
   }
 }
