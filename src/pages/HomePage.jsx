@@ -4,6 +4,7 @@ import { useLang } from '../context/LanguageContext'
 import { playMenuSound } from '../utils/menuAudio'
 import PhoneScrollStage from './PhoneScrollStage'
 import EarthieShowcase from '../components/EarthieShowcase'
+import FunTitleReveal from '../components/FunTitleReveal'
 import HeroParticles from '../components/HeroParticles'
 import CommunityFloatingPosts from '../components/CommunityFloatingPosts'
 import RecyclePortalSection from '../components/RecyclePortalSection'
@@ -183,8 +184,8 @@ export default function HomePage() {
           <div className={`community-copy ${isAr ? 'community-copy--ar' : ''}`} dir={isAr ? 'rtl' : 'ltr'}>
             <motion.p
               className="community-kicker"
-              initial={{ opacity: 0, y: 18, filter: 'blur(6px)' }}
-              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >{isAr ? 'مجتمع إيكوبالز' : 'EcoPals community'}</motion.p>
@@ -193,21 +194,17 @@ export default function HomePage() {
                 ? ['شارك', 'أنجز', 'ألهم']
                 : ['Post.', 'Report.', 'Inspire.']
               ).map((word, i) => (
-                <motion.span
+                <span
                   key={word}
-                  initial={{ opacity: 0, y: 42, filter: 'blur(10px)' }}
-                  whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  viewport={{ once: true, amount: 0.4 }}
-                  transition={{ duration: 0.72, ease: [0.16, 1, 0.3, 1], delay: 0.08 + i * 0.12 }}
                 >
-                  {word}
-                </motion.span>
+                  <FunTitleReveal text={word} delay={0.08 + i * 0.12} />
+                </span>
               ))}
             </h2>
             <motion.p
               className="community-body"
-              initial={{ opacity: 0, y: 18, filter: 'blur(6px)' }}
-              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.58, ease: [0.16, 1, 0.3, 1], delay: 0.34 }}
             >
@@ -253,7 +250,9 @@ export default function HomePage() {
             transition={{ type: 'spring', stiffness: 260, damping: 24 }}
           >
             <p className="challenges-kicker">{challengeCopy[isAr ? 'ar' : 'en'].kicker}</p>
-            <h2>{challengeCopy[isAr ? 'ar' : 'en'].title}</h2>
+            <h2>
+              <FunTitleReveal text={challengeCopy[isAr ? 'ar' : 'en'].title} delay={0.08} />
+            </h2>
             <p className="challenges-body">{challengeCopy[isAr ? 'ar' : 'en'].body}</p>
           </motion.div>
 
@@ -346,7 +345,9 @@ export default function HomePage() {
             >
               <p className="prep-section-label">{section.label}</p>
               <p className="prep-section-kicker">{section.kicker[isAr ? 'ar' : 'en']}</p>
-              <h2 id={`${section.key}-title`}>{section.title[isAr ? 'ar' : 'en']}</h2>
+              <h2 id={`${section.key}-title`}>
+                <FunTitleReveal text={section.title[isAr ? 'ar' : 'en']} delay={0.08} />
+              </h2>
             </motion.div>
           </section>
         )]

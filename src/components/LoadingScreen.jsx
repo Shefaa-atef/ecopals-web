@@ -4,6 +4,15 @@ import { useLang } from '../context/LanguageContext'
 import logoUrl from '../assets/logo@4x.png'
 import './LoadingScreen.css'
 
+function LeafSvg({ fill }) {
+  return (
+    <svg viewBox="0 0 20 28" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 1 C18 6 19 18 10 27 C1 18 2 6 10 1 Z" fill={fill} />
+      <path d="M10 27 Q10.6 17 10 3" fill="none" stroke="rgba(0,0,0,0.18)" strokeWidth="0.8" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 export default function LoadingScreen({ onDone }) {
   const { isAr } = useLang()
 
@@ -20,12 +29,12 @@ export default function LoadingScreen({ onDone }) {
     >
       {/* Floating eco particles */}
       <div className="loading-particles" aria-hidden="true">
-        <span className="loading-leaf loading-leaf--1" />
-        <span className="loading-leaf loading-leaf--2" />
-        <span className="loading-leaf loading-leaf--3" />
-        <span className="loading-leaf loading-leaf--4" />
-        <span className="loading-leaf loading-leaf--5" />
-        <span className="loading-leaf loading-leaf--6" />
+        <span className="loading-leaf loading-leaf--1"><LeafSvg fill="rgb(105 185 95 / 0.9)" /></span>
+        <span className="loading-leaf loading-leaf--2"><LeafSvg fill="rgb(105 185 95 / 0.9)" /></span>
+        <span className="loading-leaf loading-leaf--3"><LeafSvg fill="rgb(47 111 62 / 0.88)" /></span>
+        <span className="loading-leaf loading-leaf--4"><LeafSvg fill="rgb(105 185 95 / 0.9)" /></span>
+        <span className="loading-leaf loading-leaf--5"><LeafSvg fill="rgb(105 185 95 / 0.9)" /></span>
+        <span className="loading-leaf loading-leaf--6"><LeafSvg fill="rgb(90 158 90 / 0.85)" /></span>
         <span className="loading-star loading-star--1" />
         <span className="loading-star loading-star--2" />
         <span className="loading-star loading-star--3" />

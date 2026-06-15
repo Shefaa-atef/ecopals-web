@@ -229,34 +229,7 @@ export default function useHomeScrollAnimations({
       )
     }
 
-    // Prep section body-bg transitions (sections after recycle-portal).
-    // Their positions are corrected by ScrollTrigger.refresh() called inside
-    // RecyclePortalSection after the rp pin spacer is added.
-    const prepTransitions = [
-      { key: 'recycle-challenges', from: '--light-cream',    to: '--light-leaf'     },
-      { key: 'clothing-game',      from: '--light-leaf',     to: '--soft-peach'     },
-      { key: 'match-3-game',       from: '--soft-peach',     to: '--light-lavender' },
-      { key: 'do-you-like-me-game', from: '--light-lavender', to: '--light-cream'   },
-    ]
-    prepTransitions.forEach(({ key, from, to }) => {
-      const triggerEl = document.querySelector(`.home-band-prep--${key}`)
-      if (!triggerEl) return
-      gsap.fromTo(
-        document.body,
-        { backgroundColor: readPastel(from) },
-        {
-          backgroundColor: readPastel(to),
-          ease: 'none',
-          immediateRender: false,
-          scrollTrigger: {
-            trigger: triggerEl,
-            start: 'top bottom',
-            end: 'top top',
-            invalidateOnRefresh: true,
-            scrub: 0.6,
-          },
-        },
-      )
-    })
+    // Prep body-bg tweens are created in RecyclePortalSection.jsx, after the
+    // rp pin spacer is in the DOM, so element positions are read correctly.
   }, [])
 }

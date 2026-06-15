@@ -1,0 +1,28 @@
+.menu-icon-trail {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.menu-icon-trail__drop {
+  position: absolute;
+  display: block;
+  transform-origin: 50% 45%;
+  user-select: none;
+  will-change: opacity, transform;
+  filter: drop-shadow(0 6px 9px rgb(var(--ink-brown-rgb) / 0.24));
+}
+
+.menu-icon-trail__drop svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-icon-trail {
+    display: none;
+  }
+}

@@ -1,0 +1,22 @@
+.fun-title-reveal {
+  display: inline;
+  line-height: inherit;
+}
+
+.fun-title-reveal__word {
+  display: inline-block;
+  line-height: inherit;
+  transform-origin: 50% 100%;
+  will-change: opacity, transform;
+}
+
+.fun-title-reveal__space {
+  white-space: pre;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fun-title-reveal__word {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

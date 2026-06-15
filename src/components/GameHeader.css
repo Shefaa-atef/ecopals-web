@@ -199,92 +199,97 @@
   border: 0;
   border-radius: 0;
   overflow-y: auto;
-  background-color: var(--surface);
+  background-color: var(--light-cream);
   background-image: radial-gradient(
     circle,
-    color-mix(in srgb, var(--ink-brown), transparent 88%) 1.5px,
-    transparent 1.5px
+    color-mix(in srgb, var(--ink-brown), transparent 96%) 1px,
+    transparent 1px
   );
-  background-size: 26px 26px;
+  background-size: 28px 28px;
   pointer-events: auto;
   transform-origin: calc(100% - 52px) 52px;
   will-change: clip-path, filter, opacity, transform;
 }
 
-/* ─── Decorative blobs ───────────────────────────────────── */
+/* ─── Floating eco particles (mirrors loading screen / hero) ─ */
 
-.menu-bg-decor {
+.menu-particles {
   position: absolute;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  border-radius: 0;
+  z-index: 0;
 }
 
-.mbd {
+.mp {
   position: absolute;
+  opacity: 0;
+  animation: mp-float var(--mp-dur, 7s) ease-in-out var(--mp-delay, 0s) infinite;
+}
+
+/* Leaf — SVG fill matches HeroParticles */
+.mp--leaf {
+  width: 11px;
+  height: 16px;
+}
+
+.mp--leaf svg {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.12));
+}
+
+/* Sparkle — 4-point star diamond */
+.mp--star {
+  width: 9px;
+  height: 9px;
+  background: var(--golden-yellow, #f6c85f);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  animation: mp-twinkle var(--mp-dur, 3.5s) ease-in-out var(--mp-delay, 0s) infinite;
+  box-shadow: 0 0 6px rgb(246 200 95 / 0.5);
+}
+
+/* Teal water drop */
+.mp--drop {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
+  background: #74cbd5;
+  box-shadow: 0 0 6px rgb(116 203 213 / 0.4);
 }
 
-.mbd-1 {
-  width: 320px;
-  height: 320px;
-  top: -10%;
-  left: -6%;
-  background: var(--challenge-plants);
-  opacity: 0.07;
-  animation: blobFloat 7s ease-in-out infinite;
+@keyframes mp-float {
+  0%   { transform: translateY(0) translateX(0) rotate(var(--mp-rs, 0deg));   opacity: 0; }
+  10%  { opacity: var(--mp-op, 0.55); }
+  90%  { opacity: var(--mp-op, 0.55); }
+  100% { transform: translateY(-210px) translateX(var(--mp-dx, 14px)) rotate(var(--mp-re, 120deg)); opacity: 0; }
 }
 
-.mbd-2 {
-  width: 260px;
-  height: 260px;
-  top: 5%;
-  right: -4%;
-  background: var(--challenge-water);
-  opacity: 0.07;
-  animation: blobFloat 9s ease-in-out infinite reverse;
-  animation-delay: -2.5s;
+@keyframes mp-twinkle {
+  0%   { transform: scale(0.6) rotate(0deg);   opacity: 0; }
+  20%  { transform: scale(1.1) rotate(45deg);  opacity: var(--mp-op, 0.65); }
+  50%  { transform: scale(0.8) rotate(90deg);  opacity: calc(var(--mp-op, 0.65) * 0.55); }
+  80%  { transform: scale(1.2) rotate(135deg); opacity: var(--mp-op, 0.65); }
+  100% { transform: scale(0.5) rotate(180deg); opacity: 0; }
 }
 
-.mbd-3 {
-  width: 200px;
-  height: 200px;
-  bottom: 12%;
-  left: 3%;
-  background: var(--challenge-energy);
-  opacity: 0.07;
-  animation: blobFloat 6s ease-in-out infinite;
-  animation-delay: -4s;
-}
+/* ── Leaf positions ── */
+.mp--l1 { left:  8%; bottom: 16%; --mp-dur: 6.4s; --mp-delay: 0.0s; --mp-dx:  14px; --mp-rs: 20deg;  --mp-re: 115deg; --mp-op: 0.52; }
+.mp--l2 { left: 24%; bottom:  9%; --mp-dur: 7.8s; --mp-delay: 0.9s; --mp-dx: -19px; --mp-rs: 55deg;  --mp-re: -88deg; --mp-op: 0.46; width: 9px;  height: 13px; }
+.mp--l3 { left: 65%; bottom: 22%; --mp-dur: 5.9s; --mp-delay: 1.5s; --mp-dx:  21px; --mp-rs: 80deg;  --mp-re: 195deg; --mp-op: 0.50; }
+.mp--l4 { left: 83%; bottom: 11%; --mp-dur: 7.2s; --mp-delay: 0.6s; --mp-dx: -14px; --mp-rs: 30deg;  --mp-re: -72deg; --mp-op: 0.48; width: 9px;  height: 13px; }
+.mp--l5 { left: 48%; bottom:  7%; --mp-dur: 8.5s; --mp-delay: 2.2s; --mp-dx:  11px; --mp-rs: 10deg;  --mp-re: 100deg; --mp-op: 0.42; }
+.mp--l6 { left: 91%; bottom: 30%; --mp-dur: 6.1s; --mp-delay: 3.1s; --mp-dx: -11px; --mp-rs: 45deg;  --mp-re: -58deg; --mp-op: 0.44; width: 8px;  height: 12px; }
+.mp--l7 { left: 12%; bottom: 55%; --mp-dur: 9.0s; --mp-delay: 4.4s; --mp-dx:  17px; --mp-rs: 70deg;  --mp-re: 155deg; --mp-op: 0.38; width: 10px; height: 14px; }
 
-.mbd-4 {
-  width: 280px;
-  height: 280px;
-  bottom: -8%;
-  right: 5%;
-  background: var(--challenge-community);
-  opacity: 0.07;
-  animation: blobFloat 8s ease-in-out infinite reverse;
-  animation-delay: -1s;
-}
+/* ── Sparkle positions ── */
+.mp--s1 { left: 19%; bottom: 64%; --mp-dur: 3.1s; --mp-delay: 0.4s; --mp-op: 0.62; }
+.mp--s2 { left: 74%; bottom: 58%; --mp-dur: 3.8s; --mp-delay: 1.3s; --mp-op: 0.56; width: 11px; height: 11px; }
+.mp--s3 { left: 53%; bottom: 72%; --mp-dur: 2.7s; --mp-delay: 2.5s; --mp-op: 0.50; width: 7px;  height: 7px; }
+.mp--s4 { left: 38%; bottom: 42%; --mp-dur: 3.5s; --mp-delay: 1.9s; --mp-op: 0.58; width: 8px;  height: 8px; }
 
-.mbd-5 {
-  width: 160px;
-  height: 160px;
-  top: 45%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--challenge-air);
-  opacity: 0.05;
-  animation: blobFloat 10s ease-in-out infinite;
-  animation-delay: -6s;
-}
-
-@keyframes blobFloat {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-28px) scale(1.07); }
-}
+/* ── Teal drop positions ── */
+.mp--d1 { left: 36%; bottom: 50%; --mp-dur: 8.8s; --mp-delay: 0.8s; --mp-dx:  -8px; --mp-rs: 0deg; --mp-re: 0deg; --mp-op: 0.45; }
+.mp--d2 { left: 77%; bottom: 38%; --mp-dur: 7.4s; --mp-delay: 2.9s; --mp-dx:  10px; --mp-rs: 0deg; --mp-re: 0deg; --mp-op: 0.42; width: 6px; height: 6px; }
+.mp--d3 { left: 58%; bottom: 28%; --mp-dur: 9.5s; --mp-delay: 5.0s; --mp-dx:  -6px; --mp-rs: 0deg; --mp-re: 0deg; --mp-op: 0.38; width: 7px; height: 7px; }
 
 /* ─── Menu eyebrow label ─────────────────────────────────── */
 
@@ -371,21 +376,9 @@
   z-index: 1;
 }
 
-/* Stripe pattern overlay for texture */
 .menu-tile::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background-image: repeating-linear-gradient(
-    -45deg,
-    transparent,
-    transparent 8px,
-    rgba(255, 255, 255, 0.04) 8px,
-    rgba(255, 255, 255, 0.04) 9px
-  );
-  pointer-events: none;
-  z-index: 0;
+  display: none;
+  content: none;
 }
 
 /* Icon circle */
@@ -423,28 +416,6 @@
   font-size: 1.05rem;
   font-weight: 800;
   letter-spacing: 0;
-}
-
-/* Spinning corner ✦ */
-.menu-tile-deco {
-  position: absolute;
-  top: 11px;
-  right: 14px;
-  z-index: 2;
-  font-size: 13px;
-  opacity: 0.6;
-  animation: decoSpin 9s linear infinite;
-  color: #fff;
-}
-
-.menu-tiles--rtl .menu-tile-deco {
-  right: auto;
-  left: 14px;
-}
-
-@keyframes decoSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 }
 
 /* Active / current page tile */
@@ -509,6 +480,35 @@
   letter-spacing: 0;
 }
 
+/* ─── Close button inside menu ──────────────────────────── */
+
+.menu-close-btn {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border: 3px solid var(--ink-brown);
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow:
+    0 5px 0 color-mix(in srgb, var(--surface), var(--ink-brown) 18%),
+    0 8px 18px rgb(var(--ink-brown-rgb) / 0.12);
+  color: var(--text-strong);
+  cursor: pointer;
+  transition: box-shadow 180ms ease;
+}
+
+.menu-close-btn:hover {
+  box-shadow:
+    0 8px 0 color-mix(in srgb, var(--surface), var(--ink-brown) 18%),
+    0 12px 24px rgb(var(--ink-brown-rgb) / 0.18);
+}
+
 /* ─── Media queries ──────────────────────────────────────── */
 
 @media (max-width: 980px) {
@@ -562,13 +562,16 @@
   }
 
   .game-menu {
-    padding: 88px 14px 36px;
-    gap: 14px;
+    justify-content: flex-start;
+    height: 100dvh;
+    min-height: 100dvh;
+    padding: 84px 14px 30px;
+    gap: 12px;
   }
 
   .menu-tiles {
     grid-template-columns: repeat(2, 1fr);
-    gap: 9px;
+    gap: 10px;
   }
 
   .menu-tiles .menu-tile:nth-child(-n + 3),
@@ -578,18 +581,43 @@
   }
 
   .menu-tile {
-    min-height: 118px;
-    padding: 18px 14px 16px;
+    min-height: 116px;
+    padding: 17px 10px 15px;
     border-radius: 22px;
   }
 
   .menu-tile-icon {
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .menu-eyebrow {
+    font-size: 0.55rem;
+    letter-spacing: 0.24em;
   }
 
   .menu-tile-label {
-    font-size: 0.88rem;
+    max-width: 9.5ch;
+    font-family: var(--font-heading-en);
+    font-size: clamp(1rem, 4.7vw, 1.2rem);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 0.92;
+    text-wrap: balance;
+  }
+
+  .menu-tile-label--ar {
+    max-width: 11ch;
+    font-family: var(--font-heading-ar);
+    font-size: clamp(0.92rem, 4.1vw, 1.08rem);
+    font-weight: 800;
+    line-height: 1.12;
+  }
+
+  .menu-legal-link {
+    padding: 8px 14px;
+    font-size: 0.78rem;
+    line-height: 1.15;
   }
 
 }

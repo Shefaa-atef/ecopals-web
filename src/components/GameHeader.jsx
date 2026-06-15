@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Globe2, Menu, X } from 'lucide-react'
-import { allNavItems, legalNavItems, mainNavItems } from '../constants/nav'
+import { legalNavItems, mainNavItems } from '../constants/nav'
 import {
   TILE_TILTS,
   menuColorLayer,
@@ -13,8 +13,18 @@ import {
 import { getPublicPath } from '../utils/routing'
 import { playMenuSound } from '../utils/menuAudio'
 import { useLang } from '../context/LanguageContext'
+import MenuIconTrail from './MenuIconTrail'
 import logoUrl from '../assets/logo@4x.png'
 import './GameHeader.css'
+
+function LeafSvg({ fill }) {
+  return (
+    <svg viewBox="0 0 20 28" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 1 C18 6 19 18 10 27 C1 18 2 6 10 1 Z" fill={fill} />
+      <path d="M10 27 Q10.6 17 10 3" fill="none" stroke="rgba(0,0,0,0.18)" strokeWidth="0.8" strokeLinecap="round" />
+    </svg>
+  )
+}
 
 export default function GameHeader({ route, onNavigate }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -178,17 +188,44 @@ export default function GameHeader({ route, onNavigate }) {
               initial="initial"
               variants={menuPanel}
             >
-              {/* Decorative floating blobs */}
-              <div className="menu-bg-decor" aria-hidden="true">
-                <span className="mbd mbd-1" />
-                <span className="mbd mbd-2" />
-                <span className="mbd mbd-3" />
-                <span className="mbd mbd-4" />
-                <span className="mbd mbd-5" />
+              <motion.button
+                aria-label={isAr ? 'إغلاق القائمة' : 'Close menu'}
+                className="menu-close-btn"
+                type="button"
+                onClick={handleMenuClose}
+                onMouseEnter={() => playMenuSound('hover')}
+                initial={{ opacity: 0, scale: 0.5, rotate: -90 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0, transition: { type: 'spring', stiffness: 320, damping: 18, delay: 0.32 } }}
+                exit={{ opacity: 0, scale: 0.5, rotate: 90, transition: { duration: 0.14 } }}
+                style={isAr ? { right: 'auto', left: 28 } : undefined}
+                whileHover={{ scale: 1.1, rotate: 90, transition: { type: 'spring', stiffness: 380, damping: 14 } }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <X size={22} aria-hidden="true" />
+              </motion.button>
+
+              {/* Floating eco particles — mirrors loading screen / hero style */}
+              <div className="menu-particles" aria-hidden="true">
+                <span className="mp mp--leaf mp--l1"><LeafSvg fill="#3a7d47" /></span>
+                <span className="mp mp--leaf mp--l2"><LeafSvg fill="#2f6f3e" /></span>
+                <span className="mp mp--leaf mp--l3"><LeafSvg fill="#2f6f3e" /></span>
+                <span className="mp mp--leaf mp--l4"><LeafSvg fill="#3a7d47" /></span>
+                <span className="mp mp--leaf mp--l5"><LeafSvg fill="#3a7d47" /></span>
+                <span className="mp mp--leaf mp--l6"><LeafSvg fill="#4a9060" /></span>
+                <span className="mp mp--leaf mp--l7"><LeafSvg fill="#2f6f3e" /></span>
+                <span className="mp mp--star mp--s1" />
+                <span className="mp mp--star mp--s2" />
+                <span className="mp mp--star mp--s3" />
+                <span className="mp mp--star mp--s4" />
+                <span className="mp mp--drop mp--d1" />
+                <span className="mp mp--drop mp--d2" />
+                <span className="mp mp--drop mp--d3" />
               </div>
 
+              <MenuIconTrail />
+
               {/* Section label */}
-              <p className="menu-eyebrow" aria-hidden="true">✦ MAIN MENU ✦</p>
+              <p className="menu-eyebrow" aria-hidden="true">MAIN MENU</p>
 
               {/* Main navigation tiles */}
               <nav
@@ -224,7 +261,6 @@ export default function GameHeader({ route, onNavigate }) {
                     <span className={isAr ? 'menu-tile-label menu-tile-label--ar' : 'menu-tile-label'}>
                       {isAr ? item.labelAr : item.label}
                     </span>
-                    <span className="menu-tile-deco" aria-hidden="true">✦</span>
                   </motion.a>
                 ))}
               </nav>

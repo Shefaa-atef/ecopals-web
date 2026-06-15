@@ -8,3 +8,9 @@
   will-change: transform;
   filter: drop-shadow(0 3px 8px rgb(var(--ink-brown-rgb) / 0.22));
 }
+
+.smooth-cursor-menu-icon svg {
+  display: block;
+  width: 44px;
+  height: 44px;
+}

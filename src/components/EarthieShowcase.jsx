@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
 import { Droplets, Recycle, Sprout } from 'lucide-react'
+import { SlotText } from 'slot-text/react'
+import 'slot-text/style.css'
 import { playMenuSound } from '../utils/menuAudio'
 import bodyRiveUrl from '../assets/body.riv'
 import armsRiveUrl from '../assets/arms_.riv'
@@ -44,6 +46,16 @@ const actionIcons = [Recycle, Droplets, Sprout]
 const actionThresholds = [18, 48, 78]
 const actionSounds = ['eco-recycle', 'eco-water', 'eco-plant']
 const moodThresholds = [25, 50, 75, 100]
+const progressSlotOptions = {
+  bounce: 0.42,
+  color: 'var(--fresh-leaf)',
+  direction: 'up',
+  duration: 240,
+  exitOffset: 24,
+  interrupt: true,
+  skipUnchanged: true,
+  stagger: 18,
+}
 
 const chipStyles = [
   { '--chip-color': 'var(--fresh-leaf)', '--chip-color-rgb': '105 185 95', '--chip-bg': 'var(--light-leaf)' },
@@ -181,7 +193,12 @@ export default function EarthieShowcase({ isAr, energy = 0 }) {
           transition={{ type: 'spring', stiffness: 280, damping: 22, delay: 0.42 }}
         >
           <span className="earthie-energy-label">{copy.energy}</span>
-          <span className="earthie-energy-value">{roundedEnergy}%</span>
+          <SlotText
+            aria-label={`${roundedEnergy}%`}
+            className="earthie-energy-value"
+            options={progressSlotOptions}
+            text={`${roundedEnergy}%`}
+          />
           <span className="earthie-state-label">{copy.states[stateIndex]}</span>
         </motion.div>
       </motion.div>

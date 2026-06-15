@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { recyclePhoneRefs } from '../pages/recyclePortalRefs'
+import FunTitleReveal from './FunTitleReveal'
 
 import trash1 from '../assets/trash_1.png'
 import trash2 from '../assets/trash_2.png'
@@ -45,9 +46,10 @@ export default function RecyclePortalSection({ isAr = false }) {
     if (!section) return
 
     let st = null
-    let entryTween = null
     let flyTl = null
     let flyRetry = null
+    let prepTweens = []
+    let scrollDir = 1
     const portalRef = recyclePhoneRefs.portal
     const sparklesRef = recyclePhoneRefs.sparkles
 
@@ -57,22 +59,6 @@ export default function RecyclePortalSection({ isAr = false }) {
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
       /* ── helpers ─────────────────────────────────────────────── */
-
-      entryTween = gsap.fromTo(
-        section,
-        { '--rp-handoff-opacity': 1 },
-        {
-          '--rp-handoff-opacity': 0,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 92%',
-            end: 'top top',
-            invalidateOnRefresh: true,
-            scrub: 0.45,
-          },
-        },
-      )
 
       const pulsePortal = (strong = false) => {
         const portal = portalRef.current
@@ -176,6 +162,24 @@ export default function RecyclePortalSection({ isAr = false }) {
           .add(() => pulsePortal(idx === 4), 0.5)
       }
 
+      const reversePhoneItem = (idx) => {
+        const item = recyclePhoneRefs.flyItems[idx]
+        if (!item) return
+
+        if (flyTl) flyTl.kill()
+        resetFlyItems(idx)
+
+        // Item exits portal (small/right) and flies back to the left
+        flyTl = gsap.timeline()
+          .fromTo(
+            item,
+            { autoAlpha: 0, rotation: 12,  scale: 0.16, x: 36,   y: -14 },
+            { autoAlpha: 1, rotation: 2,   scale: 0.78, x: 0,    y: 0,   duration: 0.22, ease: 'power1.inOut' },
+          )
+          .to(item, { autoAlpha: 1, rotation: -5,  scale: 1.06, x: -56,  y: 12,  duration: 0.32, ease: 'power2.out' })
+          .to(item, { autoAlpha: 0, rotation: -14, scale: 0.72, x: -260, y: 34,  duration: 0.22, ease: 'power2.in' })
+      }
+
       const showStage = (idx, instant = false, forceFly = false) => {
         const nextStage = Math.min(Math.max(idx, 0), 4)
         const isNewStage = nextStage !== currentStage
@@ -201,8 +205,14 @@ export default function RecyclePortalSection({ isAr = false }) {
           return
         }
 
+        const prevStage = currentStage
         currentStage = nextStage
-        animatePhoneItem(nextStage)
+
+        if (scrollDir === -1 && isNewStage) {
+          reversePhoneItem(prevStage)
+        } else {
+          animatePhoneItem(nextStage)
+        }
       }
 
       if (reducedMotion) {
@@ -217,27 +227,58 @@ export default function RecyclePortalSection({ isAr = false }) {
         end:        '+=500%',
         pin:        true,
         pinSpacing: true,
-        onUpdate: ({ progress }) => {
+        onUpdate: ({ progress, direction }) => {
+          scrollDir = direction
           showStage(Math.min(Math.floor(progress * 5), 4))
         },
       })
 
       // The pin spacer added above shifts every subsequent section's
-      // document position by ~4500px. Refresh so all body-bg triggers
-      // (clothing-game, match-3-game, do-you-like-me-game) recalculate
-      // their start/end positions with the spacer in place.
+      // document position by ~4500px. Refresh FIRST so element positions
+      // reflect the spacer, then create prep body-bg tweens with correct
+      // positions. Creating them in useHomeScrollAnimations (before this
+      // spacer exists) gives positions ~4500px too early — inside the pin
+      // range — causing constant color cycling during the pin.
       ScrollTrigger.refresh()
+
+      const rootStyle = getComputedStyle(document.documentElement)
+      const readPastel = (name) => rootStyle.getPropertyValue(name).trim()
+
+      ;[
+        { key: 'recycle-challenges',  from: '--soft-peach',     to: '--light-leaf'      },
+        { key: 'clothing-game',       from: '--light-leaf',     to: '--soft-peach'      },
+        { key: 'match-3-game',        from: '--soft-peach',     to: '--light-lavender'  },
+        { key: 'do-you-like-me-game', from: '--light-lavender', to: '--light-cream'     },
+      ].forEach(({ key, from, to }) => {
+        const triggerEl = document.querySelector(`.home-band-prep--${key}`)
+        if (!triggerEl) return
+        prepTweens.push(
+          gsap.fromTo(
+            document.body,
+            { backgroundColor: readPastel(from) },
+            {
+              backgroundColor: readPastel(to),
+              ease: 'none',
+              immediateRender: false,
+              scrollTrigger: {
+                trigger: triggerEl,
+                start: 'top top',
+                end: 'bottom top',
+                invalidateOnRefresh: true,
+                scrub: 0.6,
+              },
+            },
+          ),
+        )
+      })
     })
 
     return () => {
       cancelAnimationFrame(raf)
       if (flyRetry) window.clearTimeout(flyRetry)
       if (flyTl) flyTl.kill()
-      if (entryTween) {
-        if (entryTween.scrollTrigger) entryTween.scrollTrigger.kill()
-        entryTween.kill()
-      }
       if (st) st.kill()
+      prepTweens.forEach((t) => t.kill())
     }
   }, [])
 
@@ -253,7 +294,9 @@ export default function RecyclePortalSection({ isAr = false }) {
         {/* ── Copy ─────────────────────────────────────────────── */}
         <div className={`rp-copy${isAr ? ' rp-copy--ar' : ''}`} dir={isAr ? 'rtl' : 'ltr'}>
           <span className="rp-kicker">{t.kicker}</span>
-          <h2 className="rp-title" id="rp-title">{t.title}</h2>
+          <h2 className="rp-title" id="rp-title">
+            <FunTitleReveal text={t.title} delay={0.08} />
+          </h2>
           <p className="rp-subtitle">{t.subtitle}</p>
         </div>
 

@@ -108,6 +108,14 @@
   line-height: 1;
 }
 
+.earthie-energy-value.slot-text {
+  align-items: baseline;
+}
+
+.earthie-energy-value .char-slot {
+  line-height: 1.08;
+}
+
 .earthie-state-label {
   color: rgb(var(--forest-green-rgb) / 0.72);
   padding: 4px 7px;
