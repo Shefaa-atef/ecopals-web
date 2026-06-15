@@ -23,6 +23,13 @@ const PARTICLES = [
   { id: 16, shape: 'glow',    left: '83%', top: '63%', size:  8, color: '#74cbd5', opacity: 0.55, dur: 7,  delay: 2.9, dx:  -8, rs:   0, re:   0 },
   { id: 17, shape: 'leaf',    left: '65%', top: '27%', size: 16, color: '#2f6f3e', opacity: 0.42, dur: 10, delay: 5.7, dx: -20, rs: 185, re:  40 },
   { id: 18, shape: 'glow',    left: '53%', top: '69%', size:  7, color: '#d9f2df', opacity: 0.50, dur: 8,  delay: 4.2, dx:   8, rs:   0, re:   0 },
+  // ── Mobile bottom fill — keeps the CTA area lively without adding new shapes
+  { id: 19, shape: 'leaf',    left: '14%', top: '92%', size: 18, color: '#69b95f', opacity: 0.5,  dur: 10, delay: 0.4, dx:  16, rs:  28, re: 150, mobileOnly: true },
+  { id: 20, shape: 'leaf',    left: '86%', top: '91%', size: 18, color: '#69b95f', opacity: 0.5,  dur: 10, delay: 1.0, dx: -16, rs: 150, re:  28, mobileOnly: true },
+  { id: 21, shape: 'sparkle', left: '28%', top: '82%', size: 10, color: '#f6c85f', opacity: 0.58, dur: 7,  delay: 1.7, dx: -10, rs:   0, re:  85, mobileOnly: true },
+  { id: 22, shape: 'sparkle', left: '72%', top: '83%', size: 10, color: '#f6c85f', opacity: 0.58, dur: 7,  delay: 2.3, dx:  10, rs:  85, re:   0, mobileOnly: true },
+  { id: 23, shape: 'leaf',    left: '42%', top: '96%', size: 16, color: '#2f6f3e', opacity: 0.38, dur: 12, delay: 3.0, dx: -14, rs:  80, re: 215, mobileOnly: true },
+  { id: 24, shape: 'leaf',    left: '58%', top: '96%', size: 16, color: '#2f6f3e', opacity: 0.38, dur: 12, delay: 3.6, dx:  14, rs: 215, re:  80, mobileOnly: true },
 ]
 
 function Leaf({ color }) {
@@ -73,7 +80,7 @@ export default function HeroParticles() {
         return (
           <div
             key={p.id}
-            className="hp"
+            className={`hp${p.mobileOnly ? ' hp--mobile-fill' : ''}`}
             style={{
               left: p.left,
               top: p.top,

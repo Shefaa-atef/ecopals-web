@@ -45,7 +45,7 @@ export default function MenuIconTrail() {
         dropY: randomBetween(112, 190),
         rotateStart: randomBetween(-14, 14),
         rotateEnd: randomBetween(-86, 86),
-        size: randomBetween(24, 34),
+        size: randomBetween(30, 42),
       }
     }
 

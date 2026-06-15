@@ -14,6 +14,10 @@
   animation: hp-float var(--p-dur) ease-in-out var(--p-delay) infinite;
 }
 
+.hp--mobile-fill {
+  display: none;
+}
+
 .hp svg {
   display: block;
   width: 100%;
@@ -35,5 +39,11 @@
   100% {
     transform: translateY(-190px) translateX(var(--p-dx)) rotate(var(--p-re));
     opacity: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .hp--mobile-fill {
+    display: block;
   }
 }

@@ -1,4 +1,10 @@
 .earthie-showcase {
+  --earthie-blue: #67bfe1;
+  --earthie-blue-rgb: 103 191 225;
+  --earthie-blue-dark: #266d8a;
+  --earthie-blue-deep: #185a70;
+  --earthie-blue-soft: #eef9ff;
+
   position: relative;
   z-index: 2;
   display: grid;
@@ -22,7 +28,7 @@
   isolation: isolate;
   border: 4px solid var(--ink-brown);
   box-shadow:
-    0 14px 0 color-mix(in srgb, var(--forest-green), var(--ink-brown) 12%),
+    0 14px 0 color-mix(in srgb, var(--earthie-blue-dark), var(--ink-brown) 16%),
     0 22px 52px rgb(var(--ink-brown-rgb) / 0.22);
 }
 
@@ -85,14 +91,20 @@
   border-radius: 8px;
   background: #ffffff;
   box-shadow:
-    0 7px 0 color-mix(in srgb, var(--fresh-leaf), var(--ink-brown) 16%),
+    0 7px 0 color-mix(in srgb, var(--earthie-blue-dark), var(--ink-brown) 16%),
     0 14px 28px rgb(var(--ink-brown-rgb) / 0.14);
   white-space: nowrap;
   translate: -50% 0;
 }
 
 .earthie-energy-label {
-  color: rgb(var(--forest-green-rgb) / 0.58);
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 7px;
+  border-radius: 6px;
+  background: var(--earthie-blue-dark);
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--earthie-blue-dark), var(--ink-brown) 28%);
+  color: #ffffff;
   font-size: clamp(0.56rem, 0.7vw, 0.72rem);
   font-weight: 900;
   letter-spacing: 0.06em;
@@ -101,7 +113,7 @@
 }
 
 .earthie-energy-value {
-  color: var(--forest-green);
+  color: var(--earthie-blue-deep);
   font-size: clamp(1.45rem, 2.1vw, 2.15rem);
   font-variant-numeric: tabular-nums;
   font-weight: 950;
@@ -117,10 +129,11 @@
 }
 
 .earthie-state-label {
-  color: rgb(var(--forest-green-rgb) / 0.72);
+  color: #ffffff;
   padding: 4px 7px;
   border-radius: 6px;
-  background: rgb(var(--fresh-leaf-rgb) / 0.14);
+  background: var(--earthie-blue);
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--earthie-blue), var(--ink-brown) 28%);
   font-size: clamp(0.66rem, 0.78vw, 0.82rem);
   font-weight: 800;
   line-height: 1;
@@ -135,9 +148,9 @@
 }
 
 .earthie-action-chip {
-  --chip-color: var(--fresh-leaf);
-  --chip-color-rgb: var(--fresh-leaf-rgb);
-  --chip-bg: var(--light-leaf);
+  --chip-color: var(--earthie-blue-dark);
+  --chip-color-rgb: 51 127 157;
+  --chip-bg: var(--pastel-earthie-bg);
 
   display: flex;
   flex-direction: column;

@@ -48,7 +48,7 @@ const actionSounds = ['eco-recycle', 'eco-water', 'eco-plant']
 const moodThresholds = [25, 50, 75, 100]
 const progressSlotOptions = {
   bounce: 0.42,
-  color: 'var(--fresh-leaf)',
+  color: 'var(--earthie-blue-dark)',
   direction: 'up',
   duration: 240,
   exitOffset: 24,
@@ -58,9 +58,9 @@ const progressSlotOptions = {
 }
 
 const chipStyles = [
-  { '--chip-color': 'var(--fresh-leaf)', '--chip-color-rgb': '105 185 95', '--chip-bg': 'var(--light-leaf)' },
-  { '--chip-color': 'var(--ocean-blue)', '--chip-color-rgb': '116 203 213', '--chip-bg': 'var(--light-aqua)' },
-  { '--chip-color': 'var(--golden-yellow)', '--chip-color-rgb': '246 200 95', '--chip-bg': 'var(--light-cream)' },
+  { '--chip-color': 'var(--earthie-blue-dark)', '--chip-color-rgb': '38 109 138', '--chip-bg': 'var(--pastel-earthie-bg)' },
+  { '--chip-color': 'var(--earthie-blue)', '--chip-color-rgb': '103 191 225', '--chip-bg': '#eef9ff' },
+  { '--chip-color': 'var(--earthie-blue-deep)', '--chip-color-rgb': '24 90 112', '--chip-bg': '#dff3ff' },
 ]
 
 function RiveLayer({ className, progress, src }) {

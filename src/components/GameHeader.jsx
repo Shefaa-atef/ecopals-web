@@ -190,18 +190,22 @@ export default function GameHeader({ route, onNavigate }) {
             >
               <motion.button
                 aria-label={isAr ? 'إغلاق القائمة' : 'Close menu'}
-                className="menu-close-btn"
+                className={`menu-close-btn${isAr ? ' menu-close-btn--ar' : ''}`}
                 type="button"
                 onClick={handleMenuClose}
                 onMouseEnter={() => playMenuSound('hover')}
                 initial={{ opacity: 0, scale: 0.5, rotate: -90 }}
                 animate={{ opacity: 1, scale: 1, rotate: 0, transition: { type: 'spring', stiffness: 320, damping: 18, delay: 0.32 } }}
-                exit={{ opacity: 0, scale: 0.5, rotate: 90, transition: { duration: 0.14 } }}
-                style={isAr ? { right: 'auto', left: 28 } : undefined}
-                whileHover={{ scale: 1.1, rotate: 90, transition: { type: 'spring', stiffness: 380, damping: 14 } }}
+                exit={{ opacity: 0, scale: 0.5, rotate: 12, transition: { duration: 0.14 } }}
+                whileHover={{ y: -4, scale: 1.04, transition: { type: 'spring', stiffness: 380, damping: 14 } }}
                 whileTap={{ scale: 0.9 }}
               >
-                <X size={22} aria-hidden="true" />
+                <span className="menu-close-btn__icon" aria-hidden="true">
+                  <X size={20} />
+                </span>
+                <span className={isAr ? 'menu-close-btn__label menu-close-btn__label--ar' : 'menu-close-btn__label'}>
+                  {isAr ? 'إغلاق' : 'Close'}
+                </span>
               </motion.button>
 
               {/* Floating eco particles — mirrors loading screen / hero style */}

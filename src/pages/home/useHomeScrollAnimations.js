@@ -26,9 +26,10 @@ export default function useHomeScrollAnimations({
     ScrollTrigger.create({
       trigger: sticky,
       start: 'top top',
-      end: '+=260%',
+      end: '+=180%',
       pin: true,
       pinSpacing: true,
+      anticipatePin: 1,
       onUpdate: ({ progress }) => {
         setEarthieEnergy(Math.min(progress * 100, 100))
       },
@@ -37,7 +38,7 @@ export default function useHomeScrollAnimations({
     const rootStyle = getComputedStyle(document.documentElement)
     const readPastel = (name) => rootStyle.getPropertyValue(name).trim()
 
-    gsap.set(document.body, { backgroundColor: readPastel('--forest-green') })
+    gsap.set(document.body, { backgroundColor: readPastel('--pastel-earthie-bg') })
 
     const chips = gsap.utils.toArray('[data-earthie-chip]')
     if (chips.length && sticky) {
@@ -55,8 +56,8 @@ export default function useHomeScrollAnimations({
       ScrollTrigger.create({
         trigger: sticky,
         start: 'top top',
-        end: '+=130%',
-        scrub: 0.9,
+        end: '+=92%',
+        scrub: 0.5,
         animation: chipTl,
         invalidateOnRefresh: true,
       })
@@ -65,7 +66,7 @@ export default function useHomeScrollAnimations({
     // Body bg for about and community — these sit above the challenges pin spacer
     // so their trigger positions are correct at creation time.
     ;[
-      { trigger: about,      from: '--forest-green',  to: '--light-aqua'    },
+      { trigger: about,      from: '--pastel-earthie-bg', to: '--light-aqua'    },
       { trigger: community,  from: '--light-aqua',    to: '--light-lavender' },
     ].forEach(({ trigger: triggerEl, from, to }) => {
       if (!triggerEl) return
@@ -125,38 +126,71 @@ export default function useHomeScrollAnimations({
 
       const totalDur = exitTl.totalDuration()
       const pairThresholds = pairs.map((_, i) => ((i * batchDur) + batchDur * 0.35) / totalDur)
-      const scoreValues = [1, 4, 5, 6, 8, 10, 25]
+      const scoreValues = [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 25]
       const firedPairs = new Set()
 
       const spawnScorePop = (container, value) => {
         const el = document.createElement('div')
-        el.className = 'challenge-score-pop'
-        el.textContent = `+${value}`
+        const rotate = -5 + Math.random() * 10
+        const drift = -8 + Math.random() * 16
+        el.className = `challenge-score-pop${value >= 10 ? ' challenge-score-pop--bonus' : ''}`
         el.style.left = `${12 + Math.random() * 76}%`
         el.style.top = `${20 + Math.random() * 55}%`
+
+        const plus = document.createElement('span')
+        plus.className = 'challenge-score-pop__plus'
+        plus.textContent = '+'
+
+        const points = document.createElement('span')
+        points.className = 'challenge-score-pop__value'
+        points.textContent = value
+
+        el.append(plus, points)
         container.appendChild(el)
         playMenuSound('score-pop')
-        gsap.fromTo(
-          el,
-          { opacity: 0, y: 0, scale: 0.6 },
-          {
-            opacity: 1, y: -54, scale: 1.15, duration: 0.38, ease: 'back.out(1.6)',
-            onComplete: () => gsap.to(el, {
-              opacity: 0, y: -96, scale: 0.8, duration: 0.52, ease: 'power2.in',
-              onComplete: () => el.remove(),
-            }),
-          },
-        )
+        gsap.timeline({ onComplete: () => el.remove() })
+          .fromTo(
+            el,
+            {
+              opacity: 0,
+              x: 0,
+              y: 10,
+              xPercent: -50,
+              yPercent: -50,
+              scale: 0.55,
+              rotation: rotate,
+            },
+            {
+              opacity: 1,
+              x: drift,
+              y: -42,
+              scale: 1.06,
+              rotation: rotate,
+              duration: 0.28,
+              ease: 'back.out(1.8)',
+            },
+          )
+          .to(el, { y: -54, scale: 1, duration: 0.2, ease: 'power1.out' })
+          .to(el, {
+            opacity: 0,
+            x: drift * 1.15,
+            y: -92,
+            scale: 0.9,
+            rotation: rotate,
+            duration: 0.42,
+            ease: 'power2.in',
+          }, '+=0.08')
       }
 
       // ── Challenges pin (created BEFORE body-bg triggers for challenges/rp) ──
       ScrollTrigger.create({
         trigger: challenges,
         start: 'top top',
-        end: `+=${pairs.length * 340 + 280}`,
+        end: `+=${pairs.length * 230 + 180}`,
         pin: true,
-        scrub: 0.8,
+        scrub: 0.45,
         animation: exitTl,
+        anticipatePin: 1,
         invalidateOnRefresh: true,
         onUpdate: ({ progress }) => {
           const container = scorePopContainerRef.current
@@ -170,6 +204,12 @@ export default function useHomeScrollAnimations({
                 const val2 = scoreValues[Math.floor(Math.random() * scoreValues.length)]
                 spawnScorePop(container, val2)
               }, 160)
+              if (Math.random() > 0.45) {
+                setTimeout(() => {
+                  const val3 = scoreValues[Math.floor(Math.random() * scoreValues.length)]
+                  spawnScorePop(container, val3)
+                }, 300)
+              }
             }
             if (progress < threshold - 0.04) firedPairs.delete(i)
           })

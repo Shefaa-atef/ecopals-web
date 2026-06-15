@@ -207,21 +207,197 @@
 }
 
 @media (max-width: 480px) {
-  /* Hide the back-layer mobile card — it bleeds into the copy text zone */
-  .community-floating-card[data-post-id='recycling-bin-alert'] {
+  .community-floating-card {
     display: none !important;
+    width: min(92px, 24.5vw);
+    border-width: 2px;
+    border-radius: 12px;
+    box-shadow:
+      0 3px 0 color-mix(in srgb, var(--community-purple-dark, #4d2d78), var(--ink-brown) 24%),
+      0 7px 18px rgb(var(--ink-brown-rgb) / 0.12);
   }
 
-  /* Single front card centered near the bottom */
+  .community-floating-card--back {
+    opacity: 0.74;
+    filter: saturate(0.95);
+  }
+
+  .community-floating-card[data-post-id='garden-water-saved'],
+  .community-floating-card[data-post-id='tree-challenge-started'],
+  .community-floating-card[data-post-id='cleanup-progress'],
+  .community-floating-card[data-post-id='recycling-bin-alert'],
+  .community-floating-card[data-post-id='plant-swap'],
+  .community-floating-card[data-post-id='front-compost'],
+  .community-floating-card[data-post-id='front-bottle-count'],
+  .community-floating-card[data-post-id='front-group-walk'],
+  .community-floating-card[data-post-id='front-water-challenge'],
+  .community-floating-card[data-post-id='front-cup-reuse'],
+  .community-floating-card[data-post-id='school-points'],
+  .community-floating-card[data-post-id='back-lunch-boxes'] {
+    display: grid !important;
+  }
+
+  .community-floating-card__header {
+    gap: 4px;
+    padding: 4px 5px 3px;
+    border-bottom-width: 1.5px;
+  }
+
+  .community-floating-card__identity {
+    gap: 4px;
+  }
+
+  .community-floating-card__avatar {
+    width: 16px;
+    height: 16px;
+    border-width: 1.5px;
+  }
+
+  .community-floating-card__user {
+    font-size: 0.5rem;
+  }
+
+  .community-floating-card__icon {
+    width: 17px;
+    height: 17px;
+    border-width: 1.5px;
+    font-size: 0.55rem;
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--badge-bg, #f6c85f), #3d3327 28%);
+  }
+
+  .community-floating-card__text {
+    padding: 4px 6px 6px;
+    font-size: 0.47rem;
+    line-height: 1.32;
+    -webkit-line-clamp: 2;
+  }
+
+  .community-floating-card__footer {
+    display: none;
+  }
+
+  .community-floating-card[data-post-id='garden-water-saved'] {
+    top: 47% !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: 4% !important;
+  }
+
+  .community-floating-card[data-post-id='front-compost'] {
+    top: 45% !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: 35% !important;
+    width: min(88px, 23.5vw);
+  }
+
+  .community-floating-card[data-post-id='cleanup-progress'] {
+    top: 47% !important;
+    right: 3% !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: min(86px, 23vw);
+  }
+
+  .community-floating-card[data-post-id='recycling-bin-alert'] {
+    top: 52% !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: 9% !important;
+    width: min(98px, 26vw);
+  }
+
+  .community-floating-card[data-post-id='tree-challenge-started'] {
+    top: 51% !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: 41% !important;
+    width: min(90px, 24vw);
+  }
+
+  .community-floating-card[data-post-id='front-bottle-count'] {
+    top: 53% !important;
+    right: 5% !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: min(86px, 23vw);
+  }
+
+  .community-floating-card[data-post-id='plant-swap'] {
+    top: auto !important;
+    right: auto !important;
+    bottom: 15% !important;
+    left: 2% !important;
+  }
+
+  .community-floating-card[data-post-id='school-points'] {
+    top: auto !important;
+    right: auto !important;
+    bottom: 14% !important;
+    left: 29% !important;
+    width: min(88px, 23.5vw);
+  }
+
+  .community-floating-card[data-post-id='front-water-challenge'] {
+    top: auto !important;
+    right: 5% !important;
+    bottom: 15% !important;
+    left: auto !important;
+    width: min(90px, 24vw);
+  }
+
   .community-floating-card[data-post-id='front-group-walk'] {
+    top: auto !important;
+    right: auto !important;
+    bottom: 10px !important;
+    left: 5% !important;
+    width: min(104px, 28vw);
+  }
+
+  .community-floating-card[data-post-id='back-lunch-boxes'] {
+    top: auto !important;
     right: auto !important;
     bottom: 5% !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
+    left: 37% !important;
+  }
+
+  .community-floating-card[data-post-id='front-cup-reuse'] {
+    top: auto !important;
+    right: 4% !important;
+    bottom: 5% !important;
+    left: auto !important;
+    width: min(88px, 23.5vw);
   }
 
   .community-floating-posts--ar .community-floating-card[data-post-id='front-group-walk'] {
-    left: 50% !important;
+    left: auto !important;
+    right: 10% !important;
+  }
+
+  .community-floating-posts--ar .community-floating-card[data-post-id='garden-water-saved'],
+  .community-floating-posts--ar .community-floating-card[data-post-id='recycling-bin-alert'],
+  .community-floating-posts--ar .community-floating-card[data-post-id='plant-swap'] {
+    left: auto !important;
+    right: 4% !important;
+  }
+
+  .community-floating-posts--ar .community-floating-card[data-post-id='front-compost'],
+  .community-floating-posts--ar .community-floating-card[data-post-id='tree-challenge-started'],
+  .community-floating-posts--ar .community-floating-card[data-post-id='school-points'] {
+    left: auto !important;
+    right: 31% !important;
+  }
+
+  .community-floating-posts--ar .community-floating-card[data-post-id='cleanup-progress'],
+  .community-floating-posts--ar .community-floating-card[data-post-id='front-bottle-count'],
+  .community-floating-posts--ar .community-floating-card[data-post-id='front-water-challenge'],
+  .community-floating-posts--ar .community-floating-card[data-post-id='front-cup-reuse'] {
+    left: 4% !important;
     right: auto !important;
+  }
+
+  .community-floating-posts--ar .community-floating-card[data-post-id='back-lunch-boxes'] {
+    right: auto !important;
+    left: 47% !important;
   }
 }

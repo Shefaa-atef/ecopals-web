@@ -9,7 +9,6 @@ import HeroParticles from '../components/HeroParticles'
 import CommunityFloatingPosts from '../components/CommunityFloatingPosts'
 import RecyclePortalSection from '../components/RecyclePortalSection'
 import useChallengePointerParallax from './home/useChallengePointerParallax'
-import useExactSectionScroll from './home/useExactSectionScroll'
 import useHomeScrollAnimations from './home/useHomeScrollAnimations'
 import {
   challengeCopy,
@@ -34,9 +33,6 @@ export default function HomePage() {
   const coinRefs = useRef([])
   const scorePopContainerRef = useRef(null)
   const [earthieEnergy, setEarthieEnergy] = useState(0)
-
-  useExactSectionScroll(communitySectionRef, 'community', '#game')
-  useExactSectionScroll(challengesSectionRef, 'challenges', '#community')
 
   useHomeScrollAnimations({
     aboutBandRef,

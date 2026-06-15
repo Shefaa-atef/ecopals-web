@@ -47,7 +47,7 @@
   height: var(--phone-shadow-height);
   border-radius: 50%;
   background:
-    radial-gradient(ellipse at center, rgb(var(--ink-brown-rgb) / 0.3), rgb(var(--forest-green-rgb) / 0.14) 42%, transparent 72%);
+    radial-gradient(ellipse at center, rgb(var(--ink-brown-rgb) / 0.26), rgb(103 191 225 / 0.16) 42%, transparent 72%);
   filter: blur(16px);
   opacity: 0;
   pointer-events: none;
@@ -99,6 +99,11 @@
 }
 
 .phone-description-screen {
+  --phone-blue: #67bfe1;
+  --phone-blue-rgb: 103 191 225;
+  --phone-blue-dark: #266d8a;
+  --phone-blue-deep: #185a70;
+
   position: absolute;
   top: 19%;
   left: 11.2%;
@@ -108,9 +113,9 @@
   padding: clamp(18px, 2.3vw, 34px);
   border-radius: clamp(14px, 1.8vw, 28px);
   overflow: hidden;
-  background: var(--light-leaf);
+  background: var(--pastel-earthie-bg);
   box-shadow:
-    inset 0 0 0 2px rgb(var(--fresh-leaf-rgb) / 0.22),
+    inset 0 0 0 2px rgb(38 109 138 / 0.24),
     inset 0 0 0 1px rgb(255 255 255 / 0.55);
   pointer-events: none;
   will-change: clip-path, opacity;
@@ -128,7 +133,7 @@
   width: 50%;
   background:
     radial-gradient(circle at center, rgb(255 255 255 / 0.82), transparent 62%),
-    linear-gradient(135deg, rgb(var(--fresh-leaf-rgb) / 0.14), rgb(var(--sky-cyan-rgb) / 0.12));
+    linear-gradient(135deg, rgb(var(--phone-blue-rgb) / 0.12), rgb(var(--phone-blue-rgb) / 0.2));
   pointer-events: none;
   transform-origin: center;
 }
@@ -173,9 +178,9 @@
   padding: 3px 10px 3px 8px;
   border: 2px solid var(--ink-brown);
   border-radius: 999px;
-  background: var(--golden-yellow);
-  box-shadow: 0 2px 0 color-mix(in srgb, var(--golden-yellow), var(--ink-brown) 28%);
-  color: var(--ink-brown);
+  background: var(--phone-blue-dark);
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--phone-blue-dark), var(--ink-brown) 28%);
+  color: #ffffff;
   font-size: clamp(0.52rem, 0.74vw, 0.78rem);
   font-weight: 900;
   letter-spacing: 0.04em;
@@ -191,7 +196,7 @@
   font-weight: 400;
   line-height: 1.02;
   text-shadow:
-    0 4px 0 color-mix(in srgb, var(--fresh-leaf), var(--ink-brown) 32%),
+    0 4px 0 color-mix(in srgb, var(--phone-blue), var(--ink-brown) 32%),
     0 8px 16px rgb(var(--ink-brown-rgb) / 0.1);
 }
 
@@ -294,6 +299,7 @@
   .phone-description-panel h3 {
     margin-bottom: 4px;
     font-size: 1rem;
+    text-shadow: 0 3px 8px rgb(var(--ink-brown-rgb) / 0.14);
   }
 
   .phone-description-text {
