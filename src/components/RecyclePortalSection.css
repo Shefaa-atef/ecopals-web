@@ -98,9 +98,10 @@
 
 .rp-copy--ar .rp-title {
   font-family: var(--font-heading-ar);
-  font-size: clamp(1.8rem, 3vw, 3.8rem);
+  font-size: clamp(2rem, 3.6vw, 4.6rem);
   font-weight: 800;
-  line-height: 1.04;
+  line-height: 1.1;
+  margin-bottom: 28px;
   white-space: nowrap;
 }
 
