@@ -87,27 +87,6 @@ export default function useHomeScrollAnimations({
       )
     })
 
-    // Animate the challenges section's own background (lavender → light-leaf green)
-    // so the green colour shows through the dense card/coin layout.
-    if (challenges) {
-      gsap.fromTo(
-        challenges,
-        { backgroundColor: readPastel('--light-lavender') },
-        {
-          backgroundColor: readPastel('--light-leaf'),
-          ease: 'none',
-          immediateRender: false,
-          scrollTrigger: {
-            trigger: challenges,
-            start: 'top bottom',
-            end: 'top top',
-            invalidateOnRefresh: true,
-            scrub: 0.6,
-          },
-        },
-      )
-    }
-
     // ── Challenges coin/card animation ────────────────────────────────────────
     if (challenges) {
       const photoCards = photoCardRefs.current
