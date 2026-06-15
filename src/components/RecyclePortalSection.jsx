@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { recyclePhoneRefs } from '../pages/recyclePortalRefs'
 import FunTitleReveal from './FunTitleReveal'
+import { playMenuSound } from '../utils/menuAudio'
 
 import trash1 from '../assets/trash_1.png'
 import trash2 from '../assets/trash_2.png'
@@ -63,6 +64,7 @@ export default function RecyclePortalSection({ isAr = false }) {
       const pulsePortal = (strong = false) => {
         const portal = portalRef.current
         if (!portal) return
+        playMenuSound(strong ? 'rp-portal-big' : 'rp-portal')
         gsap.fromTo(
           portal,
           { scale: 1, filter: 'brightness(1)' },
@@ -120,6 +122,7 @@ export default function RecyclePortalSection({ isAr = false }) {
 
         if (flyTl) flyTl.kill()
         resetFlyItems(idx)
+        playMenuSound('rp-throw')
 
         flyTl = gsap.timeline()
           .fromTo(
@@ -168,6 +171,7 @@ export default function RecyclePortalSection({ isAr = false }) {
 
         if (flyTl) flyTl.kill()
         resetFlyItems(idx)
+        playMenuSound('rp-reverse')
 
         // Item exits portal (small/right) and flies back to the left
         flyTl = gsap.timeline()
@@ -224,9 +228,10 @@ export default function RecyclePortalSection({ isAr = false }) {
       st = ScrollTrigger.create({
         trigger:    section,
         start:      'top top',
-        end:        '+=500%',
+        end:        '+=320%',
         pin:        true,
         pinSpacing: true,
+        anticipatePin: 1,
         onUpdate: ({ progress, direction }) => {
           scrollDir = direction
           showStage(Math.min(Math.floor(progress * 5), 4))

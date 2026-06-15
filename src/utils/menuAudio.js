@@ -190,6 +190,52 @@ export function playMenuSound(type) {
     return
   }
 
+  if (type === 'rp-throw') {
+    // Whoosh as recyclable item launches from the left
+    masterGain.gain.setValueAtTime(0.0001, now)
+    masterGain.gain.exponentialRampToValueAtTime(0.3, now + 0.014)
+    masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22)
+    playMenuNoise(audioContext, masterGain, now, 0.16, 0.022, 900)
+    playMenuTone(audioContext, masterGain, now, 293.66, 0.1, 0.013, 'sine')
+    return
+  }
+
+  if (type === 'rp-portal') {
+    // Eco chime when item is absorbed into the portal
+    masterGain.gain.setValueAtTime(0.0001, now)
+    masterGain.gain.exponentialRampToValueAtTime(0.36, now + 0.016)
+    masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.48)
+    playMenuNoise(audioContext, masterGain, now, 0.055, 0.016, 1900)
+    playMenuTone(audioContext, masterGain, now + 0.018, 493.88, 0.09, 0.022, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.068, 659.25, 0.14, 0.018, 'sine')
+    return
+  }
+
+  if (type === 'rp-portal-big') {
+    // Reward fanfare — all items recycled!
+    masterGain.gain.setValueAtTime(0.0001, now)
+    masterGain.gain.exponentialRampToValueAtTime(0.44, now + 0.016)
+    masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.78)
+    playMenuNoise(audioContext, masterGain, now, 0.05, 0.018, 2600)
+    playMenuTone(audioContext, masterGain, now,        523.25, 0.14, 0.026, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.06,  659.25, 0.18, 0.022, 'sine')
+    playMenuTone(audioContext, masterGain, now + 0.12,  783.99, 0.22, 0.02,  'sine')
+    playMenuTone(audioContext, masterGain, now + 0.20, 1046.5,  0.3,  0.016, 'sine')
+    playMenuNoise(audioContext, masterGain, now + 0.16, 0.09, 0.012, 3400)
+    return
+  }
+
+  if (type === 'rp-reverse') {
+    // Descending whoosh as item exits the portal on backward scroll
+    masterGain.gain.setValueAtTime(0.0001, now)
+    masterGain.gain.exponentialRampToValueAtTime(0.22, now + 0.016)
+    masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.26)
+    playMenuNoise(audioContext, masterGain, now, 0.14, 0.018, 680)
+    playMenuTone(audioContext, masterGain, now,        587.33, 0.06, 0.016, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.04,  392,   0.09, 0.014, 'sine')
+    return
+  }
+
   playMenuTone(audioContext, masterGain, now, 659.25, 0.12, 0.032)
   playMenuTone(audioContext, masterGain, now + 0.045, 493.88, 0.16, 0.03)
 }
