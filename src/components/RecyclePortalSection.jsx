@@ -317,6 +317,7 @@ export default function RecyclePortalSection({ isAr = false }) {
                 src={src}
                 alt={`Trash pile, stage ${i + 1} of 5`}
                 draggable="false"
+                loading="lazy"
                 ref={(el) => { trashRefs.current[i] = el }}
                 style={{ opacity: i === 0 ? 1 : 0 }}
               />
@@ -349,6 +350,7 @@ export default function RecyclePortalSection({ isAr = false }) {
                 src={src}
                 alt={`Rewards pile, stage ${i + 1} of 5`}
                 draggable="false"
+                loading="lazy"
                 ref={(el) => { moneyRefs.current[i] = el }}
                 style={{ opacity: i === 0 ? 1 : 0 }}
               />

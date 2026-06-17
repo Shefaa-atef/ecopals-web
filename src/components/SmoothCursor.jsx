@@ -75,7 +75,7 @@ export default function SmoothCursor() {
       }
     }
 
-    window.addEventListener('pointermove', onMove)
+    window.addEventListener('pointermove', onMove, { passive: true })
     return () => {
       window.cancelAnimationFrame(activeFrame)
       window.removeEventListener('pointermove', onMove)

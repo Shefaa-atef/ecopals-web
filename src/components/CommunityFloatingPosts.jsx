@@ -44,9 +44,13 @@ export default function CommunityFloatingPosts({ isAr = false }) {
   }, [])
 
   useEffect(() => {
+    let lastTime = 0
     function handlePointerMove(event) {
-      const cards = document.querySelectorAll('.community-floating-card')
+      const now = performance.now()
+      if (now - lastTime < 32) return
+      lastTime = now
 
+      const cards = document.querySelectorAll('.community-floating-card')
       for (const card of cards) {
         const rect = card.getBoundingClientRect()
         const isInside =

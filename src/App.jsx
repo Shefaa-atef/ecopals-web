@@ -1,15 +1,16 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { appName } from './constants/nav'
 import { getPublicPath, getRouteState, isModifiedClick } from './utils/routing'
 import { LanguageProvider } from './context/LanguageContext'
 import Layout from './components/Layout'
 import LoadingScreen from './components/LoadingScreen'
-import HomePage from './pages/HomePage'
-import PrivacyPage from './pages/PrivacyPage'
-import DeleteAccountPage from './pages/DeleteAccountPage'
-import NotFoundPage from './pages/NotFoundPage'
 import logoUrl from './assets/logo@4x.png'
+
+const HomePage = lazy(() => import('./pages/HomePage'))
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'))
+const DeleteAccountPage = lazy(() => import('./pages/DeleteAccountPage'))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -76,10 +77,13 @@ function App() {
     return true
   }
 
-  const pages = {
-    '/': <HomePage />,
-    '/policies': <PrivacyPage />,
-    '/delete-account': <DeleteAccountPage />,
+  function renderPage() {
+    switch (route.path) {
+      case '/': return <HomePage />
+      case '/policies': return <PrivacyPage />
+      case '/delete-account': return <DeleteAccountPage />
+      default: return <NotFoundPage onNavigate={handleNavigate} />
+    }
   }
 
   return (
@@ -89,7 +93,9 @@ function App() {
       </AnimatePresence>
       {!loading && (
         <Layout route={route} onNavigate={handleNavigate}>
-          {pages[route.path] ?? <NotFoundPage onNavigate={handleNavigate} />}
+          <Suspense fallback={null}>
+            {renderPage()}
+          </Suspense>
         </Layout>
       )}
     </LanguageProvider>

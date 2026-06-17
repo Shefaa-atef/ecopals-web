@@ -21,12 +21,14 @@ export default function useExactSectionScroll(sectionRef, sectionHash, previousH
 
       window.clearTimeout(settleTimeoutId)
 
+      // Wait longer before evaluating — lets fast scrolls pass through without snapping
       settleTimeoutId = window.setTimeout(() => {
         const rect = section.getBoundingClientRect()
         const viewportHeight = window.innerHeight || 1
         const distanceFromTop = Math.abs(rect.top)
 
-        if (rect.top > viewportHeight * 0.82 || rect.top < -viewportHeight * 0.7) {
+        // Only consider snapping when the section top is already close to the viewport top
+        if (rect.top > viewportHeight * 0.18 || rect.top < -viewportHeight * 0.12) {
           hasSettled = false
           return
         }
@@ -38,7 +40,8 @@ export default function useExactSectionScroll(sectionRef, sectionHash, previousH
 
         if (isSnapping || hasSettled) return
 
-        const isNearSectionStart = rect.top <= viewportHeight * 0.72 && rect.top >= -viewportHeight * 0.34
+        // Narrower snap zone: only pull when nearly aligned
+        const isNearSectionStart = rect.top <= viewportHeight * 0.14 && rect.top >= -viewportHeight * 0.10
         const isMostlyOnScreen = rect.bottom >= viewportHeight * 0.66
 
         if (!isNearSectionStart || !isMostlyOnScreen) return
@@ -50,14 +53,15 @@ export default function useExactSectionScroll(sectionRef, sectionHash, previousH
         scrollToSection(prefersReducedMotion ? 'auto' : 'smooth')
 
         window.clearTimeout(releaseTimeoutId)
+        // Short lock so user can keep scrolling immediately after snap
         releaseTimeoutId = window.setTimeout(() => {
           isSnapping = false
 
           if (Math.abs(section.getBoundingClientRect().top) > 2) {
             scrollToSection('auto')
           }
-        }, prefersReducedMotion ? 80 : 900)
-      }, 140)
+        }, prefersReducedMotion ? 80 : 350)
+      }, 280)
     }
 
     window.addEventListener('scroll', settleSectionScroll, { passive: true })
