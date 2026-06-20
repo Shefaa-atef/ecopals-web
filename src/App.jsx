@@ -10,6 +10,7 @@ import logoUrl from './assets/logo@4x.png'
 const HomePage = lazy(() => import('./pages/HomePage'))
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'))
 const DeleteAccountPage = lazy(() => import('./pages/DeleteAccountPage'))
+const Match3Page = lazy(() => import('./pages/Match3Page'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 
 function App() {
@@ -82,6 +83,7 @@ function App() {
       case '/': return <HomePage />
       case '/policies': return <PrivacyPage />
       case '/delete-account': return <DeleteAccountPage />
+      case '/match-3': return <Match3Page onNavigate={handleNavigate} />
       default: return <NotFoundPage onNavigate={handleNavigate} />
     }
   }

@@ -2,7 +2,7 @@ import { copyFileSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 
 const distDir = 'dist'
-const routes = ['policies', 'delete-account']
+const routes = ['policies', 'delete-account', 'match-3']
 
 for (const route of routes) {
   const routeDir = join(distDir, route)

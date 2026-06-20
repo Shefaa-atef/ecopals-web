@@ -16,6 +16,7 @@ export default defineConfig({
           'vendor-framer': ['framer-motion'],
           'vendor-rive': ['@rive-app/react-canvas'],
           'vendor-misc': ['lenis', 'swiper', 'split-type', 'slot-text', 'culori', 'simplex-noise'],
+          'vendor-phaser': ['phaser'],
         },
       },
     },

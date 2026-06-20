@@ -876,9 +876,16 @@
 }
 
 .home-band-prep--match-3-game {
-  --prep-bg: var(--light-lavender);
-  --prep-text: #2a1a4a;
-  --prep-accent: var(--lavender);
+  --prep-bg: var(--light-leaf);
+  --prep-text: #163a21;
+  --prep-accent: var(--fresh-leaf);
+  /* stack title above showcase */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(28px, 4vh, 52px);
+  padding: clamp(72px, 10svh, 120px) clamp(16px, 4vw, 48px) clamp(60px, 8svh, 96px);
 }
 
 .home-band-prep--do-you-like-me-game {

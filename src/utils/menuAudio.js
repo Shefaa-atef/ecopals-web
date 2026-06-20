@@ -236,6 +236,27 @@ export function playMenuSound(type) {
     return
   }
 
+  if (type === 'match3-swap') {
+    playMenuNoise(audioContext, masterGain, now, 0.07, 0.01, 1200)
+    playMenuTone(audioContext, masterGain, now + 0.02, 523.25, 0.065, 0.014, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.055, 659.25, 0.08, 0.012, 'sine')
+    return
+  }
+
+  if (type === 'match3-match') {
+    playMenuTone(audioContext, masterGain, now,        659.25, 0.09, 0.022, 'triangle')
+    playMenuTone(audioContext, masterGain, now + 0.04,  880,   0.13, 0.02,  'sine')
+    playMenuTone(audioContext, masterGain, now + 0.09, 1046.5, 0.18, 0.016, 'sine')
+    playMenuNoise(audioContext, masterGain, now + 0.04, 0.055, 0.009, 2200)
+    return
+  }
+
+  if (type === 'match3-land') {
+    playMenuNoise(audioContext, masterGain, now, 0.045, 0.007, 900)
+    playMenuTone(audioContext, masterGain, now + 0.01, 392, 0.05, 0.01, 'triangle')
+    return
+  }
+
   playMenuTone(audioContext, masterGain, now, 659.25, 0.12, 0.032)
   playMenuTone(audioContext, masterGain, now + 0.045, 493.88, 0.16, 0.03)
 }

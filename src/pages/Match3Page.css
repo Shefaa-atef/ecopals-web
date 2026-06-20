@@ -1,0 +1,58 @@
+.match3-page {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  background: var(--light-lavender);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.match3-canvas-wrap {
+  width: 100%;
+  max-width: 544px;
+  aspect-ratio: 544 / 608; /* BOARD_WIDTH / BOARD_HEIGHT from match3Data */
+}
+
+.match3-canvas-wrap canvas {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+}
+
+.match3-back-btn {
+  position: fixed;
+  top: 14px;
+  left: 18px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--forest-green);
+  color: #fff;
+  border-radius: 999px;
+  font-family: 'Boogie Boys', system-ui, sans-serif;
+  font-size: 0.95rem;
+  text-decoration: none;
+  box-shadow: 0 2px 10px rgba(47 111 62 / 0.32);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.match3-back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(47 111 62 / 0.42);
+}
+
+.match3-back-btn--ar {
+  left: auto;
+  right: 18px;
+  direction: rtl;
+}
+
+@media (max-width: 480px) {
+  .match3-canvas-wrap {
+    max-width: 100vmin;
+  }
+}

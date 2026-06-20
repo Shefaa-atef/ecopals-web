@@ -8,6 +8,7 @@ import FunTitleReveal from '../components/FunTitleReveal'
 import HeroParticles from '../components/HeroParticles'
 import CommunityFloatingPosts from '../components/CommunityFloatingPosts'
 import RecyclePortalSection from '../components/RecyclePortalSection'
+import Match3Showcase from '../components/Match3Showcase'
 import useChallengePointerParallax from './home/useChallengePointerParallax'
 import useExactSectionScroll from './home/useExactSectionScroll'
 import useHomeScrollAnimations from './home/useHomeScrollAnimations'
@@ -327,6 +328,33 @@ export default function HomePage() {
           return [
             <RecyclePortalSection key="recycle-portal" isAr={isAr} />,
           ]
+        }
+
+        if (section.key === 'match-3-game') {
+          return [(
+            <section
+              aria-labelledby="match-3-game-title"
+              className="home-band-prep home-band-prep--match-3-game"
+              id="match-3-game"
+              key="match-3-game"
+            >
+              <motion.div
+                className="prep-section-shell"
+                dir={isAr ? 'rtl' : 'ltr'}
+                initial={{ opacity: 0, y: 28 }}
+                transition={{ type: 'spring', stiffness: 220, damping: 24 }}
+                viewport={{ once: true, amount: 0.3 }}
+                whileInView={{ opacity: 1, y: 0 }}
+              >
+                <p className="prep-section-label">{section.label}</p>
+                <p className="prep-section-kicker">{section.kicker[isAr ? 'ar' : 'en']}</p>
+                <h2 id="match-3-game-title">
+                  <FunTitleReveal text={section.title[isAr ? 'ar' : 'en']} delay={0.08} />
+                </h2>
+              </motion.div>
+              <Match3Showcase />
+            </section>
+          )]
         }
 
         return [(
