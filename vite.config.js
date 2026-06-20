@@ -9,14 +9,26 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom'],
-          'vendor-three': ['three', '@react-three/fiber', '@react-three/drei', '@react-three/postprocessing', 'postprocessing', 'maath'],
-          'vendor-gsap': ['gsap', '@gsap/react'],
-          'vendor-framer': ['framer-motion'],
-          'vendor-rive': ['@rive-app/react-canvas'],
-          'vendor-misc': ['lenis', 'swiper', 'split-type', 'slot-text', 'culori', 'simplex-noise'],
-          'vendor-phaser': ['phaser'],
+        manualChunks(id) {
+          if (id.includes('node_modules/phaser'))                    return 'vendor-phaser'
+          if (id.includes('node_modules/react') ||
+              id.includes('node_modules/react-dom'))                 return 'vendor-react'
+          if (id.includes('node_modules/three') ||
+              id.includes('node_modules/@react-three') ||
+              id.includes('node_modules/@react-three/fiber') ||
+              id.includes('node_modules/@react-three/drei') ||
+              id.includes('node_modules/postprocessing') ||
+              id.includes('node_modules/maath'))                     return 'vendor-three'
+          if (id.includes('node_modules/gsap') ||
+              id.includes('node_modules/@gsap'))                     return 'vendor-gsap'
+          if (id.includes('node_modules/framer-motion'))             return 'vendor-framer'
+          if (id.includes('node_modules/@rive-app'))                 return 'vendor-rive'
+          if (id.includes('node_modules/lenis') ||
+              id.includes('node_modules/swiper') ||
+              id.includes('node_modules/split-type') ||
+              id.includes('node_modules/slot-text') ||
+              id.includes('node_modules/culori') ||
+              id.includes('node_modules/simplex-noise'))             return 'vendor-misc'
         },
       },
     },
