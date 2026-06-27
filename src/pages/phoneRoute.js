@@ -259,7 +259,11 @@ export function usePhoneRoute(routeKey) {
       }
 
       if (viewportCenter >= anchors[anchors.length - 1].anchor) {
-        setPose(anchors[anchors.length - 1])
+        const lastAnchor = anchors[anchors.length - 1]
+        const distance = viewportCenter - lastAnchor.anchor
+        const visibleRange = window.innerHeight * 0.75
+        const opacity = lastAnchor.opacity * smoothStep(1 - distance / visibleRange)
+        setPose({ ...lastAnchor, opacity })
         return
       }
 

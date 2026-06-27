@@ -331,30 +331,19 @@ export default function HomePage() {
         }
 
         if (section.key === 'match-3-game') {
-          return [(
-            <section
-              aria-labelledby="match-3-game-title"
-              className="home-band-prep home-band-prep--match-3-game"
-              id="match-3-game"
-              key="match-3-game"
-            >
-              <motion.div
-                className="prep-section-shell"
-                dir={isAr ? 'rtl' : 'ltr'}
-                initial={{ opacity: 0, y: 28 }}
-                transition={{ type: 'spring', stiffness: 220, damping: 24 }}
-                viewport={{ once: true, amount: 0.3 }}
-                whileInView={{ opacity: 1, y: 0 }}
+          return [
+            <EcoSectionDivider key="match-3-divider" variant="match3" />,
+            (
+              <section
+                aria-label={isAr ? 'لعبة مطابقة 3' : 'Match 3 game'}
+                className="home-match3-divider home-band-prep--match-3-game"
+                id="match-3-game"
+                key="match-3-game"
               >
-                <p className="prep-section-label">{section.label}</p>
-                <p className="prep-section-kicker">{section.kicker[isAr ? 'ar' : 'en']}</p>
-                <h2 id="match-3-game-title">
-                  <FunTitleReveal text={section.title[isAr ? 'ar' : 'en']} delay={0.08} />
-                </h2>
-              </motion.div>
-              <Match3Showcase />
-            </section>
-          )]
+                <Match3Showcase />
+              </section>
+            ),
+          ]
         }
 
         return [(
@@ -382,5 +371,11 @@ export default function HomePage() {
         )]
       })}
     </>
+  )
+}
+
+function EcoSectionDivider({ variant }) {
+  return (
+    <div className={`eco-section-divider eco-section-divider--${variant}`} aria-hidden="true" />
   )
 }

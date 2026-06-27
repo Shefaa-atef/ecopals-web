@@ -237,6 +237,29 @@
   box-shadow: 0 15px 24px rgb(var(--forest-green-rgb) / 0.14);
 }
 
+.eco-section-divider {
+  --divider-bottom: var(--pastel-earthie-bg);
+  --divider-shadow: rgb(var(--forest-green-rgb) / 0.16);
+
+  position: relative;
+  z-index: 2;
+  height: clamp(8px, 1vw, 12px);
+  margin-block: -1px;
+  background: var(--divider-bottom);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.34),
+    0 -10px 22px var(--divider-shadow);
+  pointer-events: none;
+}
+
+.eco-section-divider--match3 {
+  --divider-bottom: #174728;
+  --divider-shadow: rgb(var(--ink-brown-rgb) / 0.12);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.1),
+    0 -10px 18px rgb(var(--warm-terracotta-rgb) / 0.16);
+}
+
 .home-band {
   min-height: 44svh;
   padding: 84px 48px;
@@ -879,19 +902,44 @@
   --prep-bg: var(--light-leaf);
   --prep-text: #163a21;
   --prep-accent: var(--fresh-leaf);
-  /* stack title above showcase */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(28px, 4vh, 52px);
-  padding: clamp(72px, 10svh, 120px) clamp(16px, 4vw, 48px) clamp(60px, 8svh, 96px);
 }
 
-.home-band-prep--do-you-like-me-game {
-  --prep-bg: var(--light-cream);
-  --prep-text: #3b2e10;
-  --prep-accent: var(--golden-yellow);
+.home-match3-divider {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: auto;
+  min-height: unset;
+  margin: 0;
+  padding: clamp(24px, 3vw, 40px) 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-block: 1px solid rgb(255 255 255 / 0.12);
+  background:
+    radial-gradient(circle at 12% 20%, rgb(141 211 103 / 0.3), transparent 28%),
+    radial-gradient(circle at 88% 82%, rgb(217 255 139 / 0.16), transparent 30%),
+    linear-gradient(135deg, #174728 0%, var(--forest-green) 48%, #438c48 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    inset 0 -1px 0 rgb(8 46 23 / 0.2);
+  color: #fff;
+  isolation: isolate;
+}
+
+.home-match3-divider::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgb(255 255 255 / 0.12), transparent 45%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.05), transparent 22%, transparent 78%, rgb(8 46 23 / 0.1));
+  pointer-events: none;
+}
+
+.home-match3-divider .m3s-wrap {
+  z-index: 1;
 }
 
 .prep-section-shell {

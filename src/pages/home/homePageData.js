@@ -77,10 +77,4 @@ export const preparedSections = [
     kicker: { en: 'Game section', ar: 'قسم اللعبة' },
     title: { en: 'Match 3 Game', ar: 'لعبة ماتش 3' },
   },
-  {
-    key: 'do-you-like-me-game',
-    label: '04',
-    kicker: { en: 'Funny game', ar: 'لعبة مضحكة' },
-    title: { en: 'Do You Like Me?', ar: 'هل تحبني؟' },
-  },
 ]
