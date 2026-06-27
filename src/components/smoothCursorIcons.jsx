@@ -491,4 +491,12 @@ const MONEY_ICONS = [
 
 export const ICON_SETS = [NATURE_ICONS, FACE_ICONS, COMM_ICONS, RECYCLE_ICONS, MONEY_ICONS]
 
-export const SECTION_TO_SET = { home: 0, game: 1, community: 2, challenges: 3, 'recycle-portal': 4 }
+export const SECTION_TO_SET = {
+  home: 0,
+  game: 1,
+  community: 2,
+  challenges: 3,
+  'recycle-portal': 4,
+  'clothing-game': 1,
+  'match-3-game': 1,
+}

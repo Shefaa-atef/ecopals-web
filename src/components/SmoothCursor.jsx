@@ -111,7 +111,7 @@ export default function SmoothCursor() {
   }, [])
 
   useEffect(() => {
-    const SECTION_ORDER = ['home', 'game', 'community', 'challenges', 'recycle-portal']
+    const SECTION_ORDER = ['home', 'game', 'community', 'challenges', 'recycle-portal', 'clothing-game', 'match-3-game']
     let currentSet = -1
 
     function getActiveSet() {

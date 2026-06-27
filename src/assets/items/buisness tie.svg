@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024">
+  <!-- Generator: Adobe Illustrator 30.3.0, SVG Export Plug-In . SVG Version: 2.1.3 Build 182)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #c06a68;
+      }
+
+      .st1 {
+        fill: #fff;
+        stroke: #000;
+        stroke-miterlimit: 10;
+      }
+
+      .st2 {
+        fill: #cbcdce;
+      }
+
+      .st3 {
+        clip-path: url(#clippath-1);
+      }
+
+      .st4 {
+        isolation: isolate;
+      }
+
+      .st5 {
+        fill: #ea5524;
+      }
+
+      .st6 {
+        mix-blend-mode: multiply;
+      }
+
+      .st7 {
+        fill: #d84e20;
+      }
+
+      .st8 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <clipPath id="clippath">
+      <polygon class="st5" points="467.3 354.2 526.5 354.2 618.9 895.6 494 1010.1 378.8 893 467.3 354.2" fill="#ea5524"/>
+    </clipPath>
+    <clipPath id="clippath-1">
+      <path class="st7" d="M573.4,256.6l-27.7-46.2s-23.3-8.1-52.2-8.1-45.3,8.1-45.3,8.1l-27.7,46.2s-2.2,26.5,13.6,54.9c15.8,28.4,33.3,42.7,33.3,42.7h59.2s19.4-12.7,34.4-44.9c15-32.1,12.5-52.7,12.5-52.7Z" fill="#d84e20"/>
+    </clipPath>
+  </defs>
+  <g class="st4">
+    <g id="Layer_1">
+      <g>
+        <g>
+          <polygon class="st0" points="573.4 256.6 545.7 210.4 448.1 210.4 420.5 256.6 467.3 354.2 526.5 354.2 573.4 256.6" fill="#c06a68"/>
+          <polygon class="st5" points="467.3 354.2 526.5 354.2 618.9 895.6 494 1010.1 378.8 893 467.3 354.2" fill="#ea5524"/>
+          <g>
+            <polygon class="st5" points="467.3 354.2 526.5 354.2 618.9 895.6 494 1010.1 378.8 893 467.3 354.2" fill="#ea5524"/>
+            <g class="st8" clip-path="url(#clippath)">
+              <g class="st6">
+                <rect class="st2" x="194.5" y="329" width="628.5" height="45.8" transform="translate(-109.7 367.5) rotate(-36.1)" fill="#cbcdce"/>
+                <polygon class="st2" points="286.7 660.6 259.7 623.7 767.4 253.2 794.4 290.2 286.7 660.6" fill="#cbcdce"/>
+                <polygon class="st2" points="304.9 765.6 277.9 728.6 785.7 358.1 812.7 408 304.9 765.6" fill="#cbcdce"/>
+                <polygon class="st2" points="323.2 870.6 296.2 833.6 803.9 476 830.9 512.9 323.2 870.6" fill="#cbcdce"/>
+                <polygon class="st2" points="341.5 975.6 314.5 938.6 822.2 580.9 849.2 617.9 341.5 975.6" fill="#cbcdce"/>
+                <polygon class="st2" points="352.3 1103.4 325.3 1066.4 820.4 657 847.4 694 352.3 1103.4" fill="#cbcdce"/>
+              </g>
+            </g>
+          </g>
+        </g>
+        <g>
+          <path class="st7" d="M573.4,256.6l-27.7-46.2s-23.3-8.1-52.2-8.1-45.3,8.1-45.3,8.1l-27.7,46.2s-2.2,26.5,13.6,54.9c15.8,28.4,33.3,42.7,33.3,42.7h59.2s19.4-12.7,34.4-44.9c15-32.1,12.5-52.7,12.5-52.7Z" fill="#d84e20"/>
+          <g class="st3" clip-path="url(#clippath-1)">
+            <g class="st6">
+              <rect class="st2" x="546.6" y="14.6" width="30.9" height="615.7" transform="translate(-6.1 10.9) rotate(-1.1)" fill="#cbcdce"/>
+              <rect class="st2" x="481.1" y="-31.3" width="30.9" height="615.7" transform="translate(-5.2 9.6) rotate(-1.1)" fill="#cbcdce"/>
+              <polygon class="st2" points="409.7 -76.8 440.6 -77.4 452.6 538.2 421.7 538.8 409.7 -76.8" fill="#cbcdce"/>
+            </g>
+          </g>
+        </g>
+      </g>
+      <path class="st1" d="M882.3,127.4c-92,60.6-184,121.1-276,181.7-61.8-62.2-107.6-107.3-109-107.2,0,0-.4,0-.9,0,0,0-1.5.1-2.9.4-1.4.2-43.7,46.6-100.3,111.4-90.7-61.5-181.4-123.1-272.1-184.6,83.6,29.5,213.8,64.4,375.8,64.8,167,.4,300.8-36.1,385.5-66.4Z" stroke="#000" stroke-miterlimit="10" fill="#fff"/>
+    </g>
+  </g>
+</svg>

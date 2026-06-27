@@ -8,6 +8,7 @@ import FunTitleReveal from '../components/FunTitleReveal'
 import HeroParticles from '../components/HeroParticles'
 import CommunityFloatingPosts from '../components/CommunityFloatingPosts'
 import RecyclePortalSection from '../components/RecyclePortalSection'
+import DressingGameSection from '../components/DressingGameSection'
 import Match3Showcase from '../components/Match3Showcase'
 import useChallengePointerParallax from './home/useChallengePointerParallax'
 import useExactSectionScroll from './home/useExactSectionScroll'
@@ -343,6 +344,12 @@ export default function HomePage() {
                 <Match3Showcase />
               </section>
             ),
+          ]
+        }
+
+        if (section.key === 'clothing-game') {
+          return [
+            <DressingGameSection key="clothing-game" isAr={isAr} />,
           ]
         }
 

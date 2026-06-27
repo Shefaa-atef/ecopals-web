@@ -251,8 +251,8 @@ export default function RecyclePortalSection({ isAr = false }) {
 
       ;[
         { key: 'recycle-challenges',  from: '--soft-peach', to: '--light-leaf'  },
-        { key: 'clothing-game',       from: '--light-leaf', to: '--soft-peach'  },
-        { key: 'match-3-game',        from: '--soft-peach', to: '--light-leaf'  },
+        { key: 'clothing-game',       from: '--light-leaf', to: '--surface'     },
+        { key: 'match-3-game',        from: '--surface',    to: '--forest-green' },
       ].forEach(({ key, from, to }) => {
         const triggerEl = document.querySelector(`.home-band-prep--${key}`)
         if (!triggerEl) return
